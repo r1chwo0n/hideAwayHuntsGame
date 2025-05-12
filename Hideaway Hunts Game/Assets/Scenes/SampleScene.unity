@@ -18746,7 +18746,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-<<<<<<< HEAD
     - target: {fileID: 2674422919550724957, guid: d4695370787af5a4f918a5d85c60dc0d, type: 3}
       propertyPath: m_Name
       value: Wall 10
@@ -18873,7 +18872,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-<<<<<<< HEAD
     - target: {fileID: 3754112538503276699, guid: cf053bc370c749b4883d69a84896e94e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -37.36
