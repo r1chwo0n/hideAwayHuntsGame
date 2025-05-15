@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 5f;
     public float turnSmoothTime = 0.1f;
     private float turnSmoothVelocity;
+    private bool isSitting = false;
+
 
     //Rigid body ใช้ในการขยับตัว
     private Rigidbody rb;
@@ -55,27 +57,37 @@ public class PlayerController : MonoBehaviour
 
     if (Input.GetMouseButtonDown(0))
     {
-        animator.SetTrigger("Shoot");
+        Shoot();
     }
 
     if (Input.GetKeyDown(KeyCode.Q) )
     {
         Sit();
     }
-    if (isMoving && animator.GetBool("isSitting"))
-    {
-        Stand();
-    }
+    // if (isMoving && animator.GetBool("isSitting"))
+    // {
+    //     Stand();
+    // }
 }
+
+    void Shoot()
+    {
+        animator.SetTrigger("Shoot");
+    }
+    // void Attack()
+    // {
+    //     animator.SetTrigger("Attack");
+    // }
+    void Reload()
+    {
+        animator.SetTrigger("Reload");
+    }
 
     void Sit()
     {
-        Debug.Log("Sit");
-        animator.SetBool("isSitting", true);
-    }
-    void Stand()
-    {
-        animator.SetBool("isSitting", false);
+        isSitting = !isSitting; // Toggle sitting state
+
+        animator.SetBool("isSitting", isSitting);
     }
 
     void Jump()
