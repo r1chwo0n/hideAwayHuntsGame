@@ -3,7 +3,7 @@ using UnityEngine;
 public class ThirdPersonCamera : MonoBehaviour
 {
     public Transform target;  // Usually the player's transform
-    public Vector3 offset = new Vector3(0f, 3f, -5f);
+    public Vector3 offset = new Vector3(1.2f, 1.8f, -2.2f); // Shoulder cam
     public float mouseSensitivity = 2f;
 
     float yaw = 0f;
