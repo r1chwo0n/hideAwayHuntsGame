@@ -3,7 +3,37 @@ guid: caee5f715181a40ea8d588b6a2974be2
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mdea_MAT
+    second: {fileID: 2100000, guid: 622d519f8c356f74c8020edeea9237ad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mdea_MAT_
+    second: {fileID: 2100000, guid: 9ada76956c9a4cb4f9cbf74cfd8df68b, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: MEDEA diffuse
+    second: {fileID: 2800000, guid: 370018c9ccb0847488696cecdbbae3e3, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: MEDEA glow
+    second: {fileID: 2800000, guid: 242db7206fb0ab544af3f69ae05fc6df, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: MEDEA specular
+    second: {fileID: 2800000, guid: ab38cd2e407df1a4eb68568b58249f62, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: body diffuse
+    second: {fileID: 2800000, guid: a25f7c83a14e279499dd92ed5e65c285, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
