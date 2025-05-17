@@ -1,34 +1,35 @@
 using UnityEngine;
 
-public class ThirdPersonCamera : MonoBehaviour
+public class ThirdPersonCameraWithCollision : MonoBehaviour
 {
-    public Transform target;  // Usually the player's transform
-    public Vector3 offset = new Vector3(1.2f, 1.8f, -2.2f); // Shoulder cam
-    public float mouseSensitivity = 2f;
-
-    float yaw = 0f;
-    float pitch = 0f;
-
-    void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        Vector3 angles = transform.eulerAngles;
-        yaw = angles.y;
-        pitch = angles.x;
-    }
+    public Transform target; // ตัวละคร
+    public Vector3 offset = new Vector3(0f, 2f, -5f); // ระยะห่างกล้อง
+    public float smoothSpeed = 10f;
+    public float minDistance = 1f; // ระยะที่กล้องเข้าใกล้ได้มากที่สุด
+    public float maxDistance = 2f; // ระยะห่างปกติ
+    public LayerMask collisionMask; // กำหนดว่าอะไรที่ถือว่า "ขวาง" (เช่น Walls)
 
     void LateUpdate()
     {
-        yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
-        pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
-        pitch = Mathf.Clamp(pitch, -30f, 60f);  // Prevent flipping
+        // คำนวณตำแหน่งปลายกล้องที่ต้องการ
+        Vector3 desiredCameraPos = target.position + target.rotation * offset;
 
-        Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
-        Vector3 desiredPosition = target.position + rotation * offset;
+        // หาตำแหน่งกล้องที่ไม่ชนสิ่งกีดขวาง
+        Vector3 direction = desiredCameraPos - target.position;
+        float distance = maxDistance;
 
-        transform.position = desiredPosition;
-        transform.LookAt(target);
+        // ยิง Ray จากตัวละคร → ไปตำแหน่งกล้องที่ต้องการ
+        if (Physics.Raycast(target.position + Vector3.up * 1.5f, direction.normalized, out RaycastHit hit, maxDistance, collisionMask))
+        {
+            distance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
+        }
+
+        Vector3 finalCameraPos = target.position + target.rotation * offset.normalized * distance;
+
+        // ค่อยๆ เคลื่อนกล้องอย่าง smooth
+        transform.position = Vector3.Lerp(transform.position, finalCameraPos, smoothSpeed * Time.deltaTime);
+
+        // มองที่ตัวละคร
+        transform.LookAt(target.position + Vector3.up * 1.5f);
     }
 }
