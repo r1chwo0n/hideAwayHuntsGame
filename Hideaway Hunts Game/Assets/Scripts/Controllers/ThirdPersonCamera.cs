@@ -2,34 +2,56 @@ using UnityEngine;
 
 public class ThirdPersonCameraWithCollision : MonoBehaviour
 {
-    public Transform target; // ตัวละคร
-    public Vector3 offset = new Vector3(0f, 2f, -5f); // ระยะห่างกล้อง
+    public Transform target;
+    public Vector3 offset = new Vector3(0f, 1.5f, -0.1f);
     public float smoothSpeed = 10f;
-    public float minDistance = 1f; // ระยะที่กล้องเข้าใกล้ได้มากที่สุด
-    public float maxDistance = 2f; // ระยะห่างปกติ
-    public LayerMask collisionMask; // กำหนดว่าอะไรที่ถือว่า "ขวาง" (เช่น Walls)
+    public float minDistance = 0f;
+    public float maxDistance = 2f;
+    public LayerMask collisionMask;
+    RaycastHit hit;
 
     void LateUpdate()
-    {
-        // คำนวณตำแหน่งปลายกล้องที่ต้องการ
-        Vector3 desiredCameraPos = target.position + target.rotation * offset;
+{
+    // จุดเริ่มต้นของ Ray → ตำแหน่ง Player (เราขยับขึ้นให้พ้นพื้น)
+    Vector3 rayOrigin = target.position + Vector3.up * 1.5f;
 
-        // หาตำแหน่งกล้องที่ไม่ชนสิ่งกีดขวาง
-        Vector3 direction = desiredCameraPos - target.position;
-        float distance = maxDistance;
+    // จุดที่อยากให้กล้องไปอยู่ → เอา offset ไปคูณกับ rotation
+    Vector3 desiredCameraPos = target.position + target.rotation * offset;
 
-        // ยิง Ray จากตัวละคร → ไปตำแหน่งกล้องที่ต้องการ
-        if (Physics.Raycast(target.position + Vector3.up * 1.5f, direction.normalized, out RaycastHit hit, maxDistance, collisionMask))
+    // ทิศทางจาก player ไปตำแหน่งกล้อง
+    Vector3 direction = desiredCameraPos - rayOrigin;
+
+    RaycastHit hit;
+
+        // ยิง Ray เพื่อเช็กว่ามีอะไรมาขวางไหม
+        if (Physics.Raycast(rayOrigin, direction.normalized, out hit, direction.magnitude, collisionMask))
         {
-            distance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
+            // 🎯 ถ้ามีของบัง → เส้นเขียว จาก player ไปจุดที่ชน
+            Debug.DrawLine(rayOrigin, hit.point, Color.green);
+            // 🎯 ถ้ามีของบัง → เส้นแดง จาก player ไปจุดที่อยากให้กล้องอยู    
+            Debug.Log("Hit: " + hit.collider.name);
+    }
+        else
+        {
+            // ❌ ไม่มีอะไรบัง → เส้นแดง จาก player ไปจุดที่อยากให้กล้องอยู่
+            Debug.DrawLine(rayOrigin, desiredCameraPos, Color.red);
         }
 
-        Vector3 finalCameraPos = target.position + target.rotation * offset.normalized * distance;
-
-        // ค่อยๆ เคลื่อนกล้องอย่าง smooth
-        transform.position = Vector3.Lerp(transform.position, finalCameraPos, smoothSpeed * Time.deltaTime);
-
-        // มองที่ตัวละคร
-        transform.LookAt(target.position + Vector3.up * 1.5f);
+    // แก้ระยะตาม ray hit
+    float distance = maxDistance;
+    if (Physics.Raycast(rayOrigin, direction.normalized, out hit, direction.magnitude, collisionMask))
+    {
+        distance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
     }
+
+    // ตำแหน่งกล้องสุดท้าย
+    Vector3 finalCameraPos = rayOrigin + direction.normalized * distance;
+
+    // กล้องค่อยๆ เคลื่อน
+    transform.position = Vector3.Lerp(transform.position, finalCameraPos, smoothSpeed * Time.deltaTime);
+
+    // กล้องมองที่ตัวละคร
+    transform.LookAt(target.position + Vector3.up * 1.5f);
+}
+
 }
