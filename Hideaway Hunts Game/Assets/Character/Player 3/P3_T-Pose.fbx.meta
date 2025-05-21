@@ -5,25 +5,45 @@ ModelImporter:
   internalIDToNameTable: []
   externalObjects:
   - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Character_Rasta_boy_body
+    second: {fileID: 2100000, guid: 5fde8b509f89144c28b7ed808d2b2ef0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rasta_Brows_MAT1
+    second: {fileID: 2100000, guid: 125460fef3bfc464a892eab6fdf6d916, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rasta_Eyes_MAT1
+    second: {fileID: 2100000, guid: 05263532698b84151828f10db2edab3b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rasta_Mouth_MAT1
+    second: {fileID: 2100000, guid: 4f8d35991cd6e41dab6d15269f8b0181, type: 2}
+  - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: OccupyGuy_FaceAnimMap
-    second: {fileID: 2800000, guid: 42ecad5b97a57384e953c51255381bb3, type: 3}
+    second: {fileID: 2800000, guid: ed501f4c8fcde4b899c42669451e20f7, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: OccupyGuy_diffuse
-    second: {fileID: 2800000, guid: 8045c05e7db363c4f91e8fb0ee4a2222, type: 3}
+    second: {fileID: 2800000, guid: a19ea74127f8448cc9147f08e810d27d, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: OccupyGuy_normal
-    second: {fileID: 2800000, guid: 108ea279786796b4db0b6c1a9c36f591, type: 3}
+    second: {fileID: 2800000, guid: fe9559dfffd1342cc8ec7306e42ea754, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: OccupyGuy_spec
-    second: {fileID: 2800000, guid: 9955351eac6525046a80fc3b7510eb8b, type: 3}
+    second: {fileID: 2800000, guid: 0c75fc26a531d47b3b8e37ec7b71ce7f, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
