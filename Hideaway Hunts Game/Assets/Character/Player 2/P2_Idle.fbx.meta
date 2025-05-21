@@ -3,7 +3,37 @@ guid: d6f4daf84897d42f08f6220bc1deaa2c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: survivor_MAT
+    second: {fileID: 2100000, guid: 9e35b5c50eddaae4eaef3327bdf8f277, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: survivor_MAT1
+    second: {fileID: 2100000, guid: 9a5e730024753bc4a9927d7dcb8729f5, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Survivor_body_diffuse
+    second: {fileID: 2800000, guid: 68651d70634834e4081d8db1949beb3b, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Survivor_diffuse
+    second: {fileID: 2800000, guid: 3b84892427e729c409d5fe7205d1141a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Survivor_normal
+    second: {fileID: 2800000, guid: f8dc11298110f244cbbd8c3c5c52efbb, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Survivor_specular
+    second: {fileID: 2800000, guid: 42945983de8af9f458461e68ed26ae28, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
