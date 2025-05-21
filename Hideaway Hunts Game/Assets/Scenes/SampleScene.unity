@@ -32448,9 +32448,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3757444193673140, guid: d4695370787af5a4f918a5d85c60dc0d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1797667833048707708, guid: d4695370787af5a4f918a5d85c60dc0d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2674422919550724957, guid: d4695370787af5a4f918a5d85c60dc0d, type: 3}
       propertyPath: m_Name
       value: Wall 10 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2674422919550724957, guid: d4695370787af5a4f918a5d85c60dc0d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2977684774639869049, guid: d4695370787af5a4f918a5d85c60dc0d, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3339038509469774311, guid: d4695370787af5a4f918a5d85c60dc0d, type: 3}
       propertyPath: m_LocalPosition.x

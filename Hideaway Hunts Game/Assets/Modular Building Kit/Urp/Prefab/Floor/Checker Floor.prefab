@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 284794239206799125}
   - component: {fileID: 2600615015424672735}
   - component: {fileID: 3974578650587136250}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Checker Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
