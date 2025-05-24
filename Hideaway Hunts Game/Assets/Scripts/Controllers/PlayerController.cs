@@ -114,36 +114,38 @@ public class PlayerController : MonoBehaviour
     }
 
     void MoveWithCameraDirection()
+{
+    float horizontal = Input.GetAxisRaw("Horizontal");
+    float vertical = Input.GetAxisRaw("Vertical");
+
+    float inputSpeed = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.5f;
+    Vector3 inputDirection = new Vector3(horizontal, 0f, vertical).normalized;
+
+    if (inputDirection.magnitude >= 0.1f)
     {
-        float horizontal = 0f;
-        float vertical = Input.GetKey(KeyCode.W) ? 1f : 0f;
+        // Calculate movement direction relative to camera
+        float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+        float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
+        // 👉 Rotate character to face movement direction
+        transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
 
-        float inputSpeed = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.5f;
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+        rb.MovePosition(rb.position + moveDirection.normalized * speed * inputSpeed * Time.deltaTime);
 
-        if (direction.magnitude >= 0.1f)
-        {
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
-            // float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-
-            // transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            rb.MovePosition(rb.position + moveDir.normalized * speed * inputSpeed * Time.deltaTime);
-
-            animator.SetFloat("Speed", inputSpeed); // Run = 1, Walk = 0.5
-        }
-        else
-        {
-            animator.SetFloat("Speed", 0f);
-        }
-        
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        yaw += mouseX;
-
-        transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        animator.SetFloat("Speed", inputSpeed); // 0.5f = walk, 1f = run
     }
+    else
+    {
+        animator.SetFloat("Speed", 0f);
+    }
+
+    // ✅ Mouse look around (camera already follows the player)
+    float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+    yaw += mouseX;
+    cameraTransform.RotateAround(transform.position, Vector3.up, mouseX); // makes camera orbit if needed
+}
+
 
 
 
