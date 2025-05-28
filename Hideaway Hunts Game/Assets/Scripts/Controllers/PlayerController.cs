@@ -5,8 +5,11 @@ public class PlayerController : MonoBehaviour
     public float speed = 5f;
     public float jumpForce = 5f;
     public float turnSmoothTime = 0.1f;
+    public int health = 100;
     private float turnSmoothVelocity;
     private bool isSitting = false;
+    private bool isDead = false;
+    public CrosshairController crosshairController; 
 
 
     //Rigid body ใช้ในการขยับตัว
@@ -31,66 +34,53 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        // Set the cursor to be invisible and locked to the center of the screen
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         yaw = transform.eulerAngles.y;
 
-        // Get references to components
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        animator.applyRootMotion = false; // 🛑 Prevent animation from moving the character
 
         if (cameraTransform == null)
-        cameraTransform = Camera.main.transform;
+            cameraTransform = Camera.main.transform;
     }
 
+
     void FixedUpdate()
-{
-    isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
-    // Debug.Log($"Grounded: {isGrounded}");
-    animator.SetBool("isGrounded", isGrounded);
-}
+    {
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
+        // Debug.Log($"Grounded: {isGrounded}");
+        animator.SetBool("isGrounded", isGrounded);
+    }
 
 
     void Update()
-{
-    float horizontal = Input.GetAxisRaw("Horizontal");
-    float vertical = Input.GetAxisRaw("Vertical");
-    bool isMoving = horizontal != 0 || vertical != 0;
-
-    MoveWithCameraDirection();
-
-    if (Input.GetKeyDown(KeyCode.Space) )
     {
-        Jump();
-    }
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
 
-    if (Input.GetMouseButtonDown(0))
-    {
-        Shoot();
-    }
+        MoveWithCameraDirection();
 
-    if (Input.GetKeyDown(KeyCode.Q) )
-    {
-        Sit();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Shoot();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Sit();
+        }
     }
-    // if (isMoving && animator.GetBool("isSitting"))
-    // {
-    //     Stand();
-    // }
-}
 
     void Shoot()
     {
         animator.SetTrigger("Shoot");
-    }
-    // void Attack()
-    // {
-    //     animator.SetTrigger("Attack");
-    // }
-    void Reload()
-    {
-        animator.SetTrigger("Reload");
     }
 
     void Sit()
@@ -105,6 +95,31 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("Jump");
     }
 
+    public void TakeDamage(int amount)
+    {
+        if (isDead) return;
+
+        health -= amount;
+        if (health <= 0)
+        {
+            health = 0;
+            Die();
+        }
+        else
+        {
+            // Flash crosshair red on damage
+            if (crosshairController != null)
+                crosshairController.FlashDamage();
+        }
+    }
+
+    void Die()
+    {
+        isDead = true;
+        animator.SetTrigger("Dead");
+        this.enabled = false; // disable player control or movement scripts here
+    }
+
     void OnDrawGizmosSelected()
     {
         if (groundCheck == null) return;
@@ -114,44 +129,35 @@ public class PlayerController : MonoBehaviour
     }
 
     void MoveWithCameraDirection()
-{
-    float horizontal = Input.GetAxisRaw("Horizontal");
-    float vertical = Input.GetAxisRaw("Vertical");
-
-    float inputSpeed = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.5f;
-    Vector3 inputDirection = new Vector3(horizontal, 0f, vertical).normalized;
-
-    if (inputDirection.magnitude >= 0.1f)
     {
-        // Calculate movement direction relative to camera
-        float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
-        float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
 
-        // 👉 Rotate character to face movement direction
-        transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
+        float inputSpeed = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.5f;
+        Vector3 inputDirection = new Vector3(horizontal, 0f, vertical).normalized;
 
-        Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-        rb.MovePosition(rb.position + moveDirection.normalized * speed * inputSpeed * Time.deltaTime);
+        if (inputDirection.magnitude >= 0.1f)
+        {
+            // Calculate movement direction relative to camera
+            float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+            float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
-        animator.SetFloat("Speed", inputSpeed); // 0.5f = walk, 1f = run
+            // 👉 Rotate character to face movement direction
+            transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
+
+            Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            rb.MovePosition(rb.position + moveDirection.normalized * speed * inputSpeed * Time.deltaTime);
+
+            animator.SetFloat("Speed", inputSpeed); // 0.5f = walk, 1f = run
+        }
+        else
+        {
+            animator.SetFloat("Speed", 0f);
+        }
+
+        // ✅ Mouse look around (camera already follows the player)
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        yaw += mouseX;
+        cameraTransform.RotateAround(transform.position, Vector3.up, mouseX); // makes camera orbit if needed
     }
-    else
-    {
-        animator.SetFloat("Speed", 0f);
-    }
-
-    // ✅ Mouse look around (camera already follows the player)
-    float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-    yaw += mouseX;
-    cameraTransform.RotateAround(transform.position, Vector3.up, mouseX); // makes camera orbit if needed
-}
-
-
-
-
-    bool IsGrounded()
-    {
-       return Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
-    }
-
 }

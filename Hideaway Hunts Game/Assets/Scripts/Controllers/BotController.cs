@@ -3,7 +3,6 @@ using UnityEngine;
 public class BotController : MonoBehaviour
 {
     public float speed = 5f;
-    public float jumpForce = 5f;
     public Transform cameraTransform;
     private Rigidbody rb;
     private Animator animator;
@@ -15,6 +14,10 @@ public class BotController : MonoBehaviour
 
     private float decisionTimer = 0f;
     private string currentAction = "Idle";
+    public int health = 100;
+    private bool isDead = false;
+
+    public Transform shootPoint; // Where bot shoots from (assign in inspector)
 
     void Start()
     {
@@ -31,12 +34,14 @@ public class BotController : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
+
         decisionTimer -= Time.deltaTime;
 
         if (decisionTimer <= 0f)
         {
             PickNewAction();
-            decisionTimer = Random.Range(2f, 5f); // เปลี่ยนพฤติกรรมทุกๆ 2-5 วิ
+            decisionTimer = Random.Range(2f, 5f);
         }
 
         PerformAction();
@@ -44,8 +49,7 @@ public class BotController : MonoBehaviour
 
     void PickNewAction()
     {
-        int rand = Random.Range(0, 4); // เลือก 0-3
-
+        int rand = Random.Range(0, 4);
         switch (rand)
         {
             case 0: currentAction = "Walk"; break;
@@ -80,6 +84,7 @@ public class BotController : MonoBehaviour
 
             case "Shoot":
                 animator.SetTrigger("Shoot");
+                TryShootPlayer();
                 currentAction = "Idle";
                 break;
 
@@ -93,5 +98,48 @@ public class BotController : MonoBehaviour
     {
         Vector3 forward = transform.forward;
         rb.MovePosition(rb.position + forward.normalized * speed * 0.5f * Time.deltaTime);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (isDead) return;
+
+        health -= amount;
+        if (health <= 0)
+        {
+            health = 0;
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Debug.Log("Bot died!");
+        isDead = true;
+        animator.SetTrigger("Dead");
+        this.enabled = false;
+        rb.isKinematic = true; // Stop physics if you want
+    }
+
+    void TryShootPlayer()
+    {
+        if (shootPoint == null)
+        {
+            Debug.LogWarning("shootPoint not assigned on BotController!");
+            return;
+        }
+
+        Ray ray = new Ray(shootPoint.position, shootPoint.forward);
+        RaycastHit hit;
+        Debug.DrawRay(shootPoint.position, shootPoint.forward * 100f, Color.red, 1f);
+
+        if (Physics.Raycast(ray, out hit, 100f))
+        {
+            PlayerController player = hit.collider.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.TakeDamage(25);
+            }
+        }
     }
 }
