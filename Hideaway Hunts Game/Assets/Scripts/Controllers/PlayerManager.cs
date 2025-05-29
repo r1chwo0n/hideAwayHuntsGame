@@ -5,8 +5,6 @@ public class PlayerManager : MonoBehaviour
     public GameObject[] players;
     public ThirdPersonCameraWithCollision cameraFollow;
 
-    private int currentPlayerIndex = 0;
-
     void Start()
     {
         SwitchToPlayer(0);
@@ -39,14 +37,18 @@ public class PlayerManager : MonoBehaviour
         return;
     }
 
-    // Enable selected player and disable others
+   // Keep all characters active
     for (int i = 0; i < players.Length; i++)
     {
-        players[i].SetActive(i == index);
-    }
+        players[i].SetActive(true);
 
+        var movement = players[i].GetComponent<PlayerController>();
+        if (movement != null)
+            movement.enabled = (i == index); // Only enable control for the selected one
+    }
+    
     // Update camera to follow the new player
-    cameraFollow.target = players[index].transform;
+        cameraFollow.target = players[index].transform;
 }
 
 }
