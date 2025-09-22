@@ -12,13 +12,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Walkable
   - Water
   - UI
   - Enemy
   - collisionMask
   - Ground
-  - 
+  - stair
   - 
   - 
   - 
