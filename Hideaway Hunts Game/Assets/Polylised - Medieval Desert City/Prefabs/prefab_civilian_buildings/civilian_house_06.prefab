@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 1731589854587608776}
   - component: {fileID: 1356542595983654450}
   - component: {fileID: 2760775166561707056}
+  - component: {fileID: 4877861069626833732}
   m_Layer: 0
   m_Name: civilian_house_06
   m_TagString: Untagged
@@ -465,3 +466,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.3242059, y: 0.80605435, z: 0.54835564}
   m_Center: {x: -0.058825247, y: 7.0843124, z: 0.22812521}
+--- !u!65 &4877861069626833732
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1446531704120262}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.0076756, y: 0.6902098, z: 1.1074888}
+  m_Center: {x: 5.5005617, y: -7.007558, z: 0.5076899}
