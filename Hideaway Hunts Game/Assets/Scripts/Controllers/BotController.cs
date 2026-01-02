@@ -1,23 +1,28 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BotController : MonoBehaviour
 {
-    public float speed = 5f;
-    public Transform cameraTransform;
-    private Rigidbody rb;
-    private Animator animator;
+    public float speed = 5f; // ความเร็วในการเคลื่อนที่ของบอท เทียบกับ เดินของผู้เล่น
+    public LayerMask groundLayer; // ประกาศ Layer พื้น ถูกตั้งค่าจาก inspector 
+    public Transform groundCheck; // Empty Object ติดไว้ที่ใต้เท้า ตรวจสอบตรงนี้มีพื้นเปล่า (ไม่ให้กระโดกลางอากาศ)
+    public Transform cameraTransform; // มีเพื่อให้บอทสามารถใช้ข้อมูลทิศทางของกล้องมาช่วยตัดสินใจพฤติกรรมหรือการเคลื่อนไหวได้
+    public int health = 100;
+    public Transform shootPoint; // จุดที่ยิง Where bot shoots from (assign in inspector)
+    public float groundDistance = 0.6f; // รัศมีใช้ตรวจสอบการชน
 
-    public LayerMask groundLayer;
-    public Transform groundCheck;
-    public float groundDistance = 0.6f;
-    private bool isGrounded;
+    private Rigidbody rb;
+    private Animator animator; // ประกาศไว้สำหรับเล่น animation ตามสถานะ
+
+    
+    
+    private bool isGrounded; // เก็บสถานะว่า bot ยังอยู่บนพื้นมั้ย
 
     private float decisionTimer = 0f;
     private string currentAction = "Idle";
-    public int health = 100;
+    
     private bool isDead = false;
-
-    public Transform shootPoint; // Where bot shoots from (assign in inspector)
+    
+    
 
     void Start()
     {

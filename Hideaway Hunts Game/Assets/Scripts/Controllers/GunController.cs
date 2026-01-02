@@ -2,28 +2,50 @@
 
 public class GunController : MonoBehaviour
 {
+    [Header("Shooting")]
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float bulletForce = 20f;
 
+    [Header("Cooldown")]
+    public float MaxCooldown = 0.5f;   // ยิงได้ทุก 0.5 วิ
+    public float CurrentCooldown = 0f;
+
+    public bool CanShoot => CurrentCooldown <= 0f;
+
     void Update()
     {
-        if (Input.GetButtonDown("Fire1")) // คลิกซ้าย / Ctrl / ปุ่ม Fire
+        // ลด cooldown ลงเรื่อย ๆ
+        if (CurrentCooldown > 0f)
+            CurrentCooldown -= Time.deltaTime;
+
+        // ตัวอย่าง: Player input
+        if (Input.GetButtonDown("Fire1") && CanShoot)
         {
             Shoot();
         }
     }
 
-    void Shoot()
+    public void Shoot()
     {
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        Vector3 targetPoint = ray.GetPoint(100f); // จุดปลายที่ไกลออกไป
+        if (!CanShoot) return;
 
-        Vector3 direction = (targetPoint - firePoint.position).normalized;
+        Ray ray = Camera.main.ViewportPointToRay(
+            new Vector3(0.5f, 0.5f, 0));
 
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(direction));
+        Vector3 targetPoint = ray.GetPoint(100f);
+        Vector3 direction =
+            (targetPoint - firePoint.position).normalized;
+
+        GameObject bullet = Instantiate(
+            bulletPrefab,
+            firePoint.position,
+            Quaternion.LookRotation(direction));
+
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         rb.AddForce(direction * bulletForce, ForceMode.Impulse);
 
+        // reset cooldown
+        CurrentCooldown = MaxCooldown;
     }
 }

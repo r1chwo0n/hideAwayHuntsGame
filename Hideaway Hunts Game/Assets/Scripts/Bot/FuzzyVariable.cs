@@ -1,24 +1,51 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
+
+//public class FuzzySet
+//{
+//    public string name;
+//    public Func<float, float> membershipFunc;
+//    public float centroid; // ใช้สำหรับ defuzzification
+
+//    public FuzzySet(string name, Func<float, float> membershipFunc, float centroid)
+//    {
+//        this.name = name;
+//        this.membershipFunc = membershipFunc;
+//        this.centroid = centroid;
+//    }
+
+//    public float GetMembership(float value) => membershipFunc(value);
+//}
 
 public class FuzzySet
 {
     public string name;
     public Func<float, float> membershipFunc;
+    public float centroid;
 
+    // INPUT (ไม่ใช้ centroid)
     public FuzzySet(string name, Func<float, float> membershipFunc)
     {
         this.name = name;
         this.membershipFunc = membershipFunc;
     }
 
+    // OUTPUT (ใช้ centroid)
+    public FuzzySet(string name, float centroid)
+    {
+        this.name = name;
+        this.centroid = centroid;
+    }
+
     public float GetMembership(float value) => membershipFunc(value);
 }
 
+
+
 public class FuzzyVariable
 {
-    public string name;
-    public List<FuzzySet> sets = new();
+    public string name; // ชื่อตัวแปร 
+    public List<FuzzySet> sets = new(); // ชุดฟัซซี่
 
     public FuzzyVariable(string name) => this.name = name;
 

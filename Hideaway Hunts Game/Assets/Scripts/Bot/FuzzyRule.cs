@@ -4,7 +4,6 @@ public class FuzzyRule
 {
     public Dictionary<string, string> conditions = new(); // InputName -> FuzzySetName
     public Dictionary<string, string> conclusions = new(); // OutputName -> FuzzySetName
-    public float weight = 1f;
 
     public FuzzyRule AddCondition(string inputName, string fuzzySetName)
     {
