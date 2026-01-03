@@ -1,90 +1,194 @@
 ﻿using UnityEngine;
-// ร่างที่ active อยู่เพียง 1 ร่าง
+
 [System.Serializable]
 public struct EnemyPerception
 {
     public Transform enemy;
-    public float distance;
+
+    public float distance3D;
+    public float horizontalDistance; // แนวนอน
+    public float verticalDifference; // แนวตั้ง
+
     public bool inRange;
     public bool lineOfSight;
     public bool enemyCanSeeMe;
-    public float relativeAngle;
+
+    public float relativeAngle; // 0–1 (0 = หน้า, 1 = หลัง)
 }
 
 public class PerceptionController : MonoBehaviour
 {
+    [Header("References")]
     public Transform origin;
+
+    [Header("Sense Settings")]
     public float detectRadius = 50f;
+    public float eyeHeight = 1.6f;
+    public LayerMask sightMask; // พวก obstacle enemy player
 
     public EnemyPerception SenseEnemy(Transform enemy)
     {
         EnemyPerception p = new EnemyPerception();
         p.enemy = enemy;
 
-        Vector3 dir = enemy.position - origin.position;
-        p.distance = dir.magnitude;
-        p.inRange = p.distance <= detectRadius;
+        if (!enemy || !origin)
+            return p;
 
+        Vector3 delta = enemy.position - origin.position;
+
+        // --- Distance ---
+        p.distance3D = delta.magnitude;
+        p.verticalDifference = Mathf.Abs(delta.y);
+
+        delta.y = 0f;
+        p.horizontalDistance = delta.magnitude;
+
+        p.inRange = p.horizontalDistance <= detectRadius;
+
+        // --- Vision ---
         p.lineOfSight = HasLineOfSight(enemy);
         p.enemyCanSeeMe = EnemyHasLineOfSight(enemy);
+
+        // --- Angle ---
         p.relativeAngle = GetRelativeAngle(enemy);
 
         return p;
     }
 
-    private bool HasLineOfSight(Transform enemy)
+    // จาก ตน.ของเรา มองเห็นศัตรูโดยไม่มี obstacle บังใช่มั้ย
+    // Raycast : เส้นตรงเส้นเดียวยิงออกไป
+    //private bool HasLineOfSight(Transform enemy)
+    //{
+    //    Vector3 myEye = origin.position + Vector3.up * eyeHeight; // ยกตำแหน่งขึ้นระดับสายตา
+    //    Vector3 enemyEye = enemy.position + Vector3.up * eyeHeight;
+
+    //    Vector3 dir = enemyEye - myEye;
+    //    float dist = dir.magnitude; // ระยะจริงระหว่างตาเรา vs ศัตรู
+    //    dir.Normalize(); // ทิศทางจากเราไปศัตรู
+
+    //    // ยิงจากตาไปในทิศ dir ยาวไม่เกิน dist 
+    //    if (Physics.Raycast(myEye, dir, out RaycastHit hit, dist, sightMask))
+    //    {
+    //        return hit.transform == enemy;
+    //    }
+
+    //    return false;
+    //}
+
+    bool HasLineOfSight(Transform enemy)
     {
         if (!enemy || !origin)
             return false;
 
-        Vector3 myEye = origin.position + Vector3.up * 1.6f;
-        Vector3 enemyEye = enemy.position + Vector3.up * 1.6f;
+        //Vector3 myEye = origin.position + Vector3.up * eyeHeight;
+        Vector3 myEye = GetEyePosition(origin);
 
-        Vector3 dir = enemyEye - myEye;
-        float dist = dir.magnitude;
-        dir.Normalize();
-
-        if (Physics.Raycast(myEye, dir, out RaycastHit hit, dist))
-            return hit.transform == enemy;
-
-        return false;
+        return CheckMultiRayLOS(myEye, enemy, sightMask);
     }
 
+
+    // ===== Line of sight (ศัตรู -> เรา)
+    //private bool EnemyHasLineOfSight(Transform enemy)
+    //{
+    //    Vector3 enemyEye = enemy.position + Vector3.up * eyeHeight;
+    //    Vector3 myEye = origin.position + Vector3.up * eyeHeight;
+
+    //    Vector3 dir = myEye - enemyEye;
+    //    float dist = dir.magnitude;
+    //    dir.Normalize();
+
+    //    if (Physics.Raycast(enemyEye, dir, out RaycastHit hit, dist, sightMask))
+    //    {
+    //        return hit.transform == origin;
+    //    }
+
+    //    return false;
+    //}
 
     bool EnemyHasLineOfSight(Transform enemy)
     {
         if (!enemy || !origin)
             return false;
 
-        Vector3 enemyEye = enemy.position + Vector3.up * 1.6f;   // ปรับตามความสูงตัวละคร
-        Vector3 myBody = origin.position + Vector3.up * 1.6f;
+        //Vector3 enemyEye = enemy.position + Vector3.up * eyeHeight;
+        Vector3 enemyEye = GetEyePosition(enemy);
 
-        Vector3 dir = myBody - enemyEye;
-        float dist = dir.magnitude;
-        dir.Normalize();
+        return CheckMultiRayLOS(enemyEye, origin, sightMask);
+    }
 
-        if (Physics.Raycast(enemyEye, dir, out RaycastHit hit, dist))
+
+    // ===== Angle เฉพาะแนวราบ
+    private float GetRelativeAngle(Transform enemy)
+    {
+        Vector3 toEnemy = enemy.position - origin.position;
+        toEnemy.y = 0f;
+
+        Vector3 forward = origin.forward;
+        forward.y = 0f;
+
+        if (toEnemy.sqrMagnitude < 0.001f)
+            return 0f;
+
+        toEnemy.Normalize();
+        forward.Normalize();
+
+        float dot = Vector3.Dot(forward, toEnemy);
+        dot = Mathf.Clamp(dot, -1f, 1f);
+
+        float angle = Mathf.Acos(dot) * Mathf.Rad2Deg; // 0–180
+        return angle / 180f;
+    }
+
+
+    // ===== Helper Methods =====
+    bool CheckMultiRayLOS(
+    Vector3 fromEye,
+    Transform target,
+    LayerMask mask
+)
+    {
+        CapsuleCollider cap = target.GetComponent<CapsuleCollider>();
+        float h = cap ? cap.height : 1.6f;
+
+        Vector3[] targetPoints =
         {
-            return hit.transform == origin;
+        target.position + Vector3.up * (h * 0.9f), // head
+        target.position + Vector3.up * (h * 0.6f), // chest
+        target.position + Vector3.up * (h * 0.3f)  // legs
+    };
+
+        foreach (var point in targetPoints)
+        {
+            Vector3 dir = point - fromEye;
+            float dist = dir.magnitude;
+
+            if (dist < 0.05f)
+                return true;
+
+            dir.Normalize();
+            Debug.DrawRay(fromEye, dir * dist, Color.red);
+
+            if (Physics.Raycast(fromEye, dir, out RaycastHit hit, dist, mask))
+            {
+                if (hit.transform == target)
+                    return true;
+            }
         }
 
         return false;
     }
 
-    float GetRelativeAngle(Transform enemy)
+    // คำนวณ eye position จาก collider
+    Vector3 GetEyePosition(Transform t)
     {
-        if (!enemy || !origin)
-            return 1f;
+        CapsuleCollider cap = t.GetComponent<CapsuleCollider>();
 
-        Vector3 toEnemy = (enemy.position - origin.position).normalized; // ชี้จากเราไปศัตรู
-        Vector3 forward = origin.forward; // ที่ที่เราหันหน้าอยู่
+        if (cap == null)
+            return t.position + Vector3.up * eyeHeight; // fallback
 
-        float dot = Vector3.Dot(forward, toEnemy); // บอกว่าเวกเตอร์ 2 ตัวชี้ไปทางเดียวกัน 1 = อยู่หน้าเรา -1 = อยู่หลังเรา 0 = อยู่ข้างๆ
-        dot = Mathf.Clamp(dot, -1f, 1f);
-
-        float angle = Mathf.Acos(dot) * Mathf.Rad2Deg; // แปลงเป็นองศา 0–180
-
-        return angle / 180f; // normalize 0–1
+        // ตำแหน่งกลาง capsule + ครึ่งสูง - offset เล็กน้อย
+        float eyeY = cap.center.y + (cap.height * 0.5f) - 0.1f;
+        return t.TransformPoint(new Vector3(0f, eyeY, 0f));
     }
 
 
