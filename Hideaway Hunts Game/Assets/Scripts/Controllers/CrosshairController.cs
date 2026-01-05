@@ -18,14 +18,14 @@ public class CrosshairController : MonoBehaviour
         bool isTarget = Physics.Raycast(ray, out hit, detectionDistance, enemyLayer);
         crosshairImage.color = isTarget ? targetColor : defaultColor;
 
-        if (Input.GetMouseButtonDown(0) && isTarget)
-        {
-            BotController enemy = hit.collider.GetComponent<BotController>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(50); // Damage bot on shoot
-            }
-        }
+        //if (Input.GetMouseButtonDown(0) && isTarget)
+        //{
+        //    BotController enemy = hit.collider.GetComponent<BotController>();
+        //    if (enemy != null)
+        //    {
+        //        enemy.TakeDamage(50); // Damage bot on shoot
+        //    }
+        //}
     }
 
     public void FlashDamage()

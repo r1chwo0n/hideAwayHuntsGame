@@ -15,10 +15,9 @@ public struct SituationSummary
 
 public class WorldPerception : MonoBehaviour
 {
-    public PerceptionController perception;   // perception ของร่าง active
-    public List<Transform> enemies; // ศัตรูทั้งหมด
+    public List<Transform> enemies;
 
-    public SituationSummary SenseWorld()
+    public SituationSummary SenseWorld(PerceptionController perception)
     {
         SituationSummary s = new SituationSummary();
 
@@ -38,40 +37,45 @@ public class WorldPerception : MonoBehaviour
 
             EnemyPerception p = perception.SenseEnemy(enemy);
 
-            if (p.distance < nearest)
-                nearest = p.distance;
+            if (!p.inRange)
+                continue;
 
-            if (p.inRange)
-            {
-                countInRange++;
-                totalDist += p.distance;
+            countInRange++;
+            totalDist += p.distance3D;
 
-                if (p.enemyCanSeeMe)
-                    countSeeingUs++;
+            if (p.distance3D < nearest)
+                nearest = p.distance3D;
 
-                if (p.lineOfSight)
-                    countUsSeeingEnemies++;
-            }
+            if (p.enemyCanSeeMe)
+                countSeeingUs++;
+
+            if (p.lineOfSight)
+                countUsSeeingEnemies++;
         }
 
         s.enemyCountInRange = countInRange;
         s.usSeeingEnemies = countUsSeeingEnemies;
         s.enemiesSeeingUs = countSeeingUs;
-        //s.avgEnemyDistance = countInRange > 0 ? totalDist / countInRange : perception.detectRadius;
+
+        // 0–1 (เข้ากับ fuzzy)
         s.avgEnemyDistance = countInRange > 0
-            ? (totalDist / countInRange) / perception.detectRadius
+            ? Mathf.Clamp01((totalDist / countInRange) / perception.detectRadius)
             : 1f;
 
-        //s.nearestEnemyDistance = countInRange > 0 ? nearest : perception.detectRadius;
-        s.nearestEnemyDistance = nearest;
+        // ระยะจริง (FormFuzzyAISetup ใช้ absolute)
+        //s.nearestEnemyDistance = nearest;
+        //s.nearestEnemyDistance =
+        //    countInRange > 0 ? nearest : perception.detectRadius * 1.2f;
+        float maxNearest = perception.detectRadius * 1.2f;
 
-        //s.nearestEnemyDistance = nearest / perception.detectRadius;
+        if (countInRange > 0)
+        {
+            nearest = Mathf.Clamp(nearest, 0f, maxNearest);
+        }
 
-
-        // threat heuristic (ยังไม่ใช่ decision)
-        //s.underHeavyThreat = countSeeingUs >= 2;
+        s.nearestEnemyDistance =
+            countInRange > 0 ? nearest : maxNearest;
 
         return s;
     }
-
 }

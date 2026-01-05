@@ -22,14 +22,24 @@ public class FormFuzzyAISetup : MonoBehaviour
 
     void SetupInputs()
     {
+        //var enemyDist = new FuzzyVariable("NearestEnemyDistance");
+        //enemyDist.AddSet(new FuzzySet("Near",
+        //    d => Triangle(d, 0f, 30f, 70f)));
+        //enemyDist.AddSet(new FuzzySet("Medium",
+        //    d => Triangle(d, 50f, 100f, 120f)));
+        //enemyDist.AddSet(new FuzzySet("Far",
+        //    d => Triangle(d, 110f, 150f, 200f)));
+        //engine.AddInput(enemyDist);
+
         var enemyDist = new FuzzyVariable("NearestEnemyDistance");
         enemyDist.AddSet(new FuzzySet("Near",
-            d => Triangle(d, 0f, 30f, 70f)));
+            d => Triangle(d, 0f, 8f, 15f)));
         enemyDist.AddSet(new FuzzySet("Medium",
-            d => Triangle(d, 50f, 100f, 120f)));
+            d => Triangle(d, 12f, 20f, 30f)));
         enemyDist.AddSet(new FuzzySet("Far",
-            d => Triangle(d, 110f, 150f, 200f)));
+            d => Triangle(d, 25f, 40f, 60f)));
         engine.AddInput(enemyDist);
+
 
         var avgDist = new FuzzyVariable("AverageEnemyDistance");
         avgDist.AddSet(new FuzzySet("Close",
@@ -111,13 +121,37 @@ public class FormFuzzyAISetup : MonoBehaviour
             .AddConclusion("FormSuitability", "Good"));
         // rule 6: เราถูกรุม => แย่จัง
         engine.AddRule(new FuzzyRule()
-            .AddCondition("EnemyDensity", "Few")
+            .AddCondition("EnemyDensity", "Many")
+            .AddCondition("EnemiesSeeingUs", "Surrounded")
             .AddConclusion("FormSuitability", "Bad"));
         // rule 7: ศัตรูอยู่ไกล เรายังไม่ถูกเห็น => OK
         engine.AddRule(new FuzzyRule()
             .AddCondition("NearestEnemyDistance", "Far")
             .AddCondition("EnemiesSeeingUs", "Unaware")
             .AddConclusion("FormSuitability", "OK"));
+        // rule 8: ใกล้มาก แต่ยังไม่เจอกัน (กำแพง / มุมบัง)
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("NearestEnemyDistance", "Near")
+            .AddCondition("UsSeeingEnemies", "Blind")
+            .AddCondition("EnemiesSeeingUs", "Unaware")
+            .AddConclusion("FormSuitability", "OK"));
+        // rule 9: ศัตรูเยอะ แต่ไกลและไม่เห็นเรา => OK
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("EnemyDensity", "Many")
+            .AddCondition("NearestEnemyDistance", "Far")
+            .AddCondition("EnemiesSeeingUs", "Unaware")
+            .AddConclusion("FormSuitability", "OK"));
+        // rule 10:เราเห็นศัตรูชัดเจนและไม่มีใครเห็นเรา => ดี
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("UsSeeingEnemies", "Clear")
+            .AddCondition("EnemiesSeeingUs", "Unaware")
+            .AddConclusion("FormSuitability", "Good"));
+        // ENDGAME: tolerate risk to finish the game
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("EnemyDensity", "Few")
+            .AddCondition("NearestEnemyDistance", "Near")
+            .AddConclusion("FormSuitability", "Good"));
+
     }
 
 }

@@ -7,7 +7,7 @@ public struct EnemyPerception
 
     public float distance3D;
     public float horizontalDistance; // แนวนอน
-    public float verticalDifference; // แนวตั้ง
+    public float verticalDifference; // ต่างสูง
 
     public bool inRange;
     public bool lineOfSight;
@@ -22,8 +22,8 @@ public class PerceptionController : MonoBehaviour
     public Transform origin;
 
     [Header("Sense Settings")]
-    public float detectRadius = 50f;
-    public float eyeHeight = 1.6f;
+    public float detectRadius = 30f;
+    public float eyeHeight = 1.6f; // assume
     public LayerMask sightMask; // พวก obstacle enemy player
 
     public EnemyPerception SenseEnemy(Transform enemy)
@@ -55,26 +55,6 @@ public class PerceptionController : MonoBehaviour
         return p;
     }
 
-    // จาก ตน.ของเรา มองเห็นศัตรูโดยไม่มี obstacle บังใช่มั้ย
-    // Raycast : เส้นตรงเส้นเดียวยิงออกไป
-    //private bool HasLineOfSight(Transform enemy)
-    //{
-    //    Vector3 myEye = origin.position + Vector3.up * eyeHeight; // ยกตำแหน่งขึ้นระดับสายตา
-    //    Vector3 enemyEye = enemy.position + Vector3.up * eyeHeight;
-
-    //    Vector3 dir = enemyEye - myEye;
-    //    float dist = dir.magnitude; // ระยะจริงระหว่างตาเรา vs ศัตรู
-    //    dir.Normalize(); // ทิศทางจากเราไปศัตรู
-
-    //    // ยิงจากตาไปในทิศ dir ยาวไม่เกิน dist 
-    //    if (Physics.Raycast(myEye, dir, out RaycastHit hit, dist, sightMask))
-    //    {
-    //        return hit.transform == enemy;
-    //    }
-
-    //    return false;
-    //}
-
     bool HasLineOfSight(Transform enemy)
     {
         if (!enemy || !origin)
@@ -85,25 +65,6 @@ public class PerceptionController : MonoBehaviour
 
         return CheckMultiRayLOS(myEye, enemy, sightMask);
     }
-
-
-    // ===== Line of sight (ศัตรู -> เรา)
-    //private bool EnemyHasLineOfSight(Transform enemy)
-    //{
-    //    Vector3 enemyEye = enemy.position + Vector3.up * eyeHeight;
-    //    Vector3 myEye = origin.position + Vector3.up * eyeHeight;
-
-    //    Vector3 dir = myEye - enemyEye;
-    //    float dist = dir.magnitude;
-    //    dir.Normalize();
-
-    //    if (Physics.Raycast(enemyEye, dir, out RaycastHit hit, dist, sightMask))
-    //    {
-    //        return hit.transform == origin;
-    //    }
-
-    //    return false;
-    //}
 
     bool EnemyHasLineOfSight(Transform enemy)
     {
@@ -117,13 +78,13 @@ public class PerceptionController : MonoBehaviour
     }
 
 
-    // ===== Angle เฉพาะแนวราบ
+    // ===== Angle เฉพาะแนวราบ ศัตรูอยู่ทิศไหน
     private float GetRelativeAngle(Transform enemy)
     {
         Vector3 toEnemy = enemy.position - origin.position;
         toEnemy.y = 0f;
 
-        Vector3 forward = origin.forward;
+        Vector3 forward = origin.forward; // ทิศที่เราหันหน้าอยู่
         forward.y = 0f;
 
         if (toEnemy.sqrMagnitude < 0.001f)
@@ -132,11 +93,11 @@ public class PerceptionController : MonoBehaviour
         toEnemy.Normalize();
         forward.Normalize();
 
-        float dot = Vector3.Dot(forward, toEnemy);
+        float dot = Vector3.Dot(forward, toEnemy); // 1 อยู่ตรงหน้า, 0 ข้างๆ, -1 ข้างหลัง
         dot = Mathf.Clamp(dot, -1f, 1f);
 
         float angle = Mathf.Acos(dot) * Mathf.Rad2Deg; // 0–180
-        return angle / 180f;
+        return angle / 180f; // normalize: 0 ข้างหน้า, 0.5 ข้างๆ, 1 ข้างหลัง
     }
 
 
@@ -145,10 +106,10 @@ public class PerceptionController : MonoBehaviour
     Vector3 fromEye,
     Transform target,
     LayerMask mask
-)
+    ) // visibility check จากเราถึงศัตรูมีอะไรกั้นมั้ย
     {
         CapsuleCollider cap = target.GetComponent<CapsuleCollider>();
-        float h = cap ? cap.height : 1.6f;
+        float h = cap ? cap.height : 1.8f;
 
         Vector3[] targetPoints =
         {

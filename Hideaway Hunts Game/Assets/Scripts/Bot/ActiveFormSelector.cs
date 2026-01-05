@@ -48,15 +48,4 @@ public class ActiveFormSelector : MonoBehaviour
         return fuzzySetup.engine.Evaluate(inputs)["FormSuitability"];
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
