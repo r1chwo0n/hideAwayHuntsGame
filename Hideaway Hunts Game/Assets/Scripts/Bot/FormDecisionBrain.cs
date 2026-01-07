@@ -16,6 +16,11 @@ public class FormDecisionBrain : MonoBehaviour
     public Transform activeForm;
     PerceptionController activePerception;
 
+    [Header("Target Selection")]
+    public TargetSelector targetSelector;
+    public List<Transform> visibleTargets; // player forms ที่มองเห็น
+
+
     void Update()
     {
         DecideBestForm();
@@ -55,6 +60,24 @@ public class FormDecisionBrain : MonoBehaviour
         }
     }
 
+    //void OnActiveFormChanged(Transform newForm)
+    //{
+    //    Debug.Log($"Active form changed to: {newForm.name}");
+
+    //    // เปิด / ปิด controller ของแต่ละ bot
+    //    foreach (var f in forms)
+    //    {
+    //        var ctrl = f.origin.GetComponent<BotController>();
+    //        if (ctrl)
+    //            ctrl.isActive = (f.origin == newForm);
+    //    }
+
+    //    // บอก ActionExecutor ว่าควบคุมใคร
+    //    actionExecutor.actor = newForm;
+    //    actionExecutor.animator = newForm.GetComponentInChildren<Animator>();
+    //    actionExecutor.gun = newForm.GetComponentInChildren<GunShooter>();
+    //}
+
     void OnActiveFormChanged(Transform newForm)
     {
         Debug.Log($"Active form changed to: {newForm.name}");
@@ -66,9 +89,8 @@ public class FormDecisionBrain : MonoBehaviour
                 ctrl.isActive = (f.origin == newForm);
         }
 
-        //BotDebugHUD.Instance?.OnActiveFormChanged(newForm.name);
-
-        actionExecutor.actor = newForm;
+        actionExecutor.SetActor(newForm);
+        targetSelector.bot = newForm;
     }
 
 
@@ -79,12 +101,24 @@ public class FormDecisionBrain : MonoBehaviour
         if (activePerception == null)
             return;
 
+        visibleTargets =
+            worldPerception.GetVisibleEnemies(activePerception);
+
         SituationSummary world =
             worldPerception.SenseWorld(activePerception);
 
         ActionType action =
             actionBrain.DecideAction(world);
 
+        if (action == ActionType.Attack)
+        {
+            Transform target =
+                targetSelector.SelectTarget(visibleTargets);
+
+            actionExecutor.SetTarget(target);
+        }
+
         actionExecutor.Execute(action);
     }
+
 }

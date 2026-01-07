@@ -1,16 +1,55 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 public class ActionExecutor : MonoBehaviour
 {
     [Header("References")]
     public Transform actor;                 // ร่างที่กำลัง active
-    public CharacterController movement;    // หรือ NavMeshAgent
+    //public CharacterController movement;    // หรือ NavMeshAgent
+    public NavMeshAgent agent;
     public GunShooter gun;                  // ยิง
     //public CoverSystem cover;               // (ถ้ามี)
     public Animator animator;
 
     [Header("State")]
     public ActionType currentAction;
+
+    [Header("Combat")]
+    public Transform target;
+
+    //void Awake()
+    //{
+    //    if (agent == null)
+    //        agent = GetComponent<NavMeshAgent>();
+    //}
+
+    void Awake()
+    {
+        currentAction = ActionType.Idle;
+        target = null;
+    }
+
+
+    public void SetActor(Transform newActor)
+    {
+        actor = newActor;
+
+        if (!actor)
+            return;
+
+        agent = actor.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        animator = actor.GetComponentInChildren<Animator>();
+        gun = actor.GetComponentInChildren<GunShooter>();
+    }
+
+
+    public void SetTarget(Transform t)
+    {
+        target = t;
+
+        if (gun)
+            gun.target = t;   // ถ้า GunShooter รองรับ target
+    }
 
     public void Execute(ActionType action)
     {
@@ -25,10 +64,14 @@ public class ActionExecutor : MonoBehaviour
 
     void OnActionChanged(ActionType action)
     {
-        if (gun) gun.enabled = false;
+        if (!animator) return;
 
-        if (animator)
-            animator.SetInteger("ActionState", (int)action);
+        animator.SetInteger("ActionState", (int)action);
+
+        animator.SetBool("IsFiring", false);
+
+        if (gun)
+            gun.enabled = (action == ActionType.Attack);
     }
 
 
@@ -75,11 +118,31 @@ public class ActionExecutor : MonoBehaviour
         // movement.Move(...)
     }
 
+    //void DoAttack()
+    //{
+    //    if (!animator || !gun) return;
+
+    //    animator.SetBool("IsFiring", true);
+
+    //    gun.Fire();
+    //}
+
     void DoAttack()
     {
-        if (gun)
-            gun.enabled = true; // GunShooter จะยิงเอง
+        if (!animator || !gun || target == null)
+            return;
+
+        // หันหน้าไปหาเป้า
+        Vector3 dir = target.position - actor.position;
+        dir.y = 0;
+        if (dir != Vector3.zero)
+            actor.rotation = Quaternion.LookRotation(dir);
+
+        animator.SetBool("IsFiring", true);
+        gun.Fire();
     }
+
+
 
     void DoRetreat()
     {

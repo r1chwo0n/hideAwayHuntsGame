@@ -2,46 +2,64 @@
 
 public class GunShooter : MonoBehaviour
 {
+    [Header("Gun Settings")]
     public float shootRange = 100f;
-    public float shootDamage = 20f;
-    public Camera playerCamera;
-    //public ParticleSystem muzzleFlash;
-    //public GameObject hitEffectPrefab;
+    public float fireCooldown = 0.5f;
+    public Transform firePoint;
 
-    void Update()
+    [Header("Runtime")]
+    public Transform target;   // ถูก set จาก ActionExecutor
+
+    float lastFireTime = -999f;
+
+    void Awake()
     {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            Shoot();
-        }
+        if (!firePoint)
+            firePoint = transform;
     }
 
-    void Shoot()
+    public void Fire()
     {
-        // เล่น muzzle flash ถ้ามี
-        //if (muzzleFlash != null)
-        //    muzzleFlash.Play();
+        if (Time.time < lastFireTime + fireCooldown)
+            return;
 
-        // Ray ยิงจากตรงกลางกล้อง
-        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        RaycastHit hit;
+        lastFireTime = Time.time;
 
-        if (Physics.Raycast(ray, out hit, shootRange))
+        ShootRay();
+    }
+
+    void ShootRay()
+    {
+        Vector3 origin = firePoint.position;
+        Vector3 direction;
+
+        // 🔹 ถ้ามี target → ยิงไปที่ target
+        if (target)
+            direction = (target.position - origin).normalized;
+        else
+            direction = firePoint.forward;
+
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, shootRange))
         {
-            Debug.Log("ยิงโดน: " + hit.collider.name);
+            Debug.Log($"GunShooter: Hit {hit.transform.name}");
 
-            // ถ้ามี hit effect prefab ให้แสดงตรงที่โดน
-            //if (hitEffectPrefab != null)
-            //{
-            //    Instantiate(hitEffectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
-            //}
-
-            // ถ้าศัตรูมี health component
-            EnemyHealth enemy = hit.transform.GetComponent<EnemyHealth>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(shootDamage);
-            }
+            HandleHit(hit.transform);
         }
+
+        Debug.DrawRay(origin, direction * shootRange, Color.red, 0.5f);
+    }
+
+    void HandleHit(Transform hit)
+    {
+        // 🔹 ถ้าโดน PlayerForm
+        PlayerForm form = hit.GetComponent<PlayerForm>();
+        if (form)
+        {
+            form.OnShot();
+            return;
+        }
+
+        // 🔹 ถ้าโดนอย่างอื่น (ฉาก / กำแพง)
+        // ทำ effect เพิ่มได้
     }
 }
