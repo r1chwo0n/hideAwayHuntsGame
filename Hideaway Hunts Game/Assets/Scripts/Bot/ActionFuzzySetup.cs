@@ -1,13 +1,4 @@
 ﻿using UnityEngine;
-public enum ActionType
-{
-    Idle,
-    Patrol,
-    Attack,
-    Retreat,
-    Flank,
-    Defend
-}
 
 public class ActionFuzzySetup : MonoBehaviour
 {
@@ -119,5 +110,10 @@ public class ActionFuzzySetup : MonoBehaviour
             .AddCondition("EnemyDensity", "Many")
             .AddCondition("UsSeeingEnemies", "Blind")
             .AddConclusion("ActionDecision", "Defend"));
+        // ไม่มีศัตรูเลย => ลาดตระเวน
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("EnemyDensity", "None")
+            .AddConclusion("ActionDecision", "Patrol"));
+
     }
 }

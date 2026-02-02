@@ -109,13 +109,13 @@ public class PerceptionController : MonoBehaviour
     ) // visibility check จากเราถึงศัตรูมีอะไรกั้นมั้ย
     {
         CapsuleCollider cap = target.GetComponent<CapsuleCollider>();
-        float h = cap ? cap.height : 1.8f;
+        float h = cap ? cap.height : 2.0f;
 
         Vector3[] targetPoints =
         {
-        target.position + Vector3.up * (h * 0.9f), // head
-        target.position + Vector3.up * (h * 0.6f), // chest
-        target.position + Vector3.up * (h * 0.3f)  // legs
+        target.position + Vector3.up * (h * 0.9f), // หัว
+        target.position + Vector3.up * (h * 0.6f), // อก
+        target.position + Vector3.up * (h * 0.3f)  // ขา
     };
 
         foreach (var point in targetPoints)

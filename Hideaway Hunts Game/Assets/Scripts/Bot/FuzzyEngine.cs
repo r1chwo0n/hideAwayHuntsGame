@@ -12,55 +12,6 @@ public class FuzzyEngine
     public void AddOutput(FuzzyVariable variable) => outputs[variable.name] = variable;
     public void AddRule(FuzzyRule rule) => rules.Add(rule);
 
-    //public Dictionary<string, string> Evaluate(Dictionary<string, float> inputValues)
-    //{
-    //    Dictionary<string, float> outputScores = new();
-    //    Dictionary<string, string> outputDecision = new();
-
-    //    foreach (var rule in rules)
-    //    {
-    //        float ruleStrength = 1f;
-
-    //        foreach (var cond in rule.conditions)
-    //        {
-    //            var inputName = cond.Key;
-    //            var setName = cond.Value;
-
-    //            var fuzzySet = inputs[inputName].sets.FirstOrDefault(s => s.name == setName);
-    //            float membership = fuzzySet.GetMembership(inputValues[inputName]);
-    //            ruleStrength = Mathf.Min(ruleStrength, membership);
-    //        }
-
-    //        foreach (var conclusion in rule.conclusions)
-    //        {
-    //            string outputName = conclusion.Key;
-    //            string setName = conclusion.Value;
-
-    //            string key = $"{outputName}_{setName}";
-    //            if (!outputScores.ContainsKey(key))
-    //                outputScores[key] = 0;
-
-    //            outputScores[key] += ruleStrength;
-    //        }
-    //    }
-
-    //    foreach (var output in outputs)
-    //    {
-    //        string outputName = output.Key;
-    //        var relevant = outputScores
-    //            .Where(kv => kv.Key.StartsWith(outputName + "_"))
-    //            .OrderByDescending(kv => kv.Value)
-    //            .FirstOrDefault();
-
-    //        if (!string.IsNullOrEmpty(relevant.Key))
-    //        {
-    //            string setName = relevant.Key.Split('_')[1];
-    //            outputDecision[outputName] = setName;
-    //        }
-    //    }
-
-    //    return outputDecision;
-    //}
     public Dictionary<string, float> Evaluate(Dictionary<string, float> inputValues)
     {
         Dictionary<string, float> numerator = new(); // Sum of (ruleStrength * centroid)
@@ -82,7 +33,6 @@ public class FuzzyEngine
                 );
             }
 
-            // Accumulate centroid
             foreach (var concl in rule.conclusions)
             {
                 var outputSet = outputs[concl.Key].sets
@@ -110,6 +60,4 @@ public class FuzzyEngine
 
         return result;
     }
-
-
 }

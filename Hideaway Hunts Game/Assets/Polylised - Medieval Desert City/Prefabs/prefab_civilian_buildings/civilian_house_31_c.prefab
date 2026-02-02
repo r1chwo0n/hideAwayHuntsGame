@@ -30,7 +30,7 @@ GameObject:
   - component: {fileID: 4730076682362322693}
   - component: {fileID: 2287566796993169789}
   - component: {fileID: 7632496046151058763}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: civilian_house_31_c
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -521,7 +521,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2300957986801780367}
   - component: {fileID: 5034734612496521015}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: stair
   m_TagString: Untagged
   m_Icon: {fileID: 0}

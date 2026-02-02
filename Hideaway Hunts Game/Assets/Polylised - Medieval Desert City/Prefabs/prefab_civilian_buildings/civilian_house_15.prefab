@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8842660416962193208}
   - component: {fileID: 8031225374118337891}
   - component: {fileID: 71510229523627173}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: civilian_house_15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: 3789473327216257480}
   - component: {fileID: 7963466625204328774}
   - component: {fileID: 874227131487390740}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -569,7 +569,7 @@ GameObject:
   - component: {fileID: 3536638110432953665}
   - component: {fileID: 190601898856762266}
   - component: {fileID: 6814890785317130385}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

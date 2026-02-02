@@ -24,6 +24,7 @@ public class ActiveFormSelector : MonoBehaviour
         foreach (var f in forms)
         {
             float score = Evaluate(f.world);
+            //Debug.Log($"{f.form.name} score = {score}");
             if (score > bestScore)
             {
                 bestScore = score;

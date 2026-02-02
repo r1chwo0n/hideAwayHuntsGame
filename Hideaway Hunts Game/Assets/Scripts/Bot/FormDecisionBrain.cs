@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
+
 
 public class FormDecisionBrain : MonoBehaviour
 {
@@ -20,11 +22,26 @@ public class FormDecisionBrain : MonoBehaviour
     public TargetSelector targetSelector;
     public List<Transform> visibleTargets; // player forms ที่มองเห็น
 
+    public CinemachineCamera botCinemachineCam;
 
+    [SerializeField] float decisionInterval = 0.5f;
+    float decisionTimer;
     void Update()
     {
+        decisionTimer -= Time.deltaTime;
+        if (decisionTimer > 0f)
+            return;
+
+        decisionTimer = decisionInterval;
+
+        if (forms.Count <= 1)
+        {
+            //DecideAction();
+            return;
+        }
+
         DecideBestForm();
-        DecideAction();
+        //DecideAction();
     }
 
     // ================= FORM SELECTION =================
@@ -43,6 +60,15 @@ public class FormDecisionBrain : MonoBehaviour
 
             SituationSummary world = worldPerception.SenseWorld(p);
 
+            Debug.Log(
+                $"[FormEval] {p.origin.name} | " +
+                $"Nearest={world.nearestEnemyDistance:F1}, " +
+                $"Avg={world.avgEnemyDistance:F2}, " +
+                $"UsSee={world.usSeeingEnemies}, " +
+                $"TheySee={world.enemiesSeeingUs}, " +
+                $"Density={world.enemyCountInRange}"
+            );
+
             situations.Add(new FormSituation
             {
                 form = p.origin,
@@ -52,6 +78,11 @@ public class FormDecisionBrain : MonoBehaviour
 
         Transform best = formSelector.SelectBestForm(situations);
 
+        if (best != null)
+        {
+            Debug.Log($"[FormDecision] Best = {best.name}");
+        }
+
         if (best != null && best != activeForm)
         {
             activeForm = best;
@@ -59,24 +90,6 @@ public class FormDecisionBrain : MonoBehaviour
             OnActiveFormChanged(best);
         }
     }
-
-    //void OnActiveFormChanged(Transform newForm)
-    //{
-    //    Debug.Log($"Active form changed to: {newForm.name}");
-
-    //    // เปิด / ปิด controller ของแต่ละ bot
-    //    foreach (var f in forms)
-    //    {
-    //        var ctrl = f.origin.GetComponent<BotController>();
-    //        if (ctrl)
-    //            ctrl.isActive = (f.origin == newForm);
-    //    }
-
-    //    // บอก ActionExecutor ว่าควบคุมใคร
-    //    actionExecutor.actor = newForm;
-    //    actionExecutor.animator = newForm.GetComponentInChildren<Animator>();
-    //    actionExecutor.gun = newForm.GetComponentInChildren<GunShooter>();
-    //}
 
     void OnActiveFormChanged(Transform newForm)
     {
@@ -89,8 +102,16 @@ public class FormDecisionBrain : MonoBehaviour
                 ctrl.isActive = (f.origin == newForm);
         }
 
-        actionExecutor.SetActor(newForm);
-        targetSelector.bot = newForm;
+        //actionExecutor.SetActor(newForm);
+        //targetSelector.bot = newForm;
+
+        if (botCinemachineCam)
+        {
+            botCinemachineCam.Follow = newForm;
+            botCinemachineCam.LookAt = newForm;
+        }
+
+
     }
 
 
@@ -109,6 +130,9 @@ public class FormDecisionBrain : MonoBehaviour
 
         ActionType action =
             actionBrain.DecideAction(world);
+
+        if (action == ActionType.Idle)
+            action = ActionType.Patrol;
 
         if (action == ActionType.Attack)
         {

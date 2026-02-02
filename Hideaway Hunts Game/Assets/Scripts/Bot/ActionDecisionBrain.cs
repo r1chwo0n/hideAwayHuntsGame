@@ -26,13 +26,22 @@ public class ActionDecisionBrain : MonoBehaviour
         return DecodeAction(v);
     }
 
+    //ActionType DecodeAction(float v)
+    //{
+    //    if (v < 0.1f) return ActionType.Idle;
+    //    if (v < 0.3f) return ActionType.Patrol;
+    //    if (v < 0.5f) return ActionType.Defend;
+    //    if (v < 0.7f) return ActionType.Flank;
+    //    if (v < 0.9f) return ActionType.Attack;
+    //    return ActionType.Retreat;
+    //}
     ActionType DecodeAction(float v)
     {
-        if (v < 0.1f) return ActionType.Idle;
-        if (v < 0.3f) return ActionType.Patrol;
-        if (v < 0.5f) return ActionType.Defend;
-        if (v < 0.7f) return ActionType.Flank;
-        if (v < 0.9f) return ActionType.Attack;
+        if (v < 0.15f) return ActionType.Patrol; // default
+        if (v < 0.35f) return ActionType.Defend;
+        if (v < 0.55f) return ActionType.Flank;
+        if (v < 0.75f) return ActionType.Attack;
         return ActionType.Retreat;
     }
+
 }

@@ -1,22 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
 
-//public class FuzzySet
-//{
-//    public string name;
-//    public Func<float, float> membershipFunc;
-//    public float centroid; // ใช้สำหรับ defuzzification
-
-//    public FuzzySet(string name, Func<float, float> membershipFunc, float centroid)
-//    {
-//        this.name = name;
-//        this.membershipFunc = membershipFunc;
-//        this.centroid = centroid;
-//    }
-
-//    public float GetMembership(float value) => membershipFunc(value);
-//}
-
 public class FuzzySet
 {
     public string name;
@@ -39,8 +23,6 @@ public class FuzzySet
 
     public float GetMembership(float value) => membershipFunc(value);
 }
-
-
 
 public class FuzzyVariable
 {
