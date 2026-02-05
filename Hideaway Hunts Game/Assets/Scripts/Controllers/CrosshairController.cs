@@ -20,10 +20,10 @@ public class CrosshairController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && isTarget)
         {
-            BotController enemy = hit.collider.GetComponent<BotController>();
-            if (enemy != null)
+            BotBody body = hit.collider.GetComponent<BotBody>();
+            if (body != null)
             {
-                enemy.TakeDamage(50); // Damage bot on shoot
+                body.TakeDamage(25);
             }
         }
     }

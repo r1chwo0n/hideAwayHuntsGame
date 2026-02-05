@@ -1,105 +1,213 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("State")]
+    public bool isActivePlayer = false;
+    private bool isDead = false;
+    private bool isSitting = false;
+
+    [Header("Stats")]
     public float speed = 5f;
     public float jumpForce = 5f;
-    public float turnSmoothTime = 0.1f;
     public int health = 100;
+    public int ammo = 30;
+
+    [Header("Rotation")]
+    public float turnSmoothTime = 0.1f;
     private float turnSmoothVelocity;
-    private bool isSitting = false;
-    private bool isDead = false;
-    public CrosshairController crosshairController; 
 
-
-    //Rigid body ใช้ในการขยับตัว
-    private Rigidbody rb;
-
-
-    //Animator ใช้ในการควบคุมการเคลื่อนไหวของตัวละคร
-    private Animator animator;
-
+    [Header("Camera")]
     public Transform cameraTransform;
-
-    //check if player is on the ground
-    public LayerMask groundLayer;//บอกว่าตรงที่ไหนเป็นพื้น
-    public Transform groundCheck;//จุดcheckพื้นวางใต้ตัวละคร
-    public float groundDistance = 0.6f;//รัศมีของ sphree ที่ใช้ตรวจสอบพื้น
-    private bool isGrounded;//เช็คว่าตัวละครอยู่บนพื้นหรือไม่
-
     public float mouseSensitivity = 2f;
 
-    float yaw;
+    [Header("Ground Check")]
+    public LayerMask groundLayer;
+    public Transform groundCheck;
+    public float groundDistance = 0.8f;
+    private bool isGrounded;
 
+    [Header("UI")]
+    public CrosshairController crosshairController;
+
+    [HideInInspector] public PlayerManager manager;
+
+    private Rigidbody rb;
+    private Animator animator;
+
+    // =========================
+    // Unity
+    // =========================
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        yaw = transform.eulerAngles.y;
-
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        animator.applyRootMotion = false; // 🛑 Prevent animation from moving the character
+        animator.applyRootMotion = false;
 
         if (cameraTransform == null)
             cameraTransform = Camera.main.transform;
     }
 
-
     void FixedUpdate()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
-        // Debug.Log($"Grounded: {isGrounded}");
+        if (isDead) return;
+
+        isGrounded = Physics.CheckSphere(
+            groundCheck.position,
+            groundDistance,
+            groundLayer
+        );
+
         animator.SetBool("isGrounded", isGrounded);
     }
 
-
     void Update()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        if (!isActivePlayer || isDead) return;
 
-        MoveWithCameraDirection();
+        Move();
+        HandleInput();
+    }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+    // =========================
+    // Public API
+    // =========================
+
+    public void SetActive(bool value)
+    {
+        isActivePlayer = value;
+
+        rb.isKinematic = !value;
+
+        if (!value)
         {
-            Jump();
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            Shoot();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Sit();
+            rb.linearVelocity = Vector3.zero;
+            animator.SetFloat("Speed", 0f);
         }
     }
 
-    void Shoot()
+    public bool IsDead()
     {
-        animator.SetTrigger("Shoot");
+        return isDead;
+    }
+
+    // =========================
+    // Input
+    // =========================
+
+    void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
+
+        if (Input.GetMouseButtonDown(0))
+            Shoot();
+
+        if (Input.GetKeyDown(KeyCode.Q))
+            Sit();
+
+        //DEBUG: กด X ตายทันที
+        if (Input.GetKeyDown(KeyCode.X))
+            Die();
+    }
+
+    // =========================
+    // Movement
+    // =========================
+
+    void Move()
+    {
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+
+        Vector3 inputDir = new Vector3(h, 0f, v);
+        float inputSpeed = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.5f;
+
+        if (inputDir.sqrMagnitude > 0f)
+        {
+            float targetAngle =
+                Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg
+                + cameraTransform.eulerAngles.y;
+
+            float smoothAngle = Mathf.SmoothDampAngle(
+                transform.eulerAngles.y,
+                targetAngle,
+                ref turnSmoothVelocity,
+                turnSmoothTime
+            );
+
+            transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
+
+            Vector3 moveDir =
+                Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+            rb.linearVelocity = new Vector3(
+                moveDir.x * speed * inputSpeed,
+                rb.linearVelocity.y,
+                moveDir.z * speed * inputSpeed
+            );
+
+            animator.SetFloat("Speed", inputSpeed);
+        }
+        else
+        {
+            animator.SetFloat("Speed", 0f);
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+        }
+    }
+
+    // =========================
+    // Actions
+    // =========================
+
+    void Jump()
+    {
+        if (!isGrounded) return;
+
+        rb.linearVelocity = new Vector3(
+            rb.linearVelocity.x,
+            0f,
+            rb.linearVelocity.z
+        );
+
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        animator.SetTrigger("Jump");
     }
 
     void Sit()
     {
-        isSitting = !isSitting; // Toggle sitting state
-
+        isSitting = !isSitting;
         animator.SetBool("isSitting", isSitting);
     }
 
-    void Jump()
+    void Shoot()
     {
-        animator.SetTrigger("Jump");
+        if (ammo <= 0) return;
+
+        ammo--;
+        animator.SetTrigger("Shoot");
+
+        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        {
+            BotBody bot = hit.collider.GetComponent<BotBody>();
+            if (bot != null)
+                bot.TakeDamage(25);
+        }
     }
+
+    // =========================
+    // Damage & Death
+    // =========================
 
     public void TakeDamage(int amount)
     {
         if (isDead) return;
 
         health -= amount;
+
         if (health <= 0)
         {
             health = 0;
@@ -107,7 +215,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // Flash crosshair red on damage
             if (crosshairController != null)
                 crosshairController.FlashDamage();
         }
@@ -115,10 +222,29 @@ public class PlayerController : MonoBehaviour
 
     void Die()
     {
+        if (isDead) return;
+
         isDead = true;
         animator.SetTrigger("Dead");
-        this.enabled = false; // disable player control or movement scripts here
+
+        rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        if (manager != null)
+            manager.OnPlayerDead(this);
+
+        StartCoroutine(Disappear());
     }
+
+    IEnumerator Disappear()
+    {
+        yield return new WaitForSeconds(3f);
+        gameObject.SetActive(false);
+    }
+
+    // =========================
+    // Gizmos
+    // =========================
 
     void OnDrawGizmosSelected()
     {
@@ -126,38 +252,5 @@ public class PlayerController : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
-    }
-
-    void MoveWithCameraDirection()
-    {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-
-        float inputSpeed = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.5f;
-        Vector3 inputDirection = new Vector3(horizontal, 0f, vertical).normalized;
-
-        if (inputDirection.magnitude >= 0.1f)
-        {
-            // Calculate movement direction relative to camera
-            float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
-            float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-
-            // 👉 Rotate character to face movement direction
-            transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
-
-            Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            rb.MovePosition(rb.position + moveDirection.normalized * speed * inputSpeed * Time.deltaTime);
-
-            animator.SetFloat("Speed", inputSpeed); // 0.5f = walk, 1f = run
-        }
-        else
-        {
-            animator.SetFloat("Speed", 0f);
-        }
-
-        // ✅ Mouse look around (camera already follows the player)
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        yaw += mouseX;
-        cameraTransform.RotateAround(transform.position, Vector3.up, mouseX); // makes camera orbit if needed
     }
 }
