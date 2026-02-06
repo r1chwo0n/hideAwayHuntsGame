@@ -9,15 +9,21 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
-        if (players.Length == 0) return;
+        if (players == null || players.Length == 0)
+        {
+            Debug.LogError("No players assigned to PlayerManager");
+            return;
+        }
 
+        // 1️⃣ setup ทุก player ก่อน
         for (int i = 0; i < players.Length; i++)
         {
             players[i].manager = this;
             players[i].SetActive(false);
         }
 
-        ActivatePlayer(0); // player 1 เป็น default
+        // 2️⃣ default = Player 1
+        ActivatePlayer(0);
     }
 
     void Update()
@@ -31,14 +37,16 @@ public class PlayerManager : MonoBehaviour
     {
         if (index < 0 || index >= players.Length) return;
         if (index == currentIndex) return;
-        if (!players[index].gameObject.activeSelf) return;
 
+        // ปิดตัวเก่า
         if (currentIndex != -1)
             players[currentIndex].SetActive(false);
 
+        // เปิดตัวใหม่
         currentIndex = index;
         players[currentIndex].SetActive(true);
 
+        // set กล้อง
         cameraController.SetTarget(players[currentIndex].transform);
 
         Debug.Log("Active Player: " + players[currentIndex].name);

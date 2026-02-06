@@ -6,7 +6,7 @@ public class ThirdPersonCameraWithCollision : MonoBehaviour
     public Transform target;
 
     [Header("Offset")]
-    public Vector3 offset = new Vector3(0f, 1.5f, -2.5f);
+    public Vector3 offset = new Vector3(0f, 1.7f, -4.5f);
 
     [Header("Follow")]
     public float followSmooth = 10f;
@@ -20,27 +20,29 @@ public class ThirdPersonCameraWithCollision : MonoBehaviour
     [Header("Collision")]
     public float collisionRadius = 0.3f;
     public float minDistance = 0.6f;
-    public float maxDistance = 2.5f;
+    public float maxDistance = 5f;
     public LayerMask collisionMask;
 
     private float yaw;
     private float pitch;
 
     private Vector3 currentTargetPos;
+    public LayerMask visibleLayers;
 
     // =========================
     // Public API
     // =========================
 
-    public void SetTarget(Transform newTarget)
+     public void SetTarget(Transform newTarget)
     {
         target = newTarget;
 
-        // reset smoothing to avoid camera jump
-        currentTargetPos = target.position + Vector3.up * offset.y;
+        // รีเซ็ตให้เห็นทุกอย่างก่อน
+        Camera.main.cullingMask = visibleLayers;
 
-        yaw = target.eulerAngles.y;
-        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+        // ❌ ซ่อน player ที่กำลังเล่นอยู่
+        int targetLayer = newTarget.gameObject.layer;
+        Camera.main.cullingMask &= ~(1 << targetLayer);
     }
 
     // =========================
