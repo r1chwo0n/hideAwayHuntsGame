@@ -32,10 +32,12 @@ public class ActionExecutor : MonoBehaviour
         target = null;
     }
 
-
     public void SetActor(Transform newActor)
     {
         actor = newActor;
+
+        currentAction = ActionType.Idle;
+        target = null;
 
         if (!actor)
             return;
@@ -44,7 +46,6 @@ public class ActionExecutor : MonoBehaviour
         animator = actor.GetComponentInChildren<Animator>();
         gun = actor.GetComponentInChildren<GunShooter>();
     }
-
 
     public void SetTarget(Transform t)
     {
@@ -98,13 +99,13 @@ public class ActionExecutor : MonoBehaviour
                 DoRetreat();
                 break;
 
-            case ActionType.Flank:
-                DoFlank();
-                break;
+            //case ActionType.Flank:
+            //    DoFlank();
+            //    break;
 
-            case ActionType.Defend:
-                DoDefend();
-                break;
+            //case ActionType.Defend:
+            //    DoDefend();
+            //    break;
         }
         UpdateMovementAnimation();
     }
@@ -166,7 +167,6 @@ public class ActionExecutor : MonoBehaviour
         if (gun)
             gun.Fire();
     }
-
 
     void DoRetreat()
     {

@@ -8,7 +8,6 @@ public struct FormSituation // ร่างหนึ่งกับการร�
     public SituationSummary world; // world perception เมื่อ origin = ร่างนี้
 }
 
-
 public class ActiveFormSelector : MonoBehaviour
 {
     public FormFuzzyAISetup fuzzySetup;
@@ -43,7 +42,8 @@ public class ActiveFormSelector : MonoBehaviour
             { "UsSeeingEnemies", s.usSeeingEnemies },
             { "EnemiesSeeingUs", s.enemiesSeeingUs },
             { "EnemyDensity", s.enemyCountInRange },
-            { "AverageEnemyDistance", s.avgEnemyDistance }
+            { "AverageEnemyDistance", s.avgEnemyDistance },
+            //{ "EnemyMovementIntensity", s.maxEnemyMovementIntensity}
         };
 
         return fuzzySetup.engine.Evaluate(inputs)["FormSuitability"];

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33081421323830616}
   - component: {fileID: 23271733254505858}
   - component: {fileID: 1716217352586065432}
+  - component: {fileID: 7466828560672278903}
   m_Layer: 11
   m_Name: civilian_house_36_a
   m_TagString: Untagged
@@ -112,3 +113,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 10.347922, y: 3.2165682, z: 8.000004}
   m_Center: {x: 0.10945439, y: 0.03620256, z: 4.000001}
+--- !u!114 &7466828560672278903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622358665942894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

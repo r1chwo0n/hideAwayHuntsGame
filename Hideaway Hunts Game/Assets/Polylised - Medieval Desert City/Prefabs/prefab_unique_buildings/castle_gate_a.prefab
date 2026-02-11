@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5911826722569905291}
   - component: {fileID: 5636439032233076990}
   - component: {fileID: 7113851764386811064}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: castle_gate_a
   m_TagString: Untagged
   m_Icon: {fileID: 0}

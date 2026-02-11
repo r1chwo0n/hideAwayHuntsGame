@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33624881039047042}
   - component: {fileID: 23105432301049440}
   - component: {fileID: 3015301974038057062}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: castle_tower_rectangular
   m_TagString: Untagged
   m_Icon: {fileID: 0}

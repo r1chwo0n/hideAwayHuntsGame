@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33835168637786416}
   - component: {fileID: 23444894064246960}
   - component: {fileID: 7465971088181027934}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: citadel_wall_a
   m_TagString: Untagged
   m_Icon: {fileID: 0}

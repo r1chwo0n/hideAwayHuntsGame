@@ -7,42 +7,65 @@ public class GunShooter : MonoBehaviour
     public float fireCooldown = 0.5f;
     public Transform firePoint;
 
+    [Header("Ammo")]
+    public int maxAmmo = 30;
+    public int currentAmmo = 30;
+
     [Header("Runtime")]
-    public Transform target;   // ถูก set จาก ActionExecutor
+    public Transform target;
 
     float lastFireTime = -999f;
+
+    public float AmmoRatio =>
+        maxAmmo > 0 ? (float)currentAmmo / maxAmmo : 0f;
 
     void Awake()
     {
         if (!firePoint)
             firePoint = transform;
+
+        currentAmmo = maxAmmo;
     }
+
+    public bool CanFire()
+    {
+        if (target == null)
+            return false;
+
+        if (currentAmmo <= 0)
+            return false;
+
+        if (Time.time < lastFireTime + fireCooldown)
+            return false;
+
+        return true;
+    }
+
 
     public void Fire()
     {
-        if (Time.time < lastFireTime + fireCooldown)
+        if (!CanFire())
             return;
 
         lastFireTime = Time.time;
+        currentAmmo--;
 
         ShootRay();
     }
 
     void ShootRay()
     {
-        Vector3 origin = firePoint.position;
-        Vector3 direction;
+        if (target == null)
+            return;
 
-        // 🔹 ถ้ามี target → ยิงไปที่ target
-        if (target)
-            direction = (target.position - origin).normalized;
-        else
-            direction = firePoint.forward;
+        Vector3 origin = firePoint.position;
+        //Vector3 direction = (target.position - origin).normalized;
+        Vector3 direction = firePoint.forward; // ต้องหันหน้า รู้สึกว่าก็ต้องเล็งเหมือนกัน
+
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, shootRange))
         {
             Debug.Log($"GunShooter: Hit {hit.transform.name}");
-
             HandleHit(hit.transform);
         }
 
@@ -51,15 +74,6 @@ public class GunShooter : MonoBehaviour
 
     void HandleHit(Transform hit)
     {
-        // 🔹 ถ้าโดน PlayerForm
-        PlayerForm form = hit.GetComponent<PlayerForm>();
-        if (form)
-        {
-            form.OnShot();
-            return;
-        }
-
-        // 🔹 ถ้าโดนอย่างอื่น (ฉาก / กำแพง)
-        // ทำ effect เพิ่มได้
+        hit.GetComponent<Killable>()?.TakeHit();
     }
 }

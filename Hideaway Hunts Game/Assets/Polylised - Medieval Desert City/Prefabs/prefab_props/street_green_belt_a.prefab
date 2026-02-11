@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33983711785317934}
   - component: {fileID: 23090859365714582}
   - component: {fileID: 273180675830297346}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: street_green_belt_a
   m_TagString: Untagged
   m_Icon: {fileID: 0}

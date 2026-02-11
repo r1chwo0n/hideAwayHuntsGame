@@ -33,7 +33,7 @@ public class PlayerManager : MonoBehaviour
 
     if (cameraFollow == null)
     {
-        Debug.LogError("⚠️ CameraFollow script is not assigned!");
+        Debug.LogError("CameraFollow script is not assigned!");
         return;
     }
 

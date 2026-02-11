@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 4420174938490913970}
   - component: {fileID: 3772050101487554250}
   - component: {fileID: 705774361222721131}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: citadel_tower_a
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     private float turnSmoothVelocity;
     private bool isSitting = false;
     private bool isDead = false;
-    public CrosshairController crosshairController; 
+    public CrosshairController crosshairController;
 
 
     //Rigid body ใช้ในการขยับตัว
@@ -30,7 +30,6 @@ public class PlayerController : MonoBehaviour
     public float mouseSensitivity = 2f;
 
     float yaw;
-
 
     void Start()
     {

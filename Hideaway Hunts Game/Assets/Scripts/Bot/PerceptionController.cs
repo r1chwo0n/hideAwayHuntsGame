@@ -12,8 +12,10 @@ public struct EnemyPerception
     public bool inRange;
     public bool lineOfSight;
     public bool enemyCanSeeMe;
-
+    
     public float relativeAngle; // 0–1 (0 = หน้า, 1 = หลัง)
+
+    public float movementIntensity; // [0,1]
 }
 
 public class PerceptionController : MonoBehaviour
@@ -28,11 +30,8 @@ public class PerceptionController : MonoBehaviour
 
     public EnemyPerception SenseEnemy(Transform enemy)
     {
-        EnemyPerception p = new EnemyPerception();
+        EnemyPerception p = new EnemyPerception();     
         p.enemy = enemy;
-
-        if (!enemy || !origin)
-            return p;
 
         Vector3 delta = enemy.position - origin.position;
 

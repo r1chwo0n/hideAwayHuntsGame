@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 2850033816148394662}
   - component: {fileID: 5248614224387674619}
   - component: {fileID: 1792109048367548094}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: civilian_house_13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,7 +324,7 @@ GameObject:
   - component: {fileID: 5832860086617223482}
   - component: {fileID: 7198082167562491314}
   - component: {fileID: 7406524617070606695}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -430,7 +430,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8097984433669129625}
   - component: {fileID: 619066638550410145}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: stair
   m_TagString: Untagged
   m_Icon: {fileID: 0}

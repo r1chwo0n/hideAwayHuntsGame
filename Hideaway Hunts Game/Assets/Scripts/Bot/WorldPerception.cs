@@ -9,6 +9,12 @@ public struct SituationSummary
     public int enemiesSeeingUs;
     public float avgEnemyDistance; //ระยะเฉลี่ยของศัตรูทั้งหมดที่อยู่ในระยะตรวจจับ
     public float nearestEnemyDistance;
+    public float maxEnemyMovementIntensity; // มีใครกำลังทำตัวนน่าสงสัยมั้ย 
+    //public float nearestEnemyVerticalDiff;
+
+    public int formsRemaining;
+    public int enemyFormsRemaining;
+    public float ammoRatio;
 }
 
 public class WorldPerception : MonoBehaviour
@@ -60,6 +66,7 @@ public class WorldPerception : MonoBehaviour
         int countInRange = 0;
         int countSeeingUs = 0;
         int countUsSeeingEnemies = 0;
+        float maxMovement = 0f;
 
         // ใช้ ToArray() เพื่อความปลอดภัยกรณี enemy ถูก remove ระหว่าง loop
         foreach (var enemy in enemies.ToArray())
@@ -82,11 +89,15 @@ public class WorldPerception : MonoBehaviour
 
             if (p.lineOfSight)
                 countUsSeeingEnemies++;
+
+            if(p.movementIntensity > maxMovement)
+                maxMovement = p.movementIntensity;
         }
 
         s.enemyCountInRange = countInRange;
         s.usSeeingEnemies = countUsSeeingEnemies;
         s.enemiesSeeingUs = countSeeingUs;
+        s.maxEnemyMovementIntensity = maxMovement;
 
         // avg distance (0–1)
         // ศัตรูโดยรวมอยู่ใกล้หรือไกลเราแค่ไหน เมื่อเทียบกับระยะมองเห็นสูงสุด

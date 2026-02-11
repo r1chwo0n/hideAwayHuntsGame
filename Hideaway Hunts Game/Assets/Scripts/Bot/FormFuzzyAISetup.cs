@@ -75,6 +75,16 @@ public class FormFuzzyAISetup : MonoBehaviour
             x => Triangle(x, 1f, 3f, 3f)));
         engine.AddInput(threat);
 
+        // การเคลื่อนไหวของศัตรู (movement intensity)
+        //var enemyMove = new FuzzyVariable("EnemyMovementIntensity");
+        //enemyMove.AddSet(new FuzzySet("Still",
+        //    x => Triangle(x, 0f, 0f, 0.25f)));
+        //enemyMove.AddSet(new FuzzySet("Moving",
+        //    x => Triangle(x, 0.15f, 0.45f, 0.75f)));
+        //enemyMove.AddSet(new FuzzySet("Fast",
+        //    x => Triangle(x, 0.6f, 1f, 1f)));
+        //engine.AddInput(enemyMove);
+
     }
 
     void SetupOutputs()
@@ -177,6 +187,26 @@ public class FormFuzzyAISetup : MonoBehaviour
         engine.AddRule(new FuzzyRule()
             .AddCondition("EnemyDensity", "None")
             .AddConclusion("FormSuitability", "Good"));
+        // rule 17
+        //engine.AddRule(new FuzzyRule()
+        //    .AddCondition("EnemyMovementIntensity", "Fast")
+        //    .AddCondition("NearestEnemyDistance", "Near")
+        //    .AddConclusion("FormSuitability", "Bad"));
+        //// rule 18
+        //engine.AddRule(new FuzzyRule()
+        //    .AddCondition("EnemyMovementIntensity", "Fast")
+        //    .AddCondition("UsSeeingEnemies", "Clear")
+        //    .AddConclusion("FormSuitability", "OK"));
+        //// rule 19
+        //engine.AddRule(new FuzzyRule()
+        //    .AddCondition("EnemyMovementIntensity", "Still")
+        //    .AddCondition("UsSeeingEnemies", "Clear")
+        //    .AddConclusion("FormSuitability", "Good"));
+        //// rule 20
+        //engine.AddRule(new FuzzyRule()
+        //    .AddCondition("EnemyMovementIntensity", "Moving")
+        //    .AddCondition("EnemiesSeeingUs", "Unaware")
+        //    .AddConclusion("FormSuitability", "OK"));
     }
 
 }

@@ -2,7 +2,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
 
-
 public class FormDecisionBrain : MonoBehaviour
 {
     [Header("References")]
@@ -13,6 +12,9 @@ public class FormDecisionBrain : MonoBehaviour
 
     [Header("Forms")]
     public List<PerceptionController> forms;
+
+    [Header("Managers")]
+    public BotFormManager botFormManager;
 
     [Header("Runtime")]
     public Transform activeForm;
@@ -25,8 +27,8 @@ public class FormDecisionBrain : MonoBehaviour
     public CinemachineCamera botCinemachineCam;
 
     [SerializeField] float decisionInterval = 0.5f;
-    float decisionTimer;
-    void Update()
+    float decisionTimer; // ถึงเวลาตัดสินใจใหม่ยัง
+    void Update() // เรียกทุกเฟรม
     {
         decisionTimer -= Time.deltaTime;
         if (decisionTimer > 0f)
@@ -34,14 +36,14 @@ public class FormDecisionBrain : MonoBehaviour
 
         decisionTimer = decisionInterval;
 
-        if (forms.Count <= 1)
+        if (forms.Count == 1)
         {
-            //DecideAction();
+            DecideAction();
             return;
         }
 
         DecideBestForm();
-        //DecideAction();
+        DecideAction();
     }
 
     // ================= FORM SELECTION =================
@@ -91,7 +93,7 @@ public class FormDecisionBrain : MonoBehaviour
         }
     }
 
-    void OnActiveFormChanged(Transform newForm)
+    void OnActiveFormChanged(Transform newForm) 
     {
         Debug.Log($"Active form changed to: {newForm.name}");
 
@@ -104,6 +106,10 @@ public class FormDecisionBrain : MonoBehaviour
 
         //actionExecutor.SetActor(newForm);
         //targetSelector.bot = newForm;
+        if (actionExecutor)
+        {
+            actionExecutor.SetActor(newForm);
+        }
 
         if (botCinemachineCam)
         {
@@ -111,9 +117,7 @@ public class FormDecisionBrain : MonoBehaviour
             botCinemachineCam.LookAt = newForm;
         }
 
-
     }
-
 
     // ================= ACTION DECISION =================
 
@@ -121,12 +125,24 @@ public class FormDecisionBrain : MonoBehaviour
     {
         if (activePerception == null)
             return;
-
+        // list ศัตรูที่เรามองเห็น
         visibleTargets =
             worldPerception.GetVisibleEnemies(activePerception);
-
+        // snapshot สถานการณ์ปัจจุบัน
         SituationSummary world =
             worldPerception.SenseWorld(activePerception);
+
+        if (botFormManager)
+            world.formsRemaining = botFormManager.AliveFormsCount;
+        else
+            world.formsRemaining = 0;
+
+        world.enemyFormsRemaining = worldPerception.enemies.Count;
+
+        if (actionExecutor && actionExecutor.gun)
+            world.ammoRatio = actionExecutor.gun.AmmoRatio;
+        else
+            world.ammoRatio = 0f;
 
         ActionType action =
             actionBrain.DecideAction(world);
