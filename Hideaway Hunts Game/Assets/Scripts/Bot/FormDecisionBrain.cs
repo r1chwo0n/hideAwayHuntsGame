@@ -144,19 +144,23 @@ public class FormDecisionBrain : MonoBehaviour
         else
             world.ammoRatio = 0f;
 
+        // ถ้าเห็นศัตรูอย่างน้อย 1 ตัว
+        if (visibleTargets.Count > 0)
+        {
+            Transform nearest =
+                targetSelector.SelectTarget(visibleTargets);
+
+            if (actionExecutor.target != nearest)
+            {
+                actionExecutor.SetTarget(nearest);
+            }
+        }
+
         ActionType action =
             actionBrain.DecideAction(world);
 
         if (action == ActionType.Idle)
             action = ActionType.Patrol;
-
-        if (action == ActionType.Attack)
-        {
-            Transform target =
-                targetSelector.SelectTarget(visibleTargets);
-
-            actionExecutor.SetTarget(target);
-        }
 
         actionExecutor.Execute(action);
     }

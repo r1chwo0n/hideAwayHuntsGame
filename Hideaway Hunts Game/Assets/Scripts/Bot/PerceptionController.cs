@@ -54,7 +54,7 @@ public class PerceptionController : MonoBehaviour
         return p;
     }
 
-    bool HasLineOfSight(Transform enemy)
+    public bool HasLineOfSight(Transform enemy)
     {
         if (!enemy || !origin)
             return false;
@@ -63,6 +63,16 @@ public class PerceptionController : MonoBehaviour
         Vector3 myEye = GetEyePosition(origin);
 
         return CheckMultiRayLOS(myEye, enemy, sightMask);
+    }
+
+    public bool HasLineOfSightFromPosition(Vector3 fromPosition, Transform enemy)
+    {
+        if (!enemy)
+            return false;
+
+        Vector3 eyePos = fromPosition + Vector3.up * eyeHeight;
+
+        return CheckMultiRayLOS(eyePos, enemy, sightMask);
     }
 
     bool EnemyHasLineOfSight(Transform enemy)
