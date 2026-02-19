@@ -355,7 +355,7 @@ AnimatorStateMachine:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Attack
+  m_Name: Combat
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 6046949698403784267}
@@ -477,6 +477,31 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
+--- !u!1101 &525261987262887659
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 6
+    m_ConditionEvent: ActionState
+    m_EventTreshold: 5
+  m_DstStateMachine: {fileID: -1373059346435590001}
+  m_DstState: {fileID: 0}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0.75
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1102 &2444703414971826709
 AnimatorState:
   serializedVersion: 6
@@ -656,20 +681,21 @@ AnimatorStateMachine:
     m_Position: {x: 160, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2444703414971826709}
-    m_Position: {x: 330, y: -120, z: 0}
+    m_Position: {x: 1110, y: -200, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: -1373059346435590001}
     m_Position: {x: 400, y: -10, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: -120252117817930420}
-    m_Position: {x: 1040, y: 290, z: 0}
+    m_Position: {x: 1150, y: 290, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 8753887129920525383}
-    m_Position: {x: 710, y: 180, z: 0}
+    m_Position: {x: 1040, y: -60, z: 0}
   m_AnyStateTransitions:
   - {fileID: -8371276695451432567}
   - {fileID: -3146364430692265652}
+  - {fileID: 525261987262887659}
   m_EntryTransitions: []
   m_StateMachineTransitions:
   - first: {fileID: -1373059346435590001}
@@ -679,7 +705,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 420, y: 110, z: 0}
   m_EntryPosition: {x: -70, y: 110, z: 0}
-  m_ExitPosition: {x: 1110, y: 140, z: 0}
+  m_ExitPosition: {x: 950, y: 110, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -3152110899029808741}
 --- !u!1102 &6921118204180683796

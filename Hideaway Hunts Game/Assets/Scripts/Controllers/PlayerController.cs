@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
 
     //Rigid body ใช้ในการขยับตัว
-    private Rigidbody rb;
+    //private Rigidbody rb;
 
 
     //Animator ใช้ในการควบคุมการเคลื่อนไหวของตัวละคร
@@ -31,15 +31,22 @@ public class PlayerController : MonoBehaviour
 
     float yaw;
 
+    private CharacterController controller;
+    float yVelocity;
+    public float gravity = -9.81f;
+
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         yaw = transform.eulerAngles.y;
 
-        rb = GetComponent<Rigidbody>();
+        //rb = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
+
         animator = GetComponent<Animator>();
-        animator.applyRootMotion = false; // 🛑 Prevent animation from moving the character
+        animator.applyRootMotion = false; // Prevent animation from moving the character
 
         if (cameraTransform == null)
             cameraTransform = Camera.main.transform;
@@ -89,9 +96,17 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isSitting", isSitting);
     }
 
+    //void Jump()
+    //{
+    //    animator.SetTrigger("Jump");
+    //}
     void Jump()
     {
-        animator.SetTrigger("Jump");
+        if (controller.isGrounded)
+        {
+            yVelocity = Mathf.Sqrt(jumpForce * -2f * gravity);
+            animator.SetTrigger("Jump");
+        }
     }
 
     public void TakeDamage(int amount)
@@ -127,36 +142,94 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
     }
 
+    //void MoveWithCameraDirection()
+    //{
+    //    float horizontal = Input.GetAxisRaw("Horizontal");
+    //    float vertical = Input.GetAxisRaw("Vertical");
+
+    //    float inputSpeed = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.5f;
+    //    Vector3 inputDirection = new Vector3(horizontal, 0f, vertical).normalized;
+
+    //    if (inputDirection.magnitude >= 0.1f)
+    //    {
+    //        // Calculate movement direction relative to camera
+    //        float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+    //        float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+
+    //        // Rotate character to face movement direction
+    //        transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
+
+    //        Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+    //        //rb.MovePosition(rb.position + moveDirection.normalized * speed * inputSpeed * Time.deltaTime);
+    //        controller.Move(moveDirection.normalized * speed * inputSpeed * Time.deltaTime);
+
+    //        animator.SetFloat("Speed", inputSpeed); // 0.5f = walk, 1f = run
+    //    }
+    //    else
+    //    {
+    //        animator.SetFloat("Speed", 0f);
+    //    }
+
+    //    // Mouse look around (camera already follows the player)
+    //    float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+    //    yaw += mouseX;
+    //    cameraTransform.RotateAround(transform.position, Vector3.up, mouseX); // makes camera orbit if needed
+    //}
+
     void MoveWithCameraDirection()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
         float inputSpeed = Input.GetKey(KeyCode.LeftShift) ? 1f : 0.5f;
+
         Vector3 inputDirection = new Vector3(horizontal, 0f, vertical).normalized;
+
+        Vector3 moveDirection = Vector3.zero;
 
         if (inputDirection.magnitude >= 0.1f)
         {
-            // Calculate movement direction relative to camera
-            float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
-            float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            // คำนวณทิศทางตามกล้อง
+            float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg
+                                + cameraTransform.eulerAngles.y;
 
-            // 👉 Rotate character to face movement direction
+            float smoothAngle = Mathf.SmoothDampAngle(
+                transform.eulerAngles.y,
+                targetAngle,
+                ref turnSmoothVelocity,
+                turnSmoothTime
+            );
+
+            // หมุนตัวละคร
             transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
 
-            Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            rb.MovePosition(rb.position + moveDirection.normalized * speed * inputSpeed * Time.deltaTime);
+            // ทิศทางเคลื่อนที่
+            moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
-            animator.SetFloat("Speed", inputSpeed); // 0.5f = walk, 1f = run
+            animator.SetFloat("Speed", inputSpeed);
         }
         else
         {
             animator.SetFloat("Speed", 0f);
         }
 
-        // ✅ Mouse look around (camera already follows the player)
+        // Gravity
+        if (controller.isGrounded && yVelocity < 0)
+        {
+            yVelocity = -2f; // กันไม่ให้ลอย
+        }
+
+        yVelocity += gravity * Time.deltaTime;
+
+        Vector3 velocity = moveDirection.normalized * speed * inputSpeed;
+        velocity.y = yVelocity;
+
+        controller.Move(velocity * Time.deltaTime);
+
+        // Mouse Look
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         yaw += mouseX;
-        cameraTransform.RotateAround(transform.position, Vector3.up, mouseX); // makes camera orbit if needed
+        cameraTransform.RotateAround(transform.position, Vector3.up, mouseX);
     }
+
 }
