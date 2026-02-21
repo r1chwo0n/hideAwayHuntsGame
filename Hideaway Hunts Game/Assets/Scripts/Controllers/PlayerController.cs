@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,7 +13,6 @@ public class PlayerController : MonoBehaviour
     public float speed = 5f;
     public float jumpForce = 5f;
     public int health = 100;
-    public int ammo = 30;
 
     [Header("Rotation")]
     public float turnSmoothTime = 0.1f;
@@ -65,39 +65,17 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!isActivePlayer || isDead) return;
+        if (manager.CurrentPlayer != this) return;
+        if (isDead) return;
 
         Move();
         HandleInput();
-    }
-
-    // =========================
-    // Public API
-    // =========================
-
-    public void SetActive(bool value)
-    {
-        isActivePlayer = value;
-
-        rb.isKinematic = !value;
-
-        rb.linearVelocity = Vector3.zero;
-
-        if (!value)
-        {
-            rb.linearVelocity = Vector3.zero;
-            animator.SetFloat("Speed", 0f);
-        }
     }
 
     public bool IsDead()
     {
         return isDead;
     }
-
-    // =========================
-    // Input
-    // =========================
 
     void HandleInput()
     {
@@ -110,9 +88,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
             Sit();
 
-        //DEBUG: กด X ตายทันที
-        if (Input.GetKeyDown(KeyCode.X))
-            Die();
+
     }
 
     // =========================
@@ -186,9 +162,10 @@ public class PlayerController : MonoBehaviour
 
     void Shoot()
     {
-        if (ammo <= 0) return;
+        if (manager.sharedAmmo <= 0) return;
 
-        ammo--;
+        manager.UseAmmo();
+
         animator.SetTrigger("Shoot");
 
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
@@ -199,6 +176,7 @@ public class PlayerController : MonoBehaviour
                 bot.TakeDamage(25);
         }
     }
+
 
     // =========================
     // Damage & Death
@@ -222,18 +200,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
+
+
     void Die()
     {
         if (isDead) return;
 
         isDead = true;
-        animator.SetTrigger("Dead");
+        manager.OnPlayerDead(this);
 
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-        if (manager != null)
-            manager.OnPlayerDead(this);
+
 
         StartCoroutine(Disappear());
     }

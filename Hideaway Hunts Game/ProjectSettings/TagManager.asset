@@ -19,9 +19,9 @@ TagManager:
   - collisionMask
   - Ground
   - stair
-  - 
-  - 
-  - 
+  - Player1
+  - Player2
+  - Player3
   - 
   - 
   - 
