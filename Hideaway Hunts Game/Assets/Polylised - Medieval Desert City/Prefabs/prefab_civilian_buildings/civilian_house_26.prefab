@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 33862291938999250}
   - component: {fileID: 23594673700584358}
   - component: {fileID: 5775513429228704086}
-  - component: {fileID: 4878203320724571450}
-  - component: {fileID: 6502733006738112079}
   - component: {fileID: 540650609459544247}
   m_Layer: 11
   m_Name: civilian_house_26
@@ -115,48 +113,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.1744843, y: 5.5999937, z: 12.377179}
   m_Center: {x: 0.42246246, y: 0.0000021457672, z: 6.1885896}
---- !u!65 &4878203320724571450
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1657209753273102}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.2691302, y: 2.1791077, z: 0.14096217}
-  m_Center: {x: -2.4245584, y: -0.008621216, z: 0.070481084}
---- !u!65 &6502733006738112079
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1657209753273102}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.9882965, y: 2.1791077, z: 0.25763193}
-  m_Center: {x: -2.2841415, y: -0.008621216, z: 0.12881596}
 --- !u!65 &540650609459544247
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -176,5 +132,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7425995, y: 2.1791077, z: 0.3724784}
-  m_Center: {x: -2.161293, y: -0.008621216, z: 0.1862392}
+  m_Size: {x: 1.2779999, y: 2.1791077, z: 0.4729904}
+  m_Center: {x: -2.4289932, y: -0.008621216, z: 0.2364952}

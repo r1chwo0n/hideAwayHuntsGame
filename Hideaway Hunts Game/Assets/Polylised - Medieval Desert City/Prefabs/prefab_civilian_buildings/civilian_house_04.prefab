@@ -13,8 +13,6 @@ GameObject:
   - component: {fileID: 23570339542632590}
   - component: {fileID: 546773434922980348}
   - component: {fileID: 3690402958711176756}
-  - component: {fileID: 1294519688249299686}
-  - component: {fileID: 7952156201172032803}
   m_Layer: 11
   m_Name: civilian_house_04
   m_TagString: Untagged
@@ -134,47 +132,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3943093, y: 1.7131416, z: 0.19465706}
-  m_Center: {x: 1.4553344, y: 6.990758, z: 0.09732853}
---- !u!65 &1294519688249299686
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1204793252515830}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.394311, y: 1.2218792, z: 0.38675284}
-  m_Center: {x: 1.4553356, y: 6.7451267, z: 0.19337642}
---- !u!65 &7952156201172032803
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1204793252515830}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.394311, y: 0.78228015, z: 0.5986677}
-  m_Center: {x: 1.4553357, y: 6.5253267, z: 0.29933384}
+  m_Size: {x: 2.3943093, y: 1.7131417, z: 0.79896736}
+  m_Center: {x: 1.4553344, y: 6.9907584, z: 0.3994832}
