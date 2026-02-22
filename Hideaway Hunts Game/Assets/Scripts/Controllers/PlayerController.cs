@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private Animator animator;
 
+    public AudioSource audioSource;
+    public AudioClip shootSound;
+
     // =========================
     // Unity
     // =========================
@@ -162,11 +165,16 @@ public class PlayerController : MonoBehaviour
 
     void Shoot()
     {
+        if (Time.timeScale == 0f) return;
         if (manager.sharedAmmo <= 0) return;
 
         manager.UseAmmo();
 
         animator.SetTrigger("Shoot");
+
+        // 🔊 เล่นเสียงยิง
+        if (shootSound != null)
+            audioSource.PlayOneShot(shootSound);
 
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 100f))
