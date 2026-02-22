@@ -10,8 +10,15 @@ public enum GameState
     Defeat
 }
 
+public enum BotMode
+{
+    Fuzzy,
+    RuleBased
+}
+
 public class GameManager : MonoBehaviour
 {
+    public static BotMode selectedMode;
     public Volume globalVolume;
     private DepthOfField dof;
     public static GameManager Instance;

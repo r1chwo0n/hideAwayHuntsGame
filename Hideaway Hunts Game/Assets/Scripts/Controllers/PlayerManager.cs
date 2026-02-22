@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro; 
 
 
 public class PlayerManager : MonoBehaviour
@@ -10,6 +11,7 @@ public class PlayerManager : MonoBehaviour
     public int sharedAmmo = 30;
     public System.Action<int> OnLifeChanged;
     public System.Action<int> OnAmmoChanged;
+    public TMP_Text playerNumberText;
 
     private int currentIndex;
 
@@ -100,6 +102,9 @@ public class PlayerManager : MonoBehaviour
 
         CurrentPlayer = players[index];
         cameraController.SetTarget(CurrentPlayer.transform);
+
+        if (playerNumberText != null)
+        playerNumberText.text = "Player " + (index + 1);
 
         Debug.Log("Active Player: " + CurrentPlayer.name);
     }
