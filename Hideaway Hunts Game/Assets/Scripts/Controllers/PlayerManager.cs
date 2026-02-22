@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 
 public class PlayerManager : MonoBehaviour
@@ -21,11 +22,16 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        // 1️⃣ setup ทุก player ก่อน
         for (int i = 0; i < players.Length; i++)
         {
             players[i].manager = this;
-            // players[i].SetActive(false);
+
+            Vector3 randomSpawn = GetRandomNavMeshPosition(
+                transform.position,  // ใช้ตำแหน่ง PlayerManager เป็น center
+                50f                   // รัศมีสุ่ม
+            );
+
+            players[i].transform.position = randomSpawn;
         }
         ActivatePlayer(0);
 
@@ -44,6 +50,22 @@ public class PlayerManager : MonoBehaviour
         {
             CurrentPlayer.TakeDamage(999);
         }
+    }
+
+    Vector3 GetRandomNavMeshPosition(Vector3 center, float range)
+    {
+        for (int i = 0; i < 30; i++) // ลองสุ่ม 30 ครั้งกันพลาด
+        {
+            Vector3 randomPoint = center + Random.insideUnitSphere * range;
+            randomPoint.y = center.y;
+
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+        }
+
+        return center; // fallback
     }
 
     void TryActivatePlayer(int index)
