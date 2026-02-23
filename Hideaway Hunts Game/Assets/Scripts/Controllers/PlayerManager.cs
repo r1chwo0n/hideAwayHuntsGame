@@ -112,8 +112,6 @@ public class PlayerManager : MonoBehaviour
 
         if (playerNumberText != null)
             playerNumberText.text = "Player " + (index + 1);
-
-        Debug.Log("Active Player: " + CurrentPlayer.name);
     }
 
 
@@ -136,20 +134,6 @@ public class PlayerManager : MonoBehaviour
         if (CurrentPlayer == player)
             CurrentPlayer = null;
     }
-    // public void NotifyPlayerDeath(PlayerController player)
-    // {
-    //     int alive = AliveCount;
-
-    //     Debug.Log("Alive Players: " + alive);
-
-    //     OnLifeChanged?.Invoke(alive);
-
-    //     // 👇 ตรงนี้แหละที่ต้องใส่
-    //     if (alive <= 0)
-    //     {
-    //         GameManager.Instance.Defeat();
-    //     }
-    // }
 
 
     public void OnPlayerDead(PlayerController deadPlayer)
@@ -167,17 +151,8 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        // ถ้าตัวที่ตายคือคนที่เราควบคุมอยู่
         if (deadPlayer == CurrentPlayer)
         {
-            // for (int i = 0; i < players.Length; i++)
-            // {
-            //     if (!players[i].IsDead())
-            //     {
-            //         ActivatePlayer(i);
-            //         return;
-            //     }
-            // }
             GameManager.Instance.Defeat();
         }
     }

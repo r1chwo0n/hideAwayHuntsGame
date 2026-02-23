@@ -118,7 +118,7 @@ public class BotController : MonoBehaviour
         isDead = true;
         animator.SetTrigger("Dead");
         this.enabled = false;
-        rb.isKinematic = true; // Stop physics if you want
+        rb.isKinematic = true;
     }
 
     void TryShootPlayer()

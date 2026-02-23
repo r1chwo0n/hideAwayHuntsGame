@@ -33,19 +33,12 @@ public class PlayerController : MonoBehaviour
     public CrosshairController crosshairController;
 
     [HideInInspector] public PlayerManager manager;
-
     private Rigidbody rb;
     private Animator animator;
-
     public AudioSource audioSource;
     public AudioClip shootSound;
-
     public SpriteRenderer minimapIcon;
-
-    // =========================
-    // Unity
-    // =========================
-
+    
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -97,10 +90,6 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    // =========================
-    // Movement
-    // =========================
-
     void Move()
     {
         float h = Input.GetAxisRaw("Horizontal");
@@ -141,10 +130,6 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
         }
     }
-
-    // =========================
-    // Actions
-    // =========================
 
     void Jump()
     {
@@ -187,12 +172,6 @@ public class PlayerController : MonoBehaviour
                 bot.TakeDamage(25);
         }
     }
-
-
-    // =========================
-    // Damage & Death
-    // =========================
-
     public void TakeDamage(int amount)
     {
         if (isDead) return;
@@ -210,11 +189,6 @@ public class PlayerController : MonoBehaviour
                 crosshairController.FlashDamage();
         }
     }
-
-
-
-
-
     void Die()
     {
         if (isDead) return;
@@ -225,8 +199,6 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-
-
         StartCoroutine(Disappear());
     }
 
@@ -235,10 +207,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(3f);
         gameObject.SetActive(false);
     }
-
-    // =========================
-    // Gizmos
-    // =========================
 
     void OnDrawGizmosSelected()
     {

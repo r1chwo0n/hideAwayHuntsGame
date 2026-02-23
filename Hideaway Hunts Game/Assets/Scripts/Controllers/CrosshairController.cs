@@ -21,7 +21,6 @@ public class CrosshairController : MonoBehaviour
 
     void Start()
     {
-        // Get main camera safely
         cam = Camera.main;
 
         if (cam == null)
@@ -66,9 +65,6 @@ public class CrosshairController : MonoBehaviour
         }
     }
 
-    // =========================
-    // Hit Feedback
-    // =========================
     public void FlashDamage()
     {
         if (flashRoutine != null)
