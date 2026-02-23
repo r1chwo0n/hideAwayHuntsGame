@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
-using TMPro; 
+using TMPro;
 
 
 public class PlayerManager : MonoBehaviour
@@ -104,7 +104,7 @@ public class PlayerManager : MonoBehaviour
         cameraController.SetTarget(CurrentPlayer.transform);
 
         if (playerNumberText != null)
-        playerNumberText.text = "Player " + (index + 1);
+            playerNumberText.text = "Player " + (index + 1);
 
         Debug.Log("Active Player: " + CurrentPlayer.name);
     }
@@ -171,7 +171,7 @@ public class PlayerManager : MonoBehaviour
             //         return;
             //     }
             // }
-         GameManager.Instance.Defeat();
+            GameManager.Instance.Defeat();
         }
     }
 }
