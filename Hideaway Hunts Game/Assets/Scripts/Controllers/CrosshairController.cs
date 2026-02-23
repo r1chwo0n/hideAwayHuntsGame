@@ -55,15 +55,15 @@ public class CrosshairController : MonoBehaviour
         crosshairImage.color = isTarget ? targetColor : defaultColor;
 
         // Shoot
-        // if (Input.GetMouseButtonDown(0) && isTarget)
-        // {
-        //     BotBody body = hit.collider.GetComponent<BotBody>();
-        //     if (body != null)
-        //     {
-        //         body.TakeDamage(25);
-        //         FlashDamage();
-        //     }
-        // }
+        if (Input.GetMouseButtonDown(0) && isTarget)
+        {
+            BotBody body = hit.collider.GetComponent<BotBody>();
+            if (body != null)
+            {
+                body.TakeDamage(25);
+                FlashDamage();
+            }
+        }
     }
 
     // =========================

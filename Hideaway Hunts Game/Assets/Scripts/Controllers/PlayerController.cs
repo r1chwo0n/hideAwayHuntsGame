@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.ProBuilder.Shapes;
 
 public class PlayerController : MonoBehaviour
 {
@@ -38,6 +39,8 @@ public class PlayerController : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip shootSound;
+
+    public SpriteRenderer minimapIcon;
 
     // =========================
     // Unity
@@ -177,12 +180,12 @@ public class PlayerController : MonoBehaviour
             audioSource.PlayOneShot(shootSound);
 
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
-        // if (Physics.Raycast(ray, out RaycastHit hit, 100f))
-        // {
-        //     BotBody bot = hit.collider.GetComponent<BotBody>();
-        //     if (bot != null)
-        //         bot.TakeDamage(25);
-        // }
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        {
+            BotBody bot = hit.collider.GetComponent<BotBody>();
+            if (bot != null)
+                bot.TakeDamage(25);
+        }
     }
 
 
@@ -243,5 +246,15 @@ public class PlayerController : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
+    }
+
+    public void SetActiveVisual(bool isActive)
+    {
+        if (minimapIcon == null) return;
+
+        if (isActive)
+            minimapIcon.color = Color.red;
+        else
+            minimapIcon.color = Color.yellow;
     }
 }

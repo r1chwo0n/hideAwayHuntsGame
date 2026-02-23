@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
-using TMPro; 
+using TMPro;
 
 
 public class PlayerManager : MonoBehaviour
@@ -103,8 +103,15 @@ public class PlayerManager : MonoBehaviour
         CurrentPlayer = players[index];
         cameraController.SetTarget(CurrentPlayer.transform);
 
+        // 🔥 อัปเดตสี minimap ทุกตัว
+        for (int i = 0; i < players.Length; i++)
+        {
+            bool isActive = (players[i] == CurrentPlayer);
+            players[i].SetActiveVisual(isActive);
+        }
+
         if (playerNumberText != null)
-        playerNumberText.text = "Player " + (index + 1);
+            playerNumberText.text = "Player " + (index + 1);
 
         Debug.Log("Active Player: " + CurrentPlayer.name);
     }
@@ -171,7 +178,27 @@ public class PlayerManager : MonoBehaviour
             //         return;
             //     }
             // }
-         GameManager.Instance.Defeat();
+            GameManager.Instance.Defeat();
         }
+    }
+
+    public int CountNearbyBots(float radius)
+    {
+        if (CurrentPlayer == null) return 0;
+
+        Collider[] hits = Physics.OverlapSphere(
+            CurrentPlayer.transform.position,
+            radius
+        );
+
+        int count = 0;
+
+        foreach (var hit in hits)
+        {
+            if (hit.GetComponent<BotBody>() != null)
+                count++;
+        }
+
+        return count;
     }
 }
