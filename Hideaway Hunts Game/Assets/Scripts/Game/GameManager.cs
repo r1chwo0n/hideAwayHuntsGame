@@ -50,14 +50,11 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         if (pausePanel != null)
             pausePanel.SetActive(false);
-        if (globalVolume.profile.TryGet(out dof))
+        if (globalVolume != null && globalVolume.profile.TryGet(out dof))
         {
             dof.active = false;
         }
         StartGame();
-
-
-
     }
 
     void Update()

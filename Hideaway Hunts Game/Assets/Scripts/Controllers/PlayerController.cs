@@ -177,12 +177,12 @@ public class PlayerController : MonoBehaviour
             audioSource.PlayOneShot(shootSound);
 
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
-        {
-            BotBody bot = hit.collider.GetComponent<BotBody>();
-            if (bot != null)
-                bot.TakeDamage(25);
-        }
+        // if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        // {
+        //     BotBody bot = hit.collider.GetComponent<BotBody>();
+        //     if (bot != null)
+        //         bot.TakeDamage(25);
+        // }
     }
 
 

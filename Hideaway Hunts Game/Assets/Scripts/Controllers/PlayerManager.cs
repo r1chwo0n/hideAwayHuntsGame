@@ -163,14 +163,15 @@ public class PlayerManager : MonoBehaviour
         // ถ้าตัวที่ตายคือคนที่เราควบคุมอยู่
         if (deadPlayer == CurrentPlayer)
         {
-            for (int i = 0; i < players.Length; i++)
-            {
-                if (!players[i].IsDead())
-                {
-                    ActivatePlayer(i);
-                    return;
-                }
-            }
+            // for (int i = 0; i < players.Length; i++)
+            // {
+            //     if (!players[i].IsDead())
+            //     {
+            //         ActivatePlayer(i);
+            //         return;
+            //     }
+            // }
+         GameManager.Instance.Defeat();
         }
     }
 }
