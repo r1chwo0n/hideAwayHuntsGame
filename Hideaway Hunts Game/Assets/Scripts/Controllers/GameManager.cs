@@ -1,17 +1,17 @@
-﻿using UnityEngine;
+﻿//using UnityEngine;
 
-public class GameManager : MonoBehaviour
-{
-    public static GameManager Instance;
+//public class GameManager : MonoBehaviour
+//{
+//    public static GameManager Instance;
 
-    void Awake()
-    {
-        Instance = this;
-    }
+//    void Awake()
+//    {
+//        Instance = this;
+//    }
 
-    public void GameOver()
-    {
-        Debug.Log("🎮 GAME OVER");
-        Time.timeScale = 0f;
-    }
-}
+//    public void GameOver()
+//    {
+//        Debug.Log("🎮 GAME OVER");
+//        Time.timeScale = 0f;
+//    }
+//}

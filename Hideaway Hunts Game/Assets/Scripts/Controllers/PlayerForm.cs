@@ -9,7 +9,7 @@ public class PlayerForm : MonoBehaviour
         if (isActiveForm)
         {
             Debug.Log("💀 Active form shot → GAME OVER");
-            GameManager.Instance.GameOver();
+            //GameManager.Instance.GameOver();
         }
         else
         {
