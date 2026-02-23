@@ -1,54 +1,177 @@
 using UnityEngine;
+using UnityEngine.AI;
+using TMPro; 
+
 
 public class PlayerManager : MonoBehaviour
 {
-    public GameObject[] players;
-    public ThirdPersonCameraWithCollision cameraFollow;
+    public PlayerController[] players;
+    public ThirdPersonCameraWithCollision cameraController;
+    public PlayerController CurrentPlayer { get; private set; }
+    public int sharedAmmo = 30;
+    public System.Action<int> OnLifeChanged;
+    public System.Action<int> OnAmmoChanged;
+    public TMP_Text playerNumberText;
+
+    private int currentIndex;
 
     void Start()
     {
-        SwitchToPlayer(0);
+
+        if (players == null || players.Length == 0)
+        {
+            Debug.LogError("No players assigned to PlayerManager");
+            return;
+        }
+
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].manager = this;
+
+            Vector3 randomSpawn = GetRandomNavMeshPosition(
+                transform.position,  // ใช้ตำแหน่ง PlayerManager เป็น center
+                50f                   // รัศมีสุ่ม
+            );
+
+            players[i].transform.position = randomSpawn;
+        }
+        ActivatePlayer(0);
+
+
+
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SwitchToPlayer(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SwitchToPlayer(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SwitchToPlayer(2);
+        if (Input.GetKeyDown(KeyCode.Alpha1)) TryActivatePlayer(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) TryActivatePlayer(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) TryActivatePlayer(2);
+
+        // DEBUG kill current only
+        if (Input.GetKeyDown(KeyCode.X) && CurrentPlayer != null)
+        {
+            CurrentPlayer.TakeDamage(999);
+        }
     }
 
-    public void SwitchToPlayer(int index)
-{
-    if (index < 0 || index >= players.Length)
+    Vector3 GetRandomNavMeshPosition(Vector3 center, float range)
     {
-        Debug.LogError("Index out of range");
-        return;
+        for (int i = 0; i < 30; i++) // ลองสุ่ม 30 ครั้งกันพลาด
+        {
+            Vector3 randomPoint = center + Random.insideUnitSphere * range;
+            randomPoint.y = center.y;
+
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+        }
+
+        return center; // fallback
     }
 
-    if (players[index] == null)
+    void TryActivatePlayer(int index)
     {
-        Debug.LogError("Player at index is missing!");
-        return;
+        if (index < 0 || index >= players.Length) return;
+        int num = index + 1;
+        if (players[index].IsDead())
+        {
+            Debug.Log("Player" + num + "is dead. Cannot switch.");
+            return;
+        }
+
+        ActivatePlayer(index);
     }
 
-    if (cameraFollow == null)
+
+    public void UseAmmo()
     {
-        Debug.LogError("CameraFollow script is not assigned!");
-        return;
+        if (sharedAmmo <= 0) return;
+
+        sharedAmmo--;
+        Debug.Log("Ammo after shoot: " + sharedAmmo +
+              " | Active: " + CurrentPlayer.name);
+
+        OnAmmoChanged?.Invoke(sharedAmmo);
     }
 
-   // Keep all characters active
-    for (int i = 0; i < players.Length; i++)
+    public void ActivatePlayer(int index)
     {
-        players[i].SetActive(true);
+        if (index < 0 || index >= players.Length) return;
+        if (players[index].IsDead()) return;
 
-        var movement = players[i].GetComponent<PlayerController>();
-        if (movement != null)
-            movement.enabled = (i == index); // Only enable control for the selected one
+        CurrentPlayer = players[index];
+        cameraController.SetTarget(CurrentPlayer.transform);
+
+        if (playerNumberText != null)
+        playerNumberText.text = "Player " + (index + 1);
+
+        Debug.Log("Active Player: " + CurrentPlayer.name);
     }
-    
-    // Update camera to follow the new player
-        cameraFollow.target = players[index].transform;
-}
 
+
+    public int AliveCount
+    {
+        get
+        {
+            int count = 0;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (!players[i].IsDead())
+                    count++;
+            }
+            return count;
+        }
+    }
+
+    public void ForceClearCurrentPlayer(PlayerController player)
+    {
+        if (CurrentPlayer == player)
+            CurrentPlayer = null;
+    }
+    // public void NotifyPlayerDeath(PlayerController player)
+    // {
+    //     int alive = AliveCount;
+
+    //     Debug.Log("Alive Players: " + alive);
+
+    //     OnLifeChanged?.Invoke(alive);
+
+    //     // 👇 ตรงนี้แหละที่ต้องใส่
+    //     if (alive <= 0)
+    //     {
+    //         GameManager.Instance.Defeat();
+    //     }
+    // }
+
+
+    public void OnPlayerDead(PlayerController deadPlayer)
+    {
+        Debug.Log(deadPlayer.name + " is Dead");
+
+        int alive = AliveCount;
+        OnLifeChanged?.Invoke(alive);
+
+        if (alive <= 0)
+        {
+            Debug.Log("Calling Defeat");
+            Debug.Log(GameManager.Instance);
+            GameManager.Instance.Defeat();
+            return;
+        }
+
+        // ถ้าตัวที่ตายคือคนที่เราควบคุมอยู่
+        if (deadPlayer == CurrentPlayer)
+        {
+            // for (int i = 0; i < players.Length; i++)
+            // {
+            //     if (!players[i].IsDead())
+            //     {
+            //         ActivatePlayer(i);
+            //         return;
+            //     }
+            // }
+         GameManager.Instance.Defeat();
+        }
+    }
 }
