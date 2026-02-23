@@ -36,10 +36,12 @@ public class WorldPerception : MonoBehaviour
         if (!enemy || enemies.Contains(enemy) == false)
             return;
 
-        var hp = enemy.GetComponent<Health>();
-        if (hp != null)
+        var k = enemy.GetComponent<Killable>();
+        if (k != null)
         {
-            hp.OnDeath += RemoveEnemy;
+            // ยกเลิกของเก่าก่อน (เผื่อเรียกซ้ำ) แล้วค่อยบวกเข้าใหม่
+            k.OnKilled -= RemoveEnemy;
+            k.OnKilled += RemoveEnemy;
         }
     }
 

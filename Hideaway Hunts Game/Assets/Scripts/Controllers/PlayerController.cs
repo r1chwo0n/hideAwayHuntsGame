@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
     public float turnSmoothTime = 0.1f;
     public int health = 100;
     private float turnSmoothVelocity;
-    private bool isSitting = false;
     private bool isDead = false;
     public CrosshairController crosshairController;
 
@@ -78,10 +77,6 @@ public class PlayerController : MonoBehaviour
             Shoot();
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Sit();
-        }
     }
 
     void Shoot()
@@ -89,17 +84,6 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("Shoot");
     }
 
-    void Sit()
-    {
-        isSitting = !isSitting; // Toggle sitting state
-
-        animator.SetBool("isSitting", isSitting);
-    }
-
-    //void Jump()
-    //{
-    //    animator.SetTrigger("Jump");
-    //}
     void Jump()
     {
         if (controller.isGrounded)

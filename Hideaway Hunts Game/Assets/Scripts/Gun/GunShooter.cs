@@ -99,6 +99,7 @@ public class GunShooter : MonoBehaviour
 
     void HandleHit(Transform hit)
     {
+        // ถ้า hit นั้นไปโดน Transform ที่ไม่มี Killable เป็น Component ก็จะไม่เกิดอะไรขึ้น
         hit.GetComponent<Killable>()?.TakeHit();
     }
 }

@@ -17,7 +17,6 @@ public class ActionExecutor : MonoBehaviour
     public Transform actor;                 // ร่างที่กำลัง active
     public NavMeshAgent agent;
     public GunShooter gun;                  // ยิง
-    //public CoverSystem cover;               // (ถ้ามี)
     public Animator animator;
 
     [Header("State")]
@@ -138,10 +137,6 @@ public class ActionExecutor : MonoBehaviour
             case ActionType.Retreat:
                 DoRetreat();
                 break;
-
-            //case ActionType.Flank:
-            //    DoFlank();
-            //    break;
 
             case ActionType.Defend:
                 DoDefend();
@@ -401,30 +396,6 @@ public class ActionExecutor : MonoBehaviour
 
         return false;
     }
-
-    //void DoFlank()
-    //{
-    //    if (!agent || target == null)
-    //        return;
-
-    //    agent.isStopped = false;
-
-    //    bool goRight = Random.value > 0.5f;
-    //    float dir = goRight ? 1f : -1f;
-
-    //    Vector3 toTarget = (target.position - actor.position).normalized;
-    //    Vector3 flankDir =
-    //        goRight
-    //        ? Vector3.Cross(Vector3.up, toTarget)
-    //        : Vector3.Cross(toTarget, Vector3.up);
-
-    //    Vector3 flankPos = actor.position + flankDir * 3f;
-
-    //    if (NavMesh.SamplePosition(flankPos, out var hit, 3f, NavMesh.AllAreas))
-    //        agent.SetDestination(hit.position);
-
-    //    animator.SetFloat("FlankDir", dir);
-    //}
 
     void DoDefend() // ไม่เคลื่อนที่ ยังไม่จำเป็นต้องหนี
     {
