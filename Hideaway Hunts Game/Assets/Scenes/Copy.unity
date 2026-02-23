@@ -11747,6 +11747,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2837782271762868660, guid: ad252b01f4b42db4d852c7a830614c9d, type: 3}
   firePoint: {fileID: 707040217}
   bulletForce: 20
+  MaxCooldown: 0.5
+  CurrentCooldown: 0
 --- !u!43 &422377304
 Mesh:
   m_ObjectHideFlags: 0
@@ -30648,6 +30650,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2837782271762868660, guid: ad252b01f4b42db4d852c7a830614c9d, type: 3}
   firePoint: {fileID: 346124838}
   bulletForce: 20
+  MaxCooldown: 0.5
+  CurrentCooldown: 0
 --- !u!43 &1105884383
 Mesh:
   m_ObjectHideFlags: 0
@@ -57763,6 +57767,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2837782271762868660, guid: ad252b01f4b42db4d852c7a830614c9d, type: 3}
   firePoint: {fileID: 1205913288}
   bulletForce: 20
+  MaxCooldown: 0.5
+  CurrentCooldown: 0
 --- !u!43 &1976093749
 Mesh:
   m_ObjectHideFlags: 0
