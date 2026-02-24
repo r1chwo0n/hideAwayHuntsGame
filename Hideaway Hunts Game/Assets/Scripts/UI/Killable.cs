@@ -45,6 +45,9 @@ public class Killable : MonoBehaviour
 
     private IEnumerator KillWithAnimation()
     {
+        // ป้องกันการทำงานซ้ำหากฟังก์ชันนี้ถูกเรียกซ้ำๆ ในเฟรมเดียวกัน
+        if (isDead) yield break;
+
         isDead = true;
         OnKilled?.Invoke(transform);
 
@@ -56,7 +59,10 @@ public class Killable : MonoBehaviour
             anim.SetTrigger("Die"); // หรือชื่อ Parameter ที่คุณตั้งไว้ใน Animator
         }
 
-        // รอให้ Animation เล่นไปสักพัก
+        // ปิด Collider เพื่อไม่ให้ศพขวางทางหรือรับดาเมจเพิ่ม
+        var col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
         yield return new WaitForSeconds(destroyDelay);
 
         Destroy(gameObject);

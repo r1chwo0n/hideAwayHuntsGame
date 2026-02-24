@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     [Header("State")]
     public bool isActivePlayer = false;
     private bool isDead = false;
-    private bool isSitting = false;
+    //private bool isSitting = false;
 
     [Header("Stats")]
     public float speed = 5f;
@@ -88,8 +88,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
             Shoot();
 
-        if (Input.GetKeyDown(KeyCode.Q))
-            Sit();
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //    Sit();
 
 
     }
@@ -157,11 +157,11 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("Jump");
     }
 
-    void Sit()
-    {
-        isSitting = !isSitting;
-        animator.SetBool("isSitting", isSitting);
-    }
+    //void Sit()
+    //{
+    //    isSitting = !isSitting;
+    //    animator.SetBool("isSitting", isSitting);
+    //}
 
     void Shoot()
     {
@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
 
         animator.SetTrigger("Shoot");
 
-        // 🔊 เล่นเสียงยิง
+        // เล่นเสียงยิง
         if (shootSound != null)
             audioSource.PlayOneShot(shootSound);
 
@@ -207,10 +207,6 @@ public class PlayerController : MonoBehaviour
                 crosshairController.FlashDamage();
         }
     }
-
-
-
-
 
     void Die()
     {

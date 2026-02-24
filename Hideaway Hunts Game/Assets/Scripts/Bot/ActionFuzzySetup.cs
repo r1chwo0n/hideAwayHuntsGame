@@ -104,15 +104,28 @@ public class ActionFuzzySetup : MonoBehaviour
 
     }
 
+    //void SetupOutputs()
+    //{
+    //    var action = new FuzzyVariable("ActionDecision");
+
+    //    action.AddSet(new FuzzySet("Idle", 0.0f));
+    //    action.AddSet(new FuzzySet("Patrol", 0.2f)); // ลาดตระเวน
+    //    action.AddSet(new FuzzySet("Defend", 0.4f)); // ป้องกัน
+    //    action.AddSet(new FuzzySet("Flank", 0.6f)); 
+    //    action.AddSet(new FuzzySet("Attack", 0.8f)); // โจมตี
+    //    action.AddSet(new FuzzySet("Retreat", 1.0f)); // ถอย
+
+    //    engine.AddOutput(action);
+    //}
+
     void SetupOutputs()
     {
         var action = new FuzzyVariable("ActionDecision");
 
-        action.AddSet(new FuzzySet("Idle", 0.0f));
-        action.AddSet(new FuzzySet("Patrol", 0.2f)); // ลาดตระเวน
-        action.AddSet(new FuzzySet("Defend", 0.4f)); // ป้องกัน
-        action.AddSet(new FuzzySet("Flank", 0.6f)); 
-        action.AddSet(new FuzzySet("Attack", 0.8f)); // โจมตี
+        action.AddSet(new FuzzySet("Idle", 0.0f));    // นิ่งเฉย
+        action.AddSet(new FuzzySet("Patrol", 0.25f)); // ลาดตระเวน
+        action.AddSet(new FuzzySet("Defend", 0.5f));  // ป้องกัน
+        action.AddSet(new FuzzySet("Attack", 0.75f)); // โจมตี
         action.AddSet(new FuzzySet("Retreat", 1.0f)); // ถอย
 
         engine.AddOutput(action);

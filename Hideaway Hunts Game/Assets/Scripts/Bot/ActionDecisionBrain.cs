@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ActionDecisionBrain : MonoBehaviour
@@ -39,13 +39,23 @@ public class ActionDecisionBrain : MonoBehaviour
     //    return ActionType.Retreat;
     //}
 
-    ActionType DecodeAction(float v)
-    {
-        if (v < 0.33f)
-            return ActionType.Patrol;
+    //ActionType DecodeAction(float v)
+    //{
+    //    if (v < 0.33f)
+    //        return ActionType.Patrol;
 
-        if (v < 0.66f)
-            return ActionType.Attack;
+    //    if (v < 0.66f)
+    //        return ActionType.Attack;
+
+    //    return ActionType.Retreat;
+    //}
+
+    private ActionType DecodeAction(float v)
+    {
+        if (v < 0.125f) return ActionType.Idle;
+        if (v < 0.375f) return ActionType.Patrol;
+        if (v < 0.625f) return ActionType.Defend;
+        if (v < 0.875f) return ActionType.Attack;
 
         return ActionType.Retreat;
     }
