@@ -39,18 +39,27 @@ public class PlayerController : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip shootSound;
 
+    private Killable myKillable;
+    public LayerMask shootMask;
+
     // =========================
     // Unity
     // =========================
 
     void Start()
     {
+        Debug.Log("Start");
+        Debug.Log($"{name} started at {transform.position}");
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         animator.applyRootMotion = false;
 
+        if (myKillable != null)
+            myKillable.OnKilled += (t) => Die();
+
         if (cameraTransform == null)
             cameraTransform = Camera.main.transform;
+
     }
 
     void FixedUpdate()
@@ -69,16 +78,15 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (manager.CurrentPlayer != this) return;
+        Debug.Log($"{name} is the active player.");
         if (isDead) return;
+        Debug.Log($"{name} is alive and can move.");
 
         Move();
         HandleInput();
     }
 
-    public bool IsDead()
-    {
-        return isDead;
-    }
+ public bool IsDead() => myKillable != null && myKillable.isDead;
 
     void HandleInput()
     {
@@ -169,20 +177,23 @@ public class PlayerController : MonoBehaviour
         if (manager.sharedAmmo <= 0) return;
 
         manager.UseAmmo();
-
         animator.SetTrigger("Shoot");
 
-        // เล่นเสียงยิง
         if (shootSound != null)
             audioSource.PlayOneShot(shootSound);
 
+        // ยิง Raycast ออกไป
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
-        // if (Physics.Raycast(ray, out RaycastHit hit, 100f))
-        // {
-        //     BotBody bot = hit.collider.GetComponent<BotBody>();
-        //     if (bot != null)
-        //         bot.TakeDamage(25);
-        // }
+        if (Physics.Raycast(ray, out RaycastHit hit, 20f, shootMask))
+        {
+            // หา Component Killable จากสิ่งที่ยิงโดน (Bot)
+            Killable target = hit.transform.GetComponent<Killable>();
+            if (target != null)
+            {
+                // สั่งให้ Bot ตัวนั้นตาย!
+                target.TakeHit();
+            }
+        }
     }
 
 
@@ -190,37 +201,25 @@ public class PlayerController : MonoBehaviour
     // Damage & Death
     // =========================
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount = 0)
     {
-        if (isDead) return;
-
-        health -= amount;
-
-        if (health <= 0)
-        {
-            health = 0;
-            Die();
-        }
-        else
-        {
-            if (crosshairController != null)
-                crosshairController.FlashDamage();
-        }
+        if (IsDead()) return;
+        
+        // เมื่อโดนยิง ให้เรียก TakeHit ของตัวเอง
+        myKillable?.TakeHit();
+        
+        if (crosshairController != null)
+            crosshairController.FlashDamage();
     }
-
-    void Die()
+void Die()
     {
-        if (isDead) return;
-
-        isDead = true;
+        // แจ้ง Manager เมื่อตาย
         manager.OnPlayerDead(this);
 
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-
-
-        StartCoroutine(Disappear());
+        // ไม่ต้องใช้ Coroutine Disappear แล้ว เพราะ Killable จัดการให้เองตามที่ตั้งค่า
     }
 
     IEnumerator Disappear()

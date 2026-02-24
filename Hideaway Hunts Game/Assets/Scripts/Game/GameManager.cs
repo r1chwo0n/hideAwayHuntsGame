@@ -34,15 +34,14 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GameManager Awake Called");
 
-        //if (Instance == null)
-        //{
-        //    Instance = this;
-        //    // DontDestroyOnLoad(gameObject);
-        //}
-        //else if (Instance != this)
-        //{
-        //    Destroy(gameObject);
-        //}
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()
@@ -59,10 +58,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // กด ESC เพื่อ Pause
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            TogglePause();
+            Time.timeScale = 0f;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 
@@ -115,6 +116,8 @@ public class GameManager : MonoBehaviour
 
     void PauseGame()
     {
+        isPaused = true;
+
         Time.timeScale = 0f;
         pausePanel.SetActive(true);
 
@@ -124,6 +127,8 @@ public class GameManager : MonoBehaviour
 
     void ResumeGame()
     {
+        isPaused = false;
+
         Time.timeScale = 1f;
         pausePanel.SetActive(false);
 
@@ -131,19 +136,11 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
     }
 
-    // =====================
-    // 🔄 Restart
-    // =====================
-
     public void RestartGame()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
-    // =====================
-    // 🚪 Quit ไป Home
-    // =====================
 
     public void QuitGame()
     {

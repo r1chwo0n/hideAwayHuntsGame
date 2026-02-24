@@ -14,7 +14,7 @@ public class CrosshairController : MonoBehaviour
 
     [Header("Raycast")]
     public float detectionDistance = 100f;
-    public LayerMask enemyLayer;
+    public LayerMask BotLayer;
 
     private Camera cam;
     private Coroutine flashRoutine;
@@ -48,22 +48,19 @@ public class CrosshairController : MonoBehaviour
             ray,
             out hit,
             detectionDistance,
-            enemyLayer
+            BotLayer
         );
 
         // Change crosshair color
         crosshairImage.color = isTarget ? targetColor : defaultColor;
 
         // Shoot
-        // if (Input.GetMouseButtonDown(0) && isTarget)
-        // {
-        //     BotBody body = hit.collider.GetComponent<BotBody>();
-        //     if (body != null)
-        //     {
-        //         body.TakeDamage(25);
-        //         FlashDamage();
-        //     }
-        // }
+        if (Input.GetMouseButtonDown(0) && isTarget)
+        {
+            
+            hit.transform.GetComponent<Killable>()?.TakeHit();
+
+        }
     }
 
     // =========================

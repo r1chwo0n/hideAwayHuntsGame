@@ -103,10 +103,15 @@ public class PlayerManager : MonoBehaviour
         CurrentPlayer = players[index];
         cameraController.SetTarget(CurrentPlayer.transform);
 
+        // 🔥 อัปเดตสี minimap ทุกตัว
+        //for (int i = 0; i < players.Length; i++)
+        //{
+        //    bool isActive = (players[i] == CurrentPlayer);
+        //    players[i].SetActiveVisual(isActive);
+        //}
+
         if (playerNumberText != null)
             playerNumberText.text = "Player " + (index + 1);
-
-        Debug.Log("Active Player: " + CurrentPlayer.name);
     }
 
 
@@ -129,20 +134,6 @@ public class PlayerManager : MonoBehaviour
         if (CurrentPlayer == player)
             CurrentPlayer = null;
     }
-    // public void NotifyPlayerDeath(PlayerController player)
-    // {
-    //     int alive = AliveCount;
-
-    //     Debug.Log("Alive Players: " + alive);
-
-    //     OnLifeChanged?.Invoke(alive);
-
-    //     // 👇 ตรงนี้แหละที่ต้องใส่
-    //     if (alive <= 0)
-    //     {
-    //         GameManager.Instance.Defeat();
-    //     }
-    // }
 
 
     public void OnPlayerDead(PlayerController deadPlayer)
@@ -160,18 +151,36 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        // ถ้าตัวที่ตายคือคนที่เราควบคุมอยู่
         if (deadPlayer == CurrentPlayer)
         {
-            // for (int i = 0; i < players.Length; i++)
-            // {
-            //     if (!players[i].IsDead())
-            //     {
-            //         ActivatePlayer(i);
-            //         return;
-            //     }
-            // }
             GameManager.Instance.Defeat();
         }
     }
+
+    public int CountNearbyBots(float radius)
+{
+    if (CurrentPlayer == null) return 0;
+
+    // ค้นหา Object รอบตัวในระยะ radius
+    Collider[] hits = Physics.OverlapSphere(
+        CurrentPlayer.transform.position,
+        radius
+    );
+
+    int count = 0;
+
+    foreach (var hit in hits)
+    {
+        Killable k = hit.GetComponent<Killable>();
+        if (k != null && 
+            k.transform != CurrentPlayer.transform && 
+            !k.isPlayer && 
+            !k.isDead)
+        {
+            count++;
+        }
+    }
+
+    return count;
+}
 }
