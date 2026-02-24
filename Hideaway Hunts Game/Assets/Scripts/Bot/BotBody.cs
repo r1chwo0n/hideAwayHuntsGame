@@ -15,6 +15,7 @@ public class BotBody : MonoBehaviour
         if (health <= 0)
         {
             Die();
+            GameManager.Instance.Victory();
         }
     }
 

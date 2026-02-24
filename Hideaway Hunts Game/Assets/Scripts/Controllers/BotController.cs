@@ -17,7 +17,7 @@ public class BotController : MonoBehaviour
     public int health = 100;
     private bool isDead = false;
 
-    public Transform shootPoint; // Where bot shoots from (assign in inspector)
+    public Transform shootPoint;
 
     void Start()
     {
@@ -109,6 +109,7 @@ public class BotController : MonoBehaviour
         {
             health = 0;
             Die();
+            GameManager.Instance.Victory();
         }
     }
 
@@ -119,6 +120,8 @@ public class BotController : MonoBehaviour
         animator.SetTrigger("Dead");
         this.enabled = false;
         rb.isKinematic = true;
+        GameManager.Instance.Victory();
+        
     }
 
     void TryShootPlayer()
