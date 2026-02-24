@@ -96,10 +96,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
             Shoot();
 
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //    Sit();
-
-
     }
 
     // =========================
@@ -165,37 +161,38 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("Jump");
     }
 
-    //void Sit()
-    //{
-    //    isSitting = !isSitting;
-    //    animator.SetBool("isSitting", isSitting);
-    //}
-
     void Shoot()
     {
         if (Time.timeScale == 0f) return;
-        if (manager.sharedAmmo <= 0) return;
 
-        manager.UseAmmo();
-        animator.SetTrigger("Shoot");
-
-        if (shootSound != null)
-            audioSource.PlayOneShot(shootSound);
-
-        // ยิง Raycast ออกไป
-        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, 20f, shootMask))
+        if (manager.CanShoot())
         {
-            // หา Component Killable จากสิ่งที่ยิงโดน (Bot)
-            Killable target = hit.transform.GetComponent<Killable>();
-            if (target != null)
+            // เรียก UseAmmo() เพื่อหักกระสุนและบันทึกเวลา Cooldown
+            manager.UseAmmo();
+
+            // เล่น Animation และเสียง
+            animator.SetTrigger("Shoot");
+
+            if (shootSound != null)
+                audioSource.PlayOneShot(shootSound);
+
+            // การยิง Raycast
+            Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+            if (Physics.Raycast(ray, out RaycastHit hit, 20f, shootMask))
             {
-                // สั่งให้ Bot ตัวนั้นตาย!
-                target.TakeHit();
+                Killable target = hit.transform.GetComponent<Killable>();
+                if (target != null)
+                {
+                    target.TakeHit();
+                }
             }
         }
+        else
+        {
+            // (Optional) อาจจะใส่เสียง "แก๊ก" เวลาปืนติด Cooldown หรือกระสุนหมดตรงนี้ได้ค่ะ
+            Debug.Log("Cannot shoot: Cooldown or Out of ammo");
+        }
     }
-
 
     // =========================
     // Damage & Death
@@ -211,7 +208,7 @@ public class PlayerController : MonoBehaviour
         if (crosshairController != null)
             crosshairController.FlashDamage();
     }
-void Die()
+    void Die()
     {
         // แจ้ง Manager เมื่อตาย
         manager.OnPlayerDead(this);
@@ -220,12 +217,6 @@ void Die()
         rb.isKinematic = true;
 
         // ไม่ต้องใช้ Coroutine Disappear แล้ว เพราะ Killable จัดการให้เองตามที่ตั้งค่า
-    }
-
-    IEnumerator Disappear()
-    {
-        yield return new WaitForSeconds(3f);
-        gameObject.SetActive(false);
     }
 
     // =========================

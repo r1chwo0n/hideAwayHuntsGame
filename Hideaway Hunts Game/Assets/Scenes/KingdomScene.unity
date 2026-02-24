@@ -12059,7 +12059,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 357339938}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3661ec12690597418216ce412ba19ac, type: 3}
   m_Name: 
@@ -19235,6 +19235,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f468f0ae4f8b613419a55fed888dfcca, type: 3}
+--- !u!1 &557644915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 557644917}
+  - component: {fileID: 557644916}
+  m_Layer: 0
+  m_Name: BotSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &557644916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557644915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb51f65baf3d8074ab5df21db0060195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  formManager: {fileID: 2027263128}
+  navSurface: {fileID: 2026540767}
+--- !u!4 &557644917
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557644915}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 91.08884, y: -3.6223984, z: 148.13867}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &559639703
 Mesh:
   m_ObjectHideFlags: 0
@@ -24024,7 +24070,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724364634}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3661ec12690597418216ce412ba19ac, type: 3}
   m_Name: 
@@ -31671,6 +31717,7 @@ MonoBehaviour:
   activeForm: {fileID: 0}
   targetSelector: {fileID: 1063263468}
   visibleTargets: []
+  swapCooldown: 10
   botCinemachineCam: {fileID: 1578822807}
   decisionInterval: 0.5
 --- !u!1 &923201863
@@ -33581,7 +33628,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 980494356}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3661ec12690597418216ce412ba19ac, type: 3}
   m_Name: 
@@ -77364,6 +77411,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a3970b8dce704952abb5c4f953a709d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  swapCooldown: 10
+  fireCooldown: 0.5
   players:
   - {fileID: 1652811133}
   - {fileID: 1354819358}
@@ -78603,3 +78652,4 @@ SceneRoots:
   - {fileID: 2033969990}
   - {fileID: 2044887079}
   - {fileID: 1909712933}
+  - {fileID: 557644917}

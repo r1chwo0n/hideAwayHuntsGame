@@ -24,13 +24,19 @@ public class FormDecisionBrain : MonoBehaviour
     public TargetSelector targetSelector;
     public List<Transform> visibleTargets; // player forms ที่มองเห็น
 
+    [Header("Form Swap Settings")]
+    [SerializeField] float swapCooldown = 10f; // ระยะเวลาขั้นต่ำที่ต้องอยู่ในร่างนั้น
+    float swapTimer; // ตัวนับเวลาถอยหลังสำหรับการเปลี่ยนร่างครั้งต่อไป
+
     public CinemachineCamera botCinemachineCam;
 
-    [SerializeField] float decisionInterval = 0.5f;
+    [SerializeField] float decisionInterval = 0.5f; // คิดทุก ๆ 0.5 วินาที 
     float decisionTimer; // ถึงเวลาตัดสินใจใหม่ยัง
     void Update() // เรียกทุกเฟรม
     {
         decisionTimer -= Time.deltaTime;
+        if (swapTimer > 0) swapTimer -= Time.deltaTime;
+
         if (decisionTimer > 0f)
             return;
 
@@ -42,8 +48,12 @@ public class FormDecisionBrain : MonoBehaviour
             return;
         }
 
-        DecideBestForm();
         DecideAction();
+
+        if (swapTimer <= 0)
+        {
+            DecideBestForm();
+        }
     }
 
     // ================= FORM SELECTION =================
@@ -97,6 +107,7 @@ public class FormDecisionBrain : MonoBehaviour
     {
         Debug.Log($"Active form changed to: {newForm.name}");
 
+        swapTimer = swapCooldown; // เริ่มนับถอยหลังใหม่หลังจากเปลี่ยนร่าง
         foreach (var f in forms)
         {
             var ctrl = f.origin.GetComponent<BotController>();
