@@ -13,7 +13,7 @@ public class CrosshairController : MonoBehaviour
     public Color hitFlashColor = Color.red;
 
     [Header("Raycast")]
-    public float detectionDistance = 100f;
+    public float detectionDistance = 30f;
     public LayerMask BotLayer;
 
     private Camera cam;
@@ -21,20 +21,12 @@ public class CrosshairController : MonoBehaviour
 
     void Start()
     {
-        // Get main camera safely
         cam = Camera.main;
 
         if (cam == null)
         {
             Debug.LogError("❌ No MainCamera found! Make sure camera tag = MainCamera");
         }
-
-        if (crosshairImage == null)
-        {
-            Debug.LogError("❌ Crosshair Image not assigned!");
-        }
-
-        crosshairImage.color = defaultColor;
     }
 
     void Update()
@@ -57,15 +49,17 @@ public class CrosshairController : MonoBehaviour
         // Shoot
         if (Input.GetMouseButtonDown(0) && isTarget)
         {
-            
-            hit.transform.GetComponent<Killable>()?.TakeHit();
+
+            Killable killable = hit.transform.GetComponent<Killable>();
+
+            if (killable != null)
+            {
+                killable.TakeHit();
+            }
 
         }
     }
 
-    // =========================
-    // Hit Feedback
-    // =========================
     public void FlashDamage()
     {
         if (flashRoutine != null)

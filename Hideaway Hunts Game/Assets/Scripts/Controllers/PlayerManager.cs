@@ -104,14 +104,14 @@ public class PlayerManager : MonoBehaviour
         cameraController.SetTarget(CurrentPlayer.transform);
 
         // 🔥 อัปเดตสี minimap ทุกตัว
-        //for (int i = 0; i < players.Length; i++)
-        //{
-        //    bool isActive = (players[i] == CurrentPlayer);
-        //    players[i].SetActiveVisual(isActive);
-        //}
+        // for (int i = 0; i < players.Length; i++)
+        // {
+        //     bool isActive = (players[i] == CurrentPlayer);
+        //     players[i].SetActiveVisual(isActive);
+        // }
 
-        if (playerNumberText != null)
-            playerNumberText.text = "Player " + (index + 1);
+        // if (playerNumberText != null)
+        //     playerNumberText.text = "Player " + (index + 1);
     }
 
 

@@ -923,7 +923,7 @@ GameObject:
   - component: {fileID: 1897231696}
   - component: {fileID: 1897231695}
   m_Layer: 5
-  m_Name: Victory
+  m_Name: Defeat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

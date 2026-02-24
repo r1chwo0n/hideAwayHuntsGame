@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.ProBuilder.Shapes;
 
 public class PlayerController : MonoBehaviour
 {
@@ -32,10 +33,8 @@ public class PlayerController : MonoBehaviour
     public CrosshairController crosshairController;
 
     [HideInInspector] public PlayerManager manager;
-
     private Rigidbody rb;
     private Animator animator;
-
     public AudioSource audioSource;
     public AudioClip shootSound;
 
@@ -46,6 +45,8 @@ public class PlayerController : MonoBehaviour
     // Unity
     // =========================
 
+    public SpriteRenderer minimapIcon;
+    
     void Start()
     {
         Debug.Log("Start");
@@ -102,10 +103,6 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    // =========================
-    // Movement
-    // =========================
-
     void Move()
     {
         float h = Input.GetAxisRaw("Horizontal");
@@ -146,10 +143,6 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
         }
     }
-
-    // =========================
-    // Actions
-    // =========================
 
     void Jump()
     {
@@ -228,10 +221,6 @@ void Die()
         gameObject.SetActive(false);
     }
 
-    // =========================
-    // Gizmos
-    // =========================
-
     void OnDrawGizmosSelected()
     {
         if (groundCheck == null) return;
@@ -239,4 +228,14 @@ void Die()
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
     }
+
+    // public void SetActiveVisual(bool isActive)
+    // {
+    //     if (minimapIcon == null) return;
+
+    //     if (isActive)
+    //         minimapIcon.color = Color.red;
+    //     else
+    //         minimapIcon.color = Color.yellow;
+    // }
 }
