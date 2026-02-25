@@ -38,27 +38,23 @@ public class Killable : MonoBehaviour
     // BOT
     // =====================
     IEnumerator KillWithAnimation()
-{
-    isDead = true;
+    {
+        isDead = true;
 
-    OnKilled?.Invoke(transform);
+        OnKilled?.Invoke(transform);
 
-    Animator anim = GetComponentInChildren<Animator>();
-    if (anim != null)
-        anim.SetTrigger("Die");
+        Animator anim = GetComponentInChildren<Animator>();
+        if (anim != null)
+            anim.SetTrigger("Die");
 
-    Collider col = GetComponent<Collider>();
-    if (col != null)
-        col.enabled = false;
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+            col.enabled = false;
 
-    Rigidbody rb = GetComponent<Rigidbody>();
-    if (rb != null)
-        rb.isKinematic = true;
-
-    yield return new WaitForSeconds(destroyDelay);
-
-    
-
-    Destroy(gameObject);
-}
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.isKinematic = true;
+        yield return new WaitForSeconds(destroyDelay);
+        Destroy(gameObject);
+    }
 }

@@ -24,13 +24,55 @@ public class FormDecisionBrain : MonoBehaviour
     public TargetSelector targetSelector;
     public List<Transform> visibleTargets; // player forms ที่มองเห็น
 
+    [Header("Form Swap Settings")]
+    [SerializeField] float swapCooldown = 10f; // ระยะเวลาขั้นต่ำที่ต้องอยู่ในร่างนั้น
+    float swapTimer; // ตัวนับเวลาถอยหลังสำหรับการเปลี่ยนร่างครั้งต่อไป
+
     public CinemachineCamera botCinemachineCam;
 
-    [SerializeField] float decisionInterval = 0.5f;
+    [SerializeField] float decisionInterval = 0.5f; // คิดทุก ๆ 0.5 วินาที 
     float decisionTimer; // ถึงเวลาตัดสินใจใหม่ยัง
+
+    void Start()
+    {
+        foreach (var f in forms.ToArray())
+            RegisterForm(f);
+    }
+
+    void RegisterForm(PerceptionController p)
+    {
+        if (!p || !p.origin) return;
+
+        var k = p.origin.GetComponent<Killable>();
+        if (k != null)
+        {
+            k.OnKilled -= OnFormKilled;
+            k.OnKilled += OnFormKilled;
+        }
+    }
+
+    void OnFormKilled(Transform deadForm)
+    {
+        Debug.Log($"Brain removing dead form {deadForm.name}");
+
+        forms.RemoveAll(f => !f || f.origin == deadForm);
+
+        if (activeForm == deadForm)
+        {
+            activeForm = null;
+            activePerception = null;
+            GameManager.Instance.Victory();
+        }
+    }
+
     void Update() // เรียกทุกเฟรม
     {
+
+        forms.RemoveAll(f => !f || !f.origin);
+
         decisionTimer -= Time.deltaTime;
+        if (swapTimer > 0) swapTimer -= Time.deltaTime;
+
         if (decisionTimer > 0f)
             return;
 
@@ -42,12 +84,16 @@ public class FormDecisionBrain : MonoBehaviour
             return;
         }
 
-        DecideBestForm();
         DecideAction();
+
+        if (swapTimer <= 0)
+        {
+            DecideBestForm();
+        }
     }
 
     // ================= FORM SELECTION =================
-
+    // ตัวอื่นควรยืนนิ่ง ถ้าไม่ได้ active
     void DecideBestForm()
     {
         if (forms == null || forms.Count == 0)
@@ -97,6 +143,7 @@ public class FormDecisionBrain : MonoBehaviour
     {
         Debug.Log($"Active form changed to: {newForm.name}");
 
+        swapTimer = swapCooldown; // เริ่มนับถอยหลังใหม่หลังจากเปลี่ยนร่าง
         foreach (var f in forms)
         {
             var ctrl = f.origin.GetComponent<BotController>();
@@ -111,7 +158,7 @@ public class FormDecisionBrain : MonoBehaviour
             actionExecutor.SetActor(newForm);
         }
 
-        if (botCinemachineCam)
+        if (newForm && newForm.gameObject.activeInHierarchy)
         {
             botCinemachineCam.Follow = newForm;
             botCinemachineCam.LookAt = newForm;
@@ -123,8 +170,15 @@ public class FormDecisionBrain : MonoBehaviour
 
     void DecideAction()
     {
-        if (activePerception == null)
+        //if (activePerception == null)
+        //    return;
+
+        if (!activeForm)
+        {
+            activePerception = null;
             return;
+        }
+
         // list ศัตรูที่เรามองเห็น
         visibleTargets =
             worldPerception.GetVisibleEnemies(activePerception);
@@ -161,6 +215,8 @@ public class FormDecisionBrain : MonoBehaviour
 
         if (action == ActionType.Idle)
             action = ActionType.Patrol;
+
+        Debug.Log(action);
 
         actionExecutor.Execute(action);
     }

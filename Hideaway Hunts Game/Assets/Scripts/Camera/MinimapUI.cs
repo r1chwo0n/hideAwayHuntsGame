@@ -6,6 +6,7 @@ public class MinimapUI : MonoBehaviour
     public PlayerManager playerManager;
     public TextMeshProUGUI nearbyBotText;
     public float detectRadius = 30f;
+    public LayerMask BotLayer;
 
     void Update()
     {
@@ -13,15 +14,13 @@ public class MinimapUI : MonoBehaviour
 
         Vector3 playerPos = playerManager.CurrentPlayer.transform.position;
 
-        Killable[] bots = FindObjectsByType<Killable>(FindObjectsSortMode.None);
+        Collider[] hits = Physics.OverlapSphere(
+            playerPos,
+            detectRadius,
+            BotLayer
+        );
 
-        int count = 0;
-
-        foreach (var bot in bots)
-        {
-            if (Vector3.Distance(playerPos, bot.transform.position) <= detectRadius)
-                count++;
-        }
+        int count = hits.Length;
 
         nearbyBotText.text = "Bots Nearby: " + count;
     }

@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using TMPro;
 using UnityEngine.ProBuilder.Shapes;
 
 public class PlayerController : MonoBehaviour
@@ -30,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
 
     [Header("UI")]
+    public UnityEngine.ProBuilder.Shapes.Sprite avatarSprite;
     public CrosshairController crosshairController;
 
     [HideInInspector] public PlayerManager manager;
@@ -46,7 +45,7 @@ public class PlayerController : MonoBehaviour
     // =========================
 
     public SpriteRenderer minimapIcon;
-    
+
     void Start()
     {
         Debug.Log("Start");
@@ -87,7 +86,7 @@ public class PlayerController : MonoBehaviour
         HandleInput();
     }
 
- public bool IsDead() => myKillable != null && myKillable.isDead;
+    public bool IsDead() => myKillable != null && myKillable.isDead;
 
     void HandleInput()
     {
@@ -100,7 +99,7 @@ public class PlayerController : MonoBehaviour
         //if (Input.GetKeyDown(KeyCode.Q))
         //    Sit();
 
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.X))
             Die();
 
 
@@ -161,11 +160,6 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("Jump");
     }
 
-    //void Sit()
-    //{
-    //    isSitting = !isSitting;
-    //    animator.SetBool("isSitting", isSitting);
-    //}
 
     void Shoot()
     {
@@ -186,7 +180,6 @@ public class PlayerController : MonoBehaviour
             Killable target = hit.transform.GetComponent<Killable>();
             if (target != null)
             {
-                // สั่งให้ Bot ตัวนั้นตาย!
                 target.TakeHit();
             }
         }
@@ -200,14 +193,14 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int amount = 0)
     {
         if (IsDead()) return;
-        
+
         // เมื่อโดนยิง ให้เรียก TakeHit ของตัวเอง
         myKillable?.TakeHit();
-        
+
         if (crosshairController != null)
             crosshairController.FlashDamage();
     }
-void Die()
+    void Die()
     {
         // แจ้ง Manager เมื่อตาย
         manager.OnPlayerDead(this);
@@ -215,7 +208,6 @@ void Die()
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-        // ไม่ต้องใช้ Coroutine Disappear แล้ว เพราะ Killable จัดการให้เองตามที่ตั้งค่า
     }
 
     void OnDrawGizmosSelected()
