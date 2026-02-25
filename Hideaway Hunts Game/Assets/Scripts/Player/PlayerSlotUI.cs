@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerSlotUI : MonoBehaviour
 {
-    public Image avatar;
+    public Image avatarImage;
+    public TMP_Text nameText;
+    public Image background;
 
     PlayerController player;
     Killable killable;
@@ -15,24 +18,25 @@ public class PlayerSlotUI : MonoBehaviour
         outline = GetComponent<Outline>();
     }
 
-    public void Setup(PlayerController p)
-    {
-        player = p;
-        killable = p.GetComponent<Killable>();
-    }
-
     void Update()
     {
         if (killable == null) return;
 
         if (killable.isDead)
-        {
-            SetAlpha(0.12f);
-        }
+            SetAlpha(0.3f);   // จางลงตอนตาย
         else
-        {
             SetAlpha(1f);
-        }
+    }
+
+    public void Setup(PlayerController p)
+    {
+        player = p;
+        killable = p.GetComponent<Killable>();
+
+        nameText.text = p.name;
+
+        if (avatarImage != null && p.avatarSprite != null)
+            avatarImage.sprite = p.avatarSprite;
     }
 
     public void SetActive(bool active)
@@ -43,8 +47,10 @@ public class PlayerSlotUI : MonoBehaviour
 
     void SetAlpha(float value)
     {
-        Color c = avatar.color;
+        if (avatarImage == null) return;
+
+        Color c = avatarImage.color;
         c.a = value;
-        avatar.color = c;
+        avatarImage.color = c;
     }
 }

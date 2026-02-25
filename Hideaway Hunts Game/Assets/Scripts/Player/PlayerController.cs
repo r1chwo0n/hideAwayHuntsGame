@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
 
     [Header("UI")]
-    public UnityEngine.ProBuilder.Shapes.Sprite avatarSprite;
+
     public CrosshairController crosshairController;
 
     [HideInInspector] public PlayerManager manager;
@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour
     private Killable myKillable;
     public LayerMask shootMask;
 
+    [Header("UI Data")]
+    public UnityEngine.Sprite avatarSprite;
     // =========================
     // Unity
     // =========================
