@@ -53730,59 +53730,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09c988c86bcc31f49a921725a9408df1, type: 3}
---- !u!1 &1408151414
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1408151416}
-  - component: {fileID: 1408151415}
-  m_Layer: 0
-  m_Name: TopBarUI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1408151415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1408151414}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 571a012b8f6f24424888dab390d7decb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerManager: {fileID: 2123138709}
-  playerParent: {fileID: 1872354592}
-  botParent: {fileID: 1582058603}
-  playerSlotPrefab: {fileID: 2781970920522295396, guid: 2595953385a8340efbb742a6cb9b6128, type: 3}
-  botSlotPrefab: {fileID: 2895128070898422886, guid: 3c11743af95104beabf6a598a46f6c49, type: 3}
-  bots:
-  - {fileID: 1291841774}
-  - {fileID: 1850744843}
-  - {fileID: 1147215938}
---- !u!4 &1408151416
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1408151414}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 199.48517, y: -14.798329, z: 94.88486}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1417813475
 GameObject:
   m_ObjectHideFlags: 0
@@ -69400,6 +69347,7 @@ GameObject:
   - component: {fileID: 1853395853}
   - component: {fileID: 1853395855}
   - component: {fileID: 1853395854}
+  - component: {fileID: 1853395856}
   m_Layer: 5
   m_Name: TopBar
   m_TagString: Untagged
@@ -69467,6 +69415,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1853395852}
   m_CullTransparentMesh: 1
+--- !u!114 &1853395856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853395852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 571a012b8f6f24424888dab390d7decb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerManager: {fileID: 2123138709}
+  playerParent: {fileID: 1872354592}
+  botParent: {fileID: 1582058603}
+  playerSlotPrefab: {fileID: 2781970920522295396, guid: 2595953385a8340efbb742a6cb9b6128, type: 3}
+  botSlotPrefab: {fileID: 2895128070898422886, guid: 3c11743af95104beabf6a598a46f6c49, type: 3}
+  bots:
+  - {fileID: 1291841774}
+  - {fileID: 1850744843}
+  - {fileID: 1147215938}
 --- !u!1 &1856297893
 GameObject:
   m_ObjectHideFlags: 0
@@ -78776,12 +78745,12 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1853395853}
   - {fileID: 727701396}
   - {fileID: 93733864}
   - {fileID: 2093707843}
   - {fileID: 1817604403}
   - {fileID: 2028137106}
-  - {fileID: 1853395853}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -79882,5 +79851,4 @@ SceneRoots:
   - {fileID: 1618627867}
   - {fileID: 1350036238}
   - {fileID: 1917426614}
-  - {fileID: 1408151416}
   - {fileID: 557644917}
