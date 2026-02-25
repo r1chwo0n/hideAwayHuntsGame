@@ -32,8 +32,56 @@ public class FormDecisionBrain : MonoBehaviour
 
     [SerializeField] float decisionInterval = 0.5f; // คิดทุก ๆ 0.5 วินาที 
     float decisionTimer; // ถึงเวลาตัดสินใจใหม่ยัง
+
+    void Start()
+    {
+        foreach (var f in forms.ToArray())
+            RegisterForm(f);
+
+        // initial form
+        if (forms.Count > 0 && forms[0] != null)
+        {
+            activePerception = forms[0];
+            activeForm = forms[0].origin;
+
+            // เรียกใช้ Helper Function ที่คุณเขียนไว้แล้ว เพื่อกระจายค่าไปยัง Component อื่นๆ
+            OnActiveFormChanged(activeForm);
+
+            // บังคับให้เริ่มนับ Cooldown ตั้งแต่เริ่มเกมเลย
+            swapTimer = swapCooldown;
+        }
+    }
+
+    void RegisterForm(PerceptionController p)
+    {
+        if (!p || !p.origin) return;
+
+        var k = p.origin.GetComponent<Killable>();
+        if (k != null)
+        {
+            k.OnKilled -= OnFormKilled;
+            k.OnKilled += OnFormKilled;
+        }
+    }
+
+    void OnFormKilled(Transform deadForm)
+    {
+        Debug.Log($"Brain removing dead form {deadForm.name}");
+
+        forms.RemoveAll(f => !f || f.origin == deadForm);
+
+        if (activeForm == deadForm)
+        {
+            activeForm = null;
+            activePerception = null;
+        }
+    }
+
     void Update() // เรียกทุกเฟรม
     {
+
+        forms.RemoveAll(f => !f || !f.origin);
+
         decisionTimer -= Time.deltaTime;
         if (swapTimer > 0) swapTimer -= Time.deltaTime;
 
@@ -42,22 +90,30 @@ public class FormDecisionBrain : MonoBehaviour
 
         decisionTimer = decisionInterval;
 
-        if (forms.Count == 1)
-        {
-            DecideAction();
-            return;
-        }
+        //if (forms.Count == 1)
+        //{
+        //    DecideAction();
+        //    return;
+        //}
 
+        //DecideAction();
+
+        //if (swapTimer <= 0)
+        //{
+        //    DecideBestForm();
+        //}
+        // 1. ตัดสินใจ Action ของ Form ปัจจุบันก่อนเสมอ
         DecideAction();
 
-        if (swapTimer <= 0)
+        // 2. ถ้ามีหลายร่าง และ Cooldown หมดแล้ว ถึงจะอนุญาตให้เปลี่ยนร่าง
+        if (forms.Count > 1 && swapTimer <= 0)
         {
             DecideBestForm();
         }
     }
 
     // ================= FORM SELECTION =================
-
+    // ตัวอื่นควรยืนนิ่ง ถ้าไม่ได้ active
     void DecideBestForm()
     {
         if (forms == null || forms.Count == 0)
@@ -122,7 +178,12 @@ public class FormDecisionBrain : MonoBehaviour
             actionExecutor.SetActor(newForm);
         }
 
-        if (botCinemachineCam)
+        if (targetSelector)
+        {
+            targetSelector.bot = newForm;
+        }
+
+        if (newForm && newForm.gameObject.activeInHierarchy)
         {
             botCinemachineCam.Follow = newForm;
             botCinemachineCam.LookAt = newForm;
@@ -134,8 +195,15 @@ public class FormDecisionBrain : MonoBehaviour
 
     void DecideAction()
     {
-        if (activePerception == null)
+        //if (activePerception == null)
+        //    return;
+
+        if (!activeForm)
+        {
+            activePerception = null;
             return;
+        }
+
         // list ศัตรูที่เรามองเห็น
         visibleTargets =
             worldPerception.GetVisibleEnemies(activePerception);
@@ -155,23 +223,41 @@ public class FormDecisionBrain : MonoBehaviour
         else
             world.ammoRatio = 0f;
 
+        Debug.Log(
+                $"Nearest={world.nearestEnemyDistance:F1}, " +
+                $"Avg={world.avgEnemyDistance:F2}, " +
+                $"UsSee={world.usSeeingEnemies}, " +
+                $"TheySee={world.enemiesSeeingUs}, " +
+                $"Density={world.enemyCountInRange}" + 
+                $"Form={world.formsRemaining}" +
+                $"Enemy={world.enemyFormsRemaining}" +
+                $"Ammo={world.ammoRatio}" 
+            );
+
         // ถ้าเห็นศัตรูอย่างน้อย 1 ตัว
         if (visibleTargets.Count > 0)
         {
-            Transform nearest =
+            Transform target =
                 targetSelector.SelectTarget(visibleTargets);
 
-            if (actionExecutor.target != nearest)
+            if (target == null)
+                Debug.Log("ไม่มี target จ้า");
+
+            if (actionExecutor.target != target)
             {
-                actionExecutor.SetTarget(nearest);
+                actionExecutor.SetTarget(target);
             }
         }
+
+        //Debug.Log("Target" + actionExecutor.target);
 
         ActionType action =
             actionBrain.DecideAction(world);
 
         if (action == ActionType.Idle)
             action = ActionType.Patrol;
+
+        Debug.Log(action);
 
         actionExecutor.Execute(action);
     }

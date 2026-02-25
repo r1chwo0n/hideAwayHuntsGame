@@ -35,21 +35,21 @@ public class ActionFuzzySetup : MonoBehaviour
         engine.AddInput(enemyDist);
 
         // การกระจายของสนาม
-        var avgDist = new FuzzyVariable("AverageEnemyDistance");
-        avgDist.AddSet(new FuzzySet("Close",
-            c => Triangle(c, 0f, 0f, 0.4f)));
-        avgDist.AddSet(new FuzzySet("Balance", // กลาง ๆ 
-            c => Triangle(c, 0.25f, 0.5f, 0.75f)));
-        avgDist.AddSet(new FuzzySet("Spread", // กระจาย
-            c => Triangle(c, 0.6f, 1f, 1f)));
-        engine.AddInput(avgDist);
+        //var avgDist = new FuzzyVariable("AverageEnemyDistance");
+        //avgDist.AddSet(new FuzzySet("Close",
+        //    c => Triangle(c, 0f, 0f, 0.4f)));
+        //avgDist.AddSet(new FuzzySet("Balance", // กลาง ๆ 
+        //    c => Triangle(c, 0.25f, 0.5f, 0.75f)));
+        //avgDist.AddSet(new FuzzySet("Spread", // กระจาย
+        //    c => Triangle(c, 0.6f, 1f, 1f)));
+        //engine.AddInput(avgDist);
 
         // ปริมาณศัตรู
         var density = new FuzzyVariable("EnemyDensity");
         density.AddSet(new FuzzySet("None",
             x => x <= 0 ? 1f : 0f));
         density.AddSet(new FuzzySet("Few",
-            x => Triangle(x, 0f, 1f, 2f)));
+            x => Triangle(x, 0f, 1f, 2.5f)));
         density.AddSet(new FuzzySet("Many",
             x => Triangle(x, 1f, 3f, 3f)));
         engine.AddInput(density);
@@ -59,7 +59,7 @@ public class ActionFuzzySetup : MonoBehaviour
         usSeeing.AddSet(new FuzzySet("Blind", // มองไม่เห็น
             x => x <= 0 ? 1f : 0f));
         usSeeing.AddSet(new FuzzySet("Partial", // เห็นบางส่วน
-            x => Triangle(x, 0f, 1f, 2f)));
+            x => Triangle(x, 0f, 1f, 2.5f)));
         usSeeing.AddSet(new FuzzySet("Clear", // เห็นชัดเจน
             x => Triangle(x, 1f, 3f, 3f)));
         engine.AddInput(usSeeing);
@@ -69,7 +69,7 @@ public class ActionFuzzySetup : MonoBehaviour
         threat.AddSet(new FuzzySet("Unaware", // ไม่รู้ตัว
             x => x <= 0 ? 1f : 0f));
         threat.AddSet(new FuzzySet("Alert", // ระวังตัว
-            x => Triangle(x, 0f, 1f, 2f)));
+            x => Triangle(x, 0f, 1f, 2.5f)));
         threat.AddSet(new FuzzySet("Surrounded", // ถูกล้อมรอบ
             x => Triangle(x, 1f, 3f, 3f)));
         engine.AddInput(threat);
@@ -133,6 +133,12 @@ public class ActionFuzzySetup : MonoBehaviour
 
     void SetupRules()
     {
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("EnemyDensity", "None")
+            .AddCondition("UsSeeingEnemies", "Blind")
+            .AddCondition("EnemiesSeeingUs", "Unaware")
+            .AddConclusion("ActionDecision", "Idle"));
+
         // Retreat = เอาตัวรอด
         // โดนล้อม = ถอย
         engine.AddRule(new FuzzyRule()
@@ -152,43 +158,63 @@ public class ActionFuzzySetup : MonoBehaviour
             .AddConclusion("ActionDecision", "Retreat"));
 
         // Defend = ตึง แต่ไม่ถอย ไม่บุก
-        // ศัตรูเยอะ + ยังไม่โดนล้อม
         engine.AddRule(new FuzzyRule()
             .AddCondition("EnemyDensity", "Many")
             .AddCondition("EnemiesSeeingUs", "Alert")
             .AddConclusion("ActionDecision", "Defend"));
 
-        // เห็นศัตรูบางส่วน + เขาเห็นเรา
+        //engine.AddRule(new FuzzyRule()
+        //    .AddCondition("UsSeeingEnemies", "Partial")
+        //    .AddCondition("EnemiesSeeingUs", "Alert")
+        //    .AddConclusion("ActionDecision", "Defend"));
+
+        // **
         engine.AddRule(new FuzzyRule()
             .AddCondition("UsSeeingEnemies", "Partial")
-            .AddCondition("EnemiesSeeingUs", "Alert")
+            .AddCondition("AmmoRatio", "Low") 
             .AddConclusion("ActionDecision", "Defend"));
 
-        // กระสุนพอ แต่ไม่เต็ม => ตั้งรับ
         engine.AddRule(new FuzzyRule()
-            .AddCondition("AmmoRatio", "Enough")
-            .AddCondition("EnemyDensity", "Few")
+            .AddCondition("NearestEnemyDistance", "Medium")
+            .AddCondition("UsSeeingEnemies", "Partial")
             .AddConclusion("ActionDecision", "Defend"));
 
         // Attack = ได้เปรียบ + โจมตี
-        // เราเห็นเขา แต่เขาไม่เห็นเรา
         engine.AddRule(new FuzzyRule()
-            .AddCondition("UsSeeingEnemies", "Clear")
+            .AddCondition("NearestEnemyDistance", "Near")
+            .AddConclusion("ActionDecision", "Attack"));
+
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("UsSeeingEnemies", "Clear") 
+            .AddCondition("AmmoRatio", "Enough")    
+            .AddConclusion("ActionDecision", "Attack"));
+
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("UsSeeingEnemies", "Partial") 
+            .AddCondition("AmmoRatio", "Full")       
+            .AddConclusion("ActionDecision", "Attack"));
+
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("UsSeeingEnemies", "Partial")
+            .AddCondition("EnemiesSeeingUs", "Unaware") 
+            .AddConclusion("ActionDecision", "Attack"));
+
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("FormsRemaining", "Plenty")
+            .AddCondition("EnemyFormsRemaining", "Few") 
+            .AddConclusion("ActionDecision", "Attack"));
+
+        engine.AddRule(new FuzzyRule()
+            .AddCondition("FormsRemaining", "Critical")
+            .AddCondition("NearestEnemyDistance", "Near")
             .AddCondition("EnemiesSeeingUs", "Unaware")
             .AddConclusion("ActionDecision", "Attack"));
 
-        // เรามีร่างมากกว่า + เห็นศัตรู
         engine.AddRule(new FuzzyRule()
-            .AddCondition("FormsRemaining", "Plenty")
-            .AddCondition("EnemyFormsRemaining", "Few")
-            .AddCondition("UsSeeingEnemies", "Partial")
-            .AddConclusion("ActionDecision", "Attack"));
-
-        // กระสุนเต็ม + ศัตรูน้อย
-        engine.AddRule(new FuzzyRule()
+            .AddCondition("NearestEnemyDistance", "Medium")
+            .AddCondition("UsSeeingEnemies", "Clear")
             .AddCondition("AmmoRatio", "Full")
-            .AddCondition("EnemyDensity", "Few")
-            .AddConclusion("ActionDecision", "Attack"));
+            .AddConclusion("ActionDecision", "Attack")); // ระยะกลางแต่เราพร้อมมาก -> เปิดก่อนได้เปรียบ
 
         // Patrol = ยังไม่มีอะไรเกิดขึ้น
         // ไม่มีศัตรู
@@ -196,16 +222,16 @@ public class ActionFuzzySetup : MonoBehaviour
             .AddCondition("EnemyDensity", "None")
             .AddConclusion("ActionDecision", "Patrol"));
 
-        // ศัตรูน้อย + ยังไม่เห็นกัน
         engine.AddRule(new FuzzyRule()
+            .AddCondition("UsSeeingEnemies", "Blind")
             .AddCondition("EnemyDensity", "Few")
             .AddCondition("EnemiesSeeingUs", "Unaware")
             .AddConclusion("ActionDecision", "Patrol"));
 
-        // เรามองไม่เห็นอะไรเลย
         engine.AddRule(new FuzzyRule()
-            .AddCondition("UsSeeingEnemies", "Blind")
-            .AddConclusion("ActionDecision", "Patrol"));
+            .AddCondition("NearestEnemyDistance", "Far")
+            .AddCondition("EnemiesSeeingUs", "Unaware")
+            .AddConclusion("ActionDecision", "Patrol")); 
 
     }
 }
