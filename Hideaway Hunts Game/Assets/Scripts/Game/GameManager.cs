@@ -18,100 +18,115 @@ public enum BotMode
 
 public class GameManager : MonoBehaviour
 {
-    public static BotMode selectedMode;
-    public Volume globalVolume;
-    private DepthOfField dof;
     public static GameManager Instance;
 
+    [Header("Mode")]
+    public static BotMode selectedMode;
+
+    [Header("Game State")]
     public GameState currentState;
+
+    [Header("Active Bot")]
+    public BotController activeBot;   // 👈 ตัวที่ต้องฆ่า
+
+    [Header("Post Processing")]
+    public Volume globalVolume;
+    private DepthOfField dof;
 
     [Header("UI")]
     public GameObject pausePanel;
 
     private bool isPaused = false;
 
+    // =====================
+    // INITIALIZE
+    // =====================
+
     void Awake()
     {
-        Debug.Log("GameManager Awake Called");
-
         if (Instance == null)
-        {
             Instance = this;
-        }
-        else if (Instance != this)
-        {
+        else
             Destroy(gameObject);
-        }
     }
 
     void Start()
     {
         Time.timeScale = 1f;
+        currentState = GameState.Playing;
+
         if (pausePanel != null)
             pausePanel.SetActive(false);
+
         if (globalVolume != null && globalVolume.profile.TryGet(out dof))
-        {
             dof.active = false;
-        }
-        StartGame();
     }
 
     void Update()
     {
-        
         if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Time.timeScale = 0f;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
+            TogglePause();
     }
 
-    public void StartGame()
+    // =====================
+    // GAME FLOW
+    // =====================
+
+    public void RegisterActiveBot(BotController bot)
     {
-        currentState = GameState.Playing;
-        Debug.Log("Game Started");
+        bot.isActive = true;
     }
 
+    public void OnBotKilled(BotController bot)
+    {
+        if (currentState != GameState.Playing)
+            return;
+
+        if (bot == activeBot)
+            Victory();
+    }
+
+    public void OnPlayerKilled()
+    {
+        if (currentState != GameState.Playing)
+            return;
+
+        Defeat();
+    }
 
     public void Victory()
     {
-        if (currentState != GameState.Playing) return;
-
         currentState = GameState.Victory;
 
         Time.timeScale = 1f;
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        UnlockCursor();
 
         SceneManager.LoadScene("VictoryScene");
     }
 
     public void Defeat()
     {
-        if (currentState != GameState.Playing) return;
-
         currentState = GameState.Defeat;
 
         Time.timeScale = 1f;
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        UnlockCursor();
 
         SceneManager.LoadScene("DefeatScene");
     }
 
     // =====================
-    // 🎮 Pause System
+    // PAUSE SYSTEM
     // =====================
 
     public void TogglePause()
     {
-        if (!isPaused)
-            PauseGame();
-        else
+        if (currentState != GameState.Playing)
+            return;
+
+        if (isPaused)
             ResumeGame();
+        else
+            PauseGame();
     }
 
     void PauseGame()
@@ -119,10 +134,8 @@ public class GameManager : MonoBehaviour
         isPaused = true;
 
         Time.timeScale = 0f;
-        pausePanel.SetActive(true);
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        pausePanel?.SetActive(true);
+        UnlockCursor();
     }
 
     void ResumeGame()
@@ -130,8 +143,22 @@ public class GameManager : MonoBehaviour
         isPaused = false;
 
         Time.timeScale = 1f;
-        pausePanel.SetActive(false);
+        pausePanel?.SetActive(false);
+        LockCursor();
+    }
 
+    // =====================
+    // UTIL
+    // =====================
+
+    void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    void LockCursor()
+    {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

@@ -100,6 +100,9 @@ public class PlayerController : MonoBehaviour
         //if (Input.GetKeyDown(KeyCode.Q))
         //    Sit();
 
+        if (Input.GetKeyDown(KeyCode.C))
+            Die();
+
 
     }
 
@@ -215,12 +218,6 @@ void Die()
         // ไม่ต้องใช้ Coroutine Disappear แล้ว เพราะ Killable จัดการให้เองตามที่ตั้งค่า
     }
 
-    IEnumerator Disappear()
-    {
-        yield return new WaitForSeconds(3f);
-        gameObject.SetActive(false);
-    }
-
     void OnDrawGizmosSelected()
     {
         if (groundCheck == null) return;
@@ -229,13 +226,13 @@ void Die()
         Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
     }
 
-    // public void SetActiveVisual(bool isActive)
-    // {
-    //     if (minimapIcon == null) return;
+    public void SetActiveVisual(bool isActive)
+    {
+        if (minimapIcon == null) return;
 
-    //     if (isActive)
-    //         minimapIcon.color = Color.red;
-    //     else
-    //         minimapIcon.color = Color.yellow;
-    // }
+        if (isActive)
+            minimapIcon.color = Color.red;
+        else
+            minimapIcon.color = Color.yellow;
+    }
 }

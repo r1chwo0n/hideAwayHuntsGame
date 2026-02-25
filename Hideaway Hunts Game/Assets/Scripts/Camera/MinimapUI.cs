@@ -13,7 +13,7 @@ public class MinimapUI : MonoBehaviour
 
         Vector3 playerPos = playerManager.CurrentPlayer.transform.position;
 
-        BotBody[] bots = FindObjectsByType<BotBody>(FindObjectsSortMode.None);
+        Killable[] bots = FindObjectsByType<Killable>(FindObjectsSortMode.None);
 
         int count = 0;
 
