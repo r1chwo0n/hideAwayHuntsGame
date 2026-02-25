@@ -4,7 +4,7 @@ public class GunShooter : MonoBehaviour
 {
     [Header("Gun Settings")]
     public float shootRange = 20f;
-    public float fireCooldown = 0.5f;
+    //public float fireCooldown = 0.5f;
     public Transform firePoint;
 
     [Header("Ammo")]
@@ -14,7 +14,7 @@ public class GunShooter : MonoBehaviour
     [Header("Runtime")]
     public Transform target;
 
-    float lastFireTime = -999f;
+    //float lastFireTime = -999f;
 
     public float AmmoRatio =>
         maxAmmo > 0 ? (float)currentAmmo / maxAmmo : 0f;
@@ -39,8 +39,8 @@ public class GunShooter : MonoBehaviour
         if (currentAmmo <= 0)
             return false;
 
-        if (Time.time < lastFireTime + fireCooldown)
-            return false;
+        //if (Time.time < lastFireTime + fireCooldown)
+        //    return false;
 
         return true;
     }
@@ -51,7 +51,7 @@ public class GunShooter : MonoBehaviour
         if (!CanFire())
             return;
 
-        lastFireTime = Time.time;
+        //lastFireTime = Time.time;
         currentAmmo--;
 
         ShootRay();

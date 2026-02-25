@@ -9,9 +9,9 @@ public class PlayerManager : MonoBehaviour
     public float swapCooldown = 10f;
     private float swapTimer;
 
-    [Header("Gun Settings")]
-    public float fireCooldown = 0.5f; // ระยะห่างระหว่างนัด (วินาที)
-    private float lastFireTime = -999f;
+    //[Header("Gun Settings")]
+    //public float fireCooldown = 0.5f; // ระยะห่างระหว่างนัด (วินาที)
+    //private float lastFireTime = -999f;
 
     public PlayerController[] players;
     public ThirdPersonCameraWithCollision cameraController;
@@ -108,7 +108,7 @@ public class PlayerManager : MonoBehaviour
         if (!CanShoot()) return;
 
         sharedAmmo--;
-        lastFireTime = Time.time; // บันทึกเวลาที่ยิงนัดนี้
+        //lastFireTime = Time.time; // บันทึกเวลาที่ยิงนัดนี้
 
         Debug.Log("Ammo after shoot: " + sharedAmmo +
               " | Active: " + CurrentPlayer.name);
@@ -129,7 +129,7 @@ public class PlayerManager : MonoBehaviour
 
         // เริ่มนับ Cooldown ใหม่ทุกครั้งที่เปลี่ยนร่างสำเร็จ
         swapTimer = swapCooldown;
-        Debug.Log($"Switched to Player {index + 1}. Cooldown started.");
+        //Debug.Log($"Switched to Player {index + 1}. Cooldown started.");
     }
 
     public int AliveCount
@@ -207,7 +207,7 @@ public class PlayerManager : MonoBehaviour
         if (sharedAmmo <= 0) return false;
 
         // ต้องพ้นระยะ Cooldown
-        if (Time.time < lastFireTime + fireCooldown) return false;
+        //if (Time.time < lastFireTime + fireCooldown) return false;
 
         if (CurrentPlayer == null || CurrentPlayer.IsDead()) return false;
 
