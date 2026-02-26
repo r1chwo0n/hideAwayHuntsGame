@@ -5,18 +5,16 @@ using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
-<<<<<<< Updated upstream
-=======
     [Header("Swap Settings")]
     public float swapCooldown = 10f;
     private float swapTimer;
+
     public TurnTimer turnTimer;
 
     //[Header("Gun Settings")]
     //public float fireCooldown = 0.5f; // ระยะห่างระหว่างนัด (วินาที)
     //private float lastFireTime = -999f;
 
->>>>>>> Stashed changes
     public PlayerController[] players;
     public ThirdPersonCameraWithCollision cameraController;
     public PlayerController CurrentPlayer { get; private set; }
@@ -55,6 +53,8 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
+        if (swapTimer > 0) swapTimer -= Time.deltaTime;
+
         if (Input.GetKeyDown(KeyCode.Alpha1)) TryActivatePlayer(0);
         if (Input.GetKeyDown(KeyCode.Alpha2)) TryActivatePlayer(1);
         if (Input.GetKeyDown(KeyCode.Alpha3)) TryActivatePlayer(2);
@@ -85,22 +85,37 @@ public class PlayerManager : MonoBehaviour
     void TryActivatePlayer(int index)
     {
         if (index < 0 || index >= players.Length) return;
-        int num = index + 1;
         if (players[index].IsDead())
         {
-            Debug.Log("Player" + num + "is dead. Cannot switch.");
+            Debug.Log("Player" + (index + 1) + "is dead. Cannot switch.");
             return;
         }
 
+        bool isCurrentPlayerDead = CurrentPlayer == null || CurrentPlayer.IsDead();
+
+        if (swapTimer > 0 && !isCurrentPlayerDead)
+        {
+            Debug.Log($"Switch on cooldown! Wait {swapTimer:F1}s");
+            return;
+        }
+
+        if (CurrentPlayer == players[index]) return;
+
+        
+
         ActivatePlayer(index);
+
+      
     }
 
 
     public void UseAmmo()
     {
-        if (sharedAmmo <= 0) return;
+        if (!CanShoot()) return;
 
         sharedAmmo--;
+        //lastFireTime = Time.time; // บันทึกเวลาที่ยิงนัดนี้
+
         Debug.Log("Ammo after shoot: " + sharedAmmo +
               " | Active: " + CurrentPlayer.name);
 
@@ -124,18 +139,15 @@ public class PlayerManager : MonoBehaviour
 
         if (playerNumberText != null)
             playerNumberText.text = "Player " + (index + 1);
-<<<<<<< Updated upstream
-=======
 
         // เริ่มนับ Cooldown ใหม่ทุกครั้งที่เปลี่ยนร่างสำเร็จ
         swapTimer = swapCooldown;
-        if (turnTimer != null)
+          if (turnTimer != null)
         {
             turnTimer.StartTimer();
         }
->>>>>>> Stashed changes
+        //Debug.Log($"Switched to Player {index + 1}. Cooldown started.");
     }
-
 
     public int AliveCount
     {
@@ -180,28 +192,19 @@ public class PlayerManager : MonoBehaviour
     }
 
     public int CountNearbyBots(float radius)
-{
-    if (CurrentPlayer == null) return 0;
-
-    // ค้นหา Object รอบตัวในระยะ radius
-    Collider[] hits = Physics.OverlapSphere(
-        CurrentPlayer.transform.position,
-        radius
-    );
-
-    int count = 0;
-
-    foreach (var hit in hits)
     {
-        Killable k = hit.GetComponent<Killable>();
-        if (k != null && 
-            k.transform != CurrentPlayer.transform && 
-            !k.isPlayer && 
-            !k.isDead)
+        if (CurrentPlayer == null) return 0;
+
+        // ค้นหา Object รอบตัวในระยะ radius
+        Collider[] hits = Physics.OverlapSphere(
+            CurrentPlayer.transform.position,
+            radius
+        );
+
+        int count = 0;
+
+        foreach (var hit in hits)
         {
-<<<<<<< Updated upstream
-            count++;
-=======
             Killable k = hit.GetComponent<Killable>();
             if (k != null &&
                 k.transform != CurrentPlayer.transform &&
@@ -210,10 +213,22 @@ public class PlayerManager : MonoBehaviour
             {
                 count++;
             }
->>>>>>> Stashed changes
         }
+
+        return count;
     }
 
-    return count;
-}
+    public bool CanShoot()
+    {
+        // กระสุนต้องไม่หมด
+        if (sharedAmmo <= 0) return false;
+
+        // ต้องพ้นระยะ Cooldown
+        //if (Time.time < lastFireTime + fireCooldown) return false;
+
+        if (CurrentPlayer == null || CurrentPlayer.IsDead()) return false;
+
+        return true;
+    }
+
 }

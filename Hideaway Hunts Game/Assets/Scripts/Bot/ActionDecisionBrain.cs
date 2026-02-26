@@ -14,7 +14,7 @@ public class ActionDecisionBrain : MonoBehaviour
         var inputs = new Dictionary<string, float>
         {
             { "NearestEnemyDistance", s.nearestEnemyDistance },
-            { "AverageEnemyDistance", s.avgEnemyDistance },
+            //{ "AverageEnemyDistance", s.avgEnemyDistance },
             { "EnemyDensity", s.enemyCountInRange },
             { "UsSeeingEnemies", s.usSeeingEnemies },
             { "EnemiesSeeingUs", s.enemiesSeeingUs },
@@ -26,6 +26,7 @@ public class ActionDecisionBrain : MonoBehaviour
         var result = fuzzySetup.engine.Evaluate(inputs);
 
         float v = result["ActionDecision"];
+        Debug.Log(v);
 
         return DecodeAction(v);
     }
@@ -50,12 +51,26 @@ public class ActionDecisionBrain : MonoBehaviour
     //    return ActionType.Retreat;
     //}
 
+    //private ActionType DecodeAction(float v)
+    //{
+    //    if (v < 0.125f) return ActionType.Idle;
+    //    if (v < 0.375f) return ActionType.Patrol;
+    //    if (v < 0.625f) return ActionType.Defend;
+    //    if (v < 0.875f) return ActionType.Attack;
+
+    //    return ActionType.Retreat;
+    //}
+
     private ActionType DecodeAction(float v)
     {
-        if (v < 0.125f) return ActionType.Idle;
-        if (v < 0.375f) return ActionType.Patrol;
-        if (v < 0.625f) return ActionType.Defend;
-        if (v < 0.875f) return ActionType.Attack;
+        if (v < 0.10f) return ActionType.Idle;
+        if (v < 0.30f) return ActionType.Patrol;
+
+        // ถ้าคะแนนเกิน 0.55 ให้ถือว่าเริ่มอยาก Attack แล้ว 
+        // เพราะค่าเฉลี่ยจากการโดนดึงระหว่าง Defend(0.5) กับ Attack(0.75) จะอยู่แถวๆ 0.6
+        if (v < 0.58f) return ActionType.Defend;
+
+        if (v < 0.88f) return ActionType.Attack;
 
         return ActionType.Retreat;
     }

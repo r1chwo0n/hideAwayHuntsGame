@@ -37,6 +37,19 @@ public class FormDecisionBrain : MonoBehaviour
     {
         foreach (var f in forms.ToArray())
             RegisterForm(f);
+
+        // initial form
+        if (forms.Count > 0 && forms[0] != null)
+        {
+            activePerception = forms[0];
+            activeForm = forms[0].origin;
+
+            // เรียกใช้ Helper Function ที่คุณเขียนไว้แล้ว เพื่อกระจายค่าไปยัง Component อื่นๆ
+            OnActiveFormChanged(activeForm);
+
+            // บังคับให้เริ่มนับ Cooldown ตั้งแต่เริ่มเกมเลย
+            swapTimer = swapCooldown;
+        }
     }
 
     void RegisterForm(PerceptionController p)
@@ -78,15 +91,23 @@ public class FormDecisionBrain : MonoBehaviour
 
         decisionTimer = decisionInterval;
 
-        if (forms.Count == 1)
-        {
-            DecideAction();
-            return;
-        }
+        //if (forms.Count == 1)
+        //{
+        //    DecideAction();
+        //    return;
+        //}
 
+        //DecideAction();
+
+        //if (swapTimer <= 0)
+        //{
+        //    DecideBestForm();
+        //}
+        // 1. ตัดสินใจ Action ของ Form ปัจจุบันก่อนเสมอ
         DecideAction();
 
-        if (swapTimer <= 0)
+        // 2. ถ้ามีหลายร่าง และ Cooldown หมดแล้ว ถึงจะอนุญาตให้เปลี่ยนร่าง
+        if (forms.Count > 1 && swapTimer <= 0)
         {
             DecideBestForm();
         }
@@ -158,6 +179,11 @@ public class FormDecisionBrain : MonoBehaviour
             actionExecutor.SetActor(newForm);
         }
 
+        if (targetSelector)
+        {
+            targetSelector.bot = newForm;
+        }
+
         if (newForm && newForm.gameObject.activeInHierarchy)
         {
             botCinemachineCam.Follow = newForm;
@@ -198,17 +224,33 @@ public class FormDecisionBrain : MonoBehaviour
         else
             world.ammoRatio = 0f;
 
+        Debug.Log(
+                $"Nearest={world.nearestEnemyDistance:F1}, " +
+                $"Avg={world.avgEnemyDistance:F2}, " +
+                $"UsSee={world.usSeeingEnemies}, " +
+                $"TheySee={world.enemiesSeeingUs}, " +
+                $"Density={world.enemyCountInRange}" + 
+                $"Form={world.formsRemaining}" +
+                $"Enemy={world.enemyFormsRemaining}" +
+                $"Ammo={world.ammoRatio}" 
+            );
+
         // ถ้าเห็นศัตรูอย่างน้อย 1 ตัว
         if (visibleTargets.Count > 0)
         {
-            Transform nearest =
+            Transform target =
                 targetSelector.SelectTarget(visibleTargets);
 
-            if (actionExecutor.target != nearest)
+            if (target == null)
+                Debug.Log("ไม่มี target จ้า");
+
+            if (actionExecutor.target != target)
             {
-                actionExecutor.SetTarget(nearest);
+                actionExecutor.SetTarget(target);
             }
         }
+
+        //Debug.Log("Target" + actionExecutor.target);
 
         ActionType action =
             actionBrain.DecideAction(world);

@@ -1,34 +1,32 @@
 using UnityEngine;
 using TMPro;
-using System.Collections;
 
 public class TurnTimer : MonoBehaviour
 {
-    public TextMeshProUGUI timeText;
-    public float countdownTime = 10f;
+    public float duration = 10f;
+    private float currentTime;
+    private bool isRunning;
 
-    float currentTime;
-    Coroutine timerCoroutine;
+    public TMP_Text timeText;
+
+    void Update()
+    {
+        if (!isRunning) return;
+
+        currentTime -= Time.deltaTime;
+
+        timeText.text = Mathf.Ceil(currentTime).ToString();
+
+        if (currentTime <= 0)
+        {
+            isRunning = false;
+            timeText.text = "0";
+        }
+    }
 
     public void StartTimer()
     {
-        if (timerCoroutine != null)
-            StopCoroutine(timerCoroutine);
-
-        timerCoroutine = StartCoroutine(Countdown());
-    }
-
-    IEnumerator Countdown()
-    {
-        currentTime = countdownTime;
-
-        while (currentTime > 0)
-        {
-            timeText.text = Mathf.Ceil(currentTime).ToString();
-            currentTime -= Time.deltaTime;
-            yield return null;
-        }
-
-        timeText.text = "0";
+        currentTime = duration;
+        isRunning = true;
     }
 }
