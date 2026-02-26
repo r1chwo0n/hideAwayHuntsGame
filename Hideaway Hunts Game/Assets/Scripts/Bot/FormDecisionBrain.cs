@@ -6,9 +6,14 @@ public class FormDecisionBrain : MonoBehaviour
 {
     [Header("References")]
     public WorldPerception worldPerception;
-    public ActiveFormSelector formSelector;
-    public ActionDecisionBrain actionBrain;
+    //public ActiveFormSelector formSelector;
+    //public ActionDecisionBrain actionBrain;
     public ActionExecutor actionExecutor;
+    public MonoBehaviour formSelector;
+    public MonoBehaviour actionBrain;
+
+    IFormSelector formBrain;
+    IActionDecisionBrain actionBrainInterface;
 
     [Header("Forms")]
     public List<PerceptionController> forms;
@@ -33,8 +38,28 @@ public class FormDecisionBrain : MonoBehaviour
     [SerializeField] float decisionInterval = 0.5f; // คิดทุก ๆ 0.5 วินาที 
     float decisionTimer; // ถึงเวลาตัดสินใจใหม่ยัง
 
+    void Awake()
+    {
+        RefreshBrains();
+    }
+
+    public void RefreshBrains()
+    {
+        formBrain = formSelector as IFormSelector;
+        actionBrainInterface = actionBrain as IActionDecisionBrain;
+
+        if (formBrain == null)
+            Debug.LogError("FormSelector does not implement IFormSelector!");
+
+        if (actionBrainInterface == null)
+            Debug.LogError("ActionBrain does not implement IActionDecisionBrain!");
+
+        Debug.Log($"Brain Installed: {formBrain.GetType().Name} | {actionBrainInterface.GetType().Name}");
+    }
+
     void Start()
     {
+
         foreach (var f in forms.ToArray())
             RegisterForm(f);
 
@@ -91,22 +116,10 @@ public class FormDecisionBrain : MonoBehaviour
 
         decisionTimer = decisionInterval;
 
-        //if (forms.Count == 1)
-        //{
-        //    DecideAction();
-        //    return;
-        //}
-
-        //DecideAction();
-
-        //if (swapTimer <= 0)
-        //{
-        //    DecideBestForm();
-        //}
-        // 1. ตัดสินใจ Action ของ Form ปัจจุบันก่อนเสมอ
+        // ตัดสินใจ Action ของ Form ปัจจุบันก่อนเสมอ
         DecideAction();
 
-        // 2. ถ้ามีหลายร่าง และ Cooldown หมดแล้ว ถึงจะอนุญาตให้เปลี่ยนร่าง
+        // ถ้ามีหลายร่าง และ Cooldown หมดแล้ว ถึงจะอนุญาตให้เปลี่ยนร่าง
         if (forms.Count > 1 && swapTimer <= 0)
         {
             DecideBestForm();
@@ -145,7 +158,7 @@ public class FormDecisionBrain : MonoBehaviour
             });
         }
 
-        Transform best = formSelector.SelectBestForm(situations);
+        Transform best = formBrain.SelectBestForm(situations);
 
         if (best != null)
         {
@@ -172,8 +185,6 @@ public class FormDecisionBrain : MonoBehaviour
                 ctrl.isActive = (f.origin == newForm);
         }
 
-        //actionExecutor.SetActor(newForm);
-        //targetSelector.bot = newForm;
         if (actionExecutor)
         {
             actionExecutor.SetActor(newForm);
@@ -226,7 +237,6 @@ public class FormDecisionBrain : MonoBehaviour
 
         Debug.Log(
                 $"Nearest={world.nearestEnemyDistance:F1}, " +
-                $"Avg={world.avgEnemyDistance:F2}, " +
                 $"UsSee={world.usSeeingEnemies}, " +
                 $"TheySee={world.enemiesSeeingUs}, " +
                 $"Density={world.enemyCountInRange}" + 
@@ -252,8 +262,7 @@ public class FormDecisionBrain : MonoBehaviour
 
         //Debug.Log("Target" + actionExecutor.target);
 
-        ActionType action =
-            actionBrain.DecideAction(world);
+        ActionType action = actionBrainInterface.DecideAction(world);
 
         if (action == ActionType.Idle)
             action = ActionType.Patrol;

@@ -45,9 +45,15 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
+        { 
             Destroy(gameObject);
+            return;
+        }
     }
 
     void Start()
@@ -60,6 +66,8 @@ public class GameManager : MonoBehaviour
 
         if (globalVolume != null && globalVolume.profile.TryGet(out dof))
             dof.active = false;
+
+        Debug.Log("GAME MODE = " + selectedMode);
     }
 
     void Update()
@@ -74,6 +82,7 @@ public class GameManager : MonoBehaviour
 
     public void RegisterActiveBot(BotController bot)
     {
+        activeBot = bot;
         bot.isActive = true;
     }
 
