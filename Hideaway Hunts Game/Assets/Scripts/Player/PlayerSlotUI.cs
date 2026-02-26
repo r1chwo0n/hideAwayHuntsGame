@@ -41,7 +41,7 @@ public class PlayerSlotUI : MonoBehaviour
 
     public void SetActive(bool active)
     {
-        if (outline != null)
+        if (outline != null && !killable.isDead)
             outline.enabled = active;
     }
 
