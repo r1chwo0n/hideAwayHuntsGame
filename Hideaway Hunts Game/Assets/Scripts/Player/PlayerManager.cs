@@ -9,6 +9,8 @@ public class PlayerManager : MonoBehaviour
     public float swapCooldown = 10f;
     private float swapTimer;
 
+    public TurnTimer turnTimer;
+
     //[Header("Gun Settings")]
     //public float fireCooldown = 0.5f; // ระยะห่างระหว่างนัด (วินาที)
     //private float lastFireTime = -999f;
@@ -99,7 +101,11 @@ public class PlayerManager : MonoBehaviour
 
         if (CurrentPlayer == players[index]) return;
 
+        
+
         ActivatePlayer(index);
+
+      
     }
 
 
@@ -136,6 +142,10 @@ public class PlayerManager : MonoBehaviour
 
         // เริ่มนับ Cooldown ใหม่ทุกครั้งที่เปลี่ยนร่างสำเร็จ
         swapTimer = swapCooldown;
+          if (turnTimer != null)
+        {
+            turnTimer.StartTimer();
+        }
         //Debug.Log($"Switched to Player {index + 1}. Cooldown started.");
     }
 
@@ -196,9 +206,9 @@ public class PlayerManager : MonoBehaviour
         foreach (var hit in hits)
         {
             Killable k = hit.GetComponent<Killable>();
-            if (k != null && 
-                k.transform != CurrentPlayer.transform && 
-                !k.isPlayer && 
+            if (k != null &&
+                k.transform != CurrentPlayer.transform &&
+                !k.isPlayer &&
                 !k.isDead)
             {
                 count++;
