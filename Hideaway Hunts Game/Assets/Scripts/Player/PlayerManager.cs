@@ -65,6 +65,7 @@ public class PlayerManager : MonoBehaviour
         {
             CurrentPlayer.TakeDamage(999);
         }
+        UpdateDetectCircle();
     }
 
     Vector3 GetRandomNavMeshPosition(Vector3 center, float range)
@@ -125,30 +126,33 @@ public class PlayerManager : MonoBehaviour
 
     public void ActivatePlayer(int index)
     {
-        if (index < 0 || index >= players.Length) return;
-        if (players[index].IsDead()) return;
-
-        CurrentPlayer = players[index];
-        cameraController.SetTarget(CurrentPlayer.transform);
-
-        // 🔥 อัปเดตสี minimap ทุกตัว
-        for (int i = 0; i < players.Length; i++)
+        // if (index < 0 || index >= players.Length) return;
+        if (!players[index].IsDead())
         {
-            bool isActive = (players[i] == CurrentPlayer);
-            players[i].SetActiveVisual(isActive);
+
+            CurrentPlayer = players[index];
+            cameraController.SetTarget(CurrentPlayer.transform);
+
+            // 🔥 อัปเดตสี minimap ทุกตัว
+            for (int i = 0; i < players.Length; i++)
+            {
+                bool isActive = (players[i] == CurrentPlayer);
+                players[i].SetActiveVisual(isActive);
+            }
+
+            if (playerNumberText != null)
+                playerNumberText.text = "Player " + (index + 1);
+
+            detectCircle.SetParent(CurrentPlayer.transform);
+            detectCircle.localPosition = new Vector3(0, 0.1f, 0);
+
+            swapTimer = swapCooldown;
+            if (turnTimer != null)
+            {
+                turnTimer.StartTimer();
+            }
         }
-
-        if (playerNumberText != null)
-            playerNumberText.text = "Player " + (index + 1);
-
-        detectCircle.SetParent(CurrentPlayer.transform);
-        detectCircle.localPosition = new Vector3(0, 0.1f, 0);
-
-        swapTimer = swapCooldown;
-        if (turnTimer != null)
-        {
-            turnTimer.StartTimer();
-        }
+        ;
 
 
     }
@@ -189,7 +193,7 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        
+
     }
 
     public int CountNearbyBots(float radius)
@@ -235,6 +239,20 @@ public class PlayerManager : MonoBehaviour
         if (CurrentPlayer == null || CurrentPlayer.IsDead()) return false;
 
         return true;
+    }
+
+    void UpdateDetectCircle()
+    {
+        if (CurrentPlayer == null)
+        {
+            detectCircle.gameObject.SetActive(false);
+            return;
+        }
+
+        int botCount = CountNearbyBots(30f);
+
+        // แสดงเฉพาะตอนมี bot ใกล้
+        detectCircle.gameObject.SetActive(botCount > 0);
     }
 
 }

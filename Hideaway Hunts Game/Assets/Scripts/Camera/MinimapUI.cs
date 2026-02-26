@@ -9,7 +9,7 @@ public class MinimapUI : MonoBehaviour
 
     public Transform detectCircle; // ลาก DetectCircle มาใส่
 
-    void Update()
+   void Update()
 {
     if (playerManager.CurrentPlayer == null) return;
 
@@ -17,15 +17,12 @@ public class MinimapUI : MonoBehaviour
 
     nearbyBotText.text = "Bots Nearby: " + count;
 
-    // ให้ DetectCircle ตาม player
-    Vector3 playerPos = playerManager.CurrentPlayer.transform.position;
+    foreach (var player in playerManager.players)
+    {
+        bool isCurrent = player == playerManager.CurrentPlayer;
+        bool hasBot = isCurrent && count > 0;
 
-    detectCircle.position = new Vector3(
-        playerPos.x,
-        detectCircle.position.y,
-        playerPos.z
-    );
-
-    detectCircle.gameObject.SetActive(count > 0);
+        player.UpdateDetectCircle(hasBot);
+    }
 }
 }

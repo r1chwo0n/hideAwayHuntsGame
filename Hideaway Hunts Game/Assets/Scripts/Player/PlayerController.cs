@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour
     private Killable myKillable;
     public LayerMask shootMask;
 
+
+
     [Header("UI Data")]
     public UnityEngine.Sprite avatarSprite;
     // =========================
@@ -47,6 +49,7 @@ public class PlayerController : MonoBehaviour
     // =========================
 
     public SpriteRenderer minimapIcon;
+    private GameObject detectCircle;
 
     void Start()
     {
@@ -218,5 +221,15 @@ public class PlayerController : MonoBehaviour
             minimapIcon.color = Color.red;
         else
             minimapIcon.color = Color.yellow;
+    }
+
+    public void UpdateDetectCircle(bool hasNearbyBot)
+    {
+        if (detectCircle == null) return;
+
+        // แสดงเฉพาะ player ที่ active และมี bot ใกล้
+        bool shouldShow = isActivePlayer && hasNearbyBot;
+
+        detectCircle.gameObject.SetActive(shouldShow);
     }
 }
