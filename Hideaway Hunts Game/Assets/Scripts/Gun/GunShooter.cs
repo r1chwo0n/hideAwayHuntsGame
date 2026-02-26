@@ -6,6 +6,8 @@ public class GunShooter : MonoBehaviour
     public float shootRange = 20f;
     //public float fireCooldown = 0.5f;
     public Transform firePoint;
+    public AudioSource audioSource;
+    public AudioClip shootSound;
 
     [Header("Ammo")]
     public int maxAmmo = 30;
@@ -35,8 +37,7 @@ public class GunShooter : MonoBehaviour
         if (currentAmmo <= 0)
             return false;
 
-        //if (Time.time < lastFireTime + fireCooldown)
-        //    return false;
+       
 
         return true;
     }
@@ -47,7 +48,9 @@ public class GunShooter : MonoBehaviour
         if (!CanFire())
             return;
 
-        //lastFireTime = Time.time;
+        if (shootSound != null)
+            audioSource.PlayOneShot(shootSound);
+            
         currentAmmo--;
 
         ShootRay();
