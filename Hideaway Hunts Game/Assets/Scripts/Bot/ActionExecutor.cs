@@ -45,6 +45,24 @@ public class ActionExecutor : MonoBehaviour
 
     public void SetActor(Transform newActor)
     {
+        if (actor != null && actor != newActor)
+        {
+            
+            if (agent != null && agent.isOnNavMesh)
+            {
+                agent.isStopped = true;
+                agent.ResetPath(); // reset path ใหม่
+            }
+            if (gun != null) gun.enabled = false;
+
+            // set Animation ของร่างเก่าให้เป็น Idle
+            if (animator != null)
+            {
+                animator.SetFloat("Speed", 0f);
+                animator.SetInteger("ActionState", (int)ActionType.Idle);
+            }
+        }
+
         actor = newActor;
 
         currentAction = ActionType.Idle;
