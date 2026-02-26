@@ -56,8 +56,8 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         animator.applyRootMotion = false;
 
-        if (myKillable != null)
-            myKillable.OnKilled += (t) => Die();
+        myKillable = GetComponent<Killable>();
+        myKillable.OnKilled += (t) => Die();
 
         if (cameraTransform == null)
             cameraTransform = Camera.main.transform;
@@ -97,9 +97,6 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
             Shoot();
-
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //    Sit();
 
         if (Input.GetKeyDown(KeyCode.X))
             Die();
@@ -166,7 +163,7 @@ public class PlayerController : MonoBehaviour
     void Shoot()
     {
         if (Time.timeScale == 0f) return;
-        if (manager.sharedAmmo <= 0) return;
+        if (manager.sharedAmmo <= 0) Die();
 
         manager.UseAmmo();
         animator.SetTrigger("Shoot");
@@ -204,20 +201,13 @@ public class PlayerController : MonoBehaviour
     }
     void Die()
     {
-        // แจ้ง Manager เมื่อตาย
+
         manager.OnPlayerDead(this);
+
 
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (groundCheck == null) return;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
     }
 
     public void SetActiveVisual(bool isActive)

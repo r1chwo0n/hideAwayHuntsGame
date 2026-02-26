@@ -8,6 +8,7 @@ public class Killable : MonoBehaviour
     public bool isDead { get; private set; }
     public System.Action<Transform> OnKilled;
 
+
     [Header("Settings")]
     public bool isPlayer = false;
     public float destroyDelay = 1.5f;
@@ -16,8 +17,10 @@ public class Killable : MonoBehaviour
     {
         if (isDead) return;
 
-        if (isPlayer)
-            KillImmediate();
+        if (isPlayer) 
+        KillImmediate();
+
+
         else
             StartCoroutine(KillWithAnimation());
     }
@@ -30,6 +33,7 @@ public class Killable : MonoBehaviour
         isDead = true;
 
         OnKilled?.Invoke(transform);
+
 
         Destroy(gameObject);
     }

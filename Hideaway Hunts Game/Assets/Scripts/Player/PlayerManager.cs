@@ -22,6 +22,7 @@ public class PlayerManager : MonoBehaviour
     public System.Action<int> OnLifeChanged;
     public System.Action<int> OnAmmoChanged;
     public TMP_Text playerNumberText;
+    public Transform detectCircle;
 
     private int currentIndex;
 
@@ -101,11 +102,11 @@ public class PlayerManager : MonoBehaviour
 
         if (CurrentPlayer == players[index]) return;
 
-        
+
 
         ActivatePlayer(index);
 
-      
+
     }
 
 
@@ -140,13 +141,16 @@ public class PlayerManager : MonoBehaviour
         if (playerNumberText != null)
             playerNumberText.text = "Player " + (index + 1);
 
-        // เริ่มนับ Cooldown ใหม่ทุกครั้งที่เปลี่ยนร่างสำเร็จ
+        detectCircle.SetParent(CurrentPlayer.transform);
+        detectCircle.localPosition = new Vector3(0, 0.1f, 0);
+
         swapTimer = swapCooldown;
-          if (turnTimer != null)
+        if (turnTimer != null)
         {
             turnTimer.StartTimer();
         }
-        //Debug.Log($"Switched to Player {index + 1}. Cooldown started.");
+
+
     }
 
     public int AliveCount
@@ -177,18 +181,15 @@ public class PlayerManager : MonoBehaviour
         int alive = AliveCount;
         OnLifeChanged?.Invoke(alive);
 
-        if (alive <= 0)
+        // 🔥 ถ้าตัวที่ตาย = ตัวที่กำลังเล่นอยู่
+        if (deadPlayer == CurrentPlayer)
         {
-            Debug.Log("Calling Defeat");
-            Debug.Log(GameManager.Instance);
+            Debug.Log("Active player died → Defeat");
             GameManager.Instance.Defeat();
             return;
         }
 
-        if (deadPlayer == CurrentPlayer)
-        {
-            GameManager.Instance.Defeat();
-        }
+        
     }
 
     public int CountNearbyBots(float radius)
@@ -221,7 +222,12 @@ public class PlayerManager : MonoBehaviour
     public bool CanShoot()
     {
         // กระสุนต้องไม่หมด
-        if (sharedAmmo <= 0) return false;
+        if (sharedAmmo <= 0)
+        {
+            GameManager.Instance.Defeat();
+
+        }
+        ;
 
         // ต้องพ้นระยะ Cooldown
         //if (Time.time < lastFireTime + fireCooldown) return false;

@@ -136,7 +136,7 @@ public class PerceptionController : MonoBehaviour
                 return true;
 
             dir.Normalize();
-            Debug.DrawRay(fromEye, dir * dist, Color.red);
+            // Debug.DrawRay(fromEye, dir * dist, Color.red);
 
             if (Physics.Raycast(fromEye, dir, out RaycastHit hit, dist, mask))
             {

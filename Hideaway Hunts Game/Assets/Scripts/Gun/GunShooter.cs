@@ -73,8 +73,6 @@ public class GunShooter : MonoBehaviour
             Debug.Log($"GunShooter: Hit {hit.transform.name}");
             HandleHit(hit.transform);
         }
-
-        Debug.DrawRay(origin, direction * shootRange, Color.red, 0.5f);
     }
 
     void HandleHit(Transform hit)

@@ -6,22 +6,26 @@ public class MinimapUI : MonoBehaviour
     public PlayerManager playerManager;
     public TextMeshProUGUI nearbyBotText;
     public float detectRadius = 30f;
-    public LayerMask BotLayer;
+
+    public Transform detectCircle; // ลาก DetectCircle มาใส่
 
     void Update()
-    {
-        if (playerManager.CurrentPlayer == null) return;
+{
+    if (playerManager.CurrentPlayer == null) return;
 
-        Vector3 playerPos = playerManager.CurrentPlayer.transform.position;
+    int count = playerManager.CountNearbyBots(detectRadius);
 
-        Collider[] hits = Physics.OverlapSphere(
-            playerPos,
-            detectRadius,
-            BotLayer
-        );
+    nearbyBotText.text = "Bots Nearby: " + count;
 
-        int count = hits.Length;
+    // ให้ DetectCircle ตาม player
+    Vector3 playerPos = playerManager.CurrentPlayer.transform.position;
 
-        nearbyBotText.text = "Bots Nearby: " + count;
-    }
+    detectCircle.position = new Vector3(
+        playerPos.x,
+        detectCircle.position.y,
+        playerPos.z
+    );
+
+    detectCircle.gameObject.SetActive(count > 0);
+}
 }
