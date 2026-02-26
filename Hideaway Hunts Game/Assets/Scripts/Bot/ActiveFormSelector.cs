@@ -8,7 +8,7 @@ public struct FormSituation // ร่างหนึ่งกับการร�
     public SituationSummary world; // world perception เมื่อ origin = ร่างนี้
 }
 
-public class ActiveFormSelector : MonoBehaviour
+public class ActiveFormSelector : MonoBehaviour, IFormSelector
 {
     public FormFuzzyAISetup fuzzySetup;
 

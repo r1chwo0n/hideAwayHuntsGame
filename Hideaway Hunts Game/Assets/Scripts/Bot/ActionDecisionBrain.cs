@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionDecisionBrain : MonoBehaviour
+public class ActionDecisionBrain : MonoBehaviour, IActionDecisionBrain
 {
     public ActionFuzzySetup fuzzySetup;
 

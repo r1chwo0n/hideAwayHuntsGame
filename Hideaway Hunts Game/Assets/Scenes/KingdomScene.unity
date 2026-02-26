@@ -14595,6 +14595,50 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.90419, y: 1, z: 3.8894806}
   m_Center: {x: 11.761506, y: 0, z: 76.84229}
+--- !u!1 &438477832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 438477834}
+  - component: {fileID: 438477833}
+  m_Layer: 0
+  m_Name: RuleBaseAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &438477833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438477832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23d699156a9fb25438f5fde5b97efc82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &438477834
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438477832}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -34.29165, y: -150.54236, z: 233.7486}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &438902883
 GameObject:
   m_ObjectHideFlags: 0
@@ -25900,6 +25944,50 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.960022, y: 1, z: 5.524719}
   m_Center: {x: -11.10643, y: 0, z: 83.743866}
+--- !u!1 &761288665
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 761288667}
+  - component: {fileID: 761288666}
+  m_Layer: 0
+  m_Name: RuleBaseForm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &761288666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761288665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed872dd3c5b38b34783fc9bcece352dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &761288667
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761288665}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -34.29165, y: -150.54236, z: 233.7486}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &764442797
 GameObject:
   m_ObjectHideFlags: 0
@@ -32320,6 +32408,7 @@ GameObject:
   m_Component:
   - component: {fileID: 921872856}
   - component: {fileID: 921872857}
+  - component: {fileID: 921872858}
   m_Layer: 0
   m_Name: BotManager
   m_TagString: Untagged
@@ -32355,9 +32444,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPerception: {fileID: 1904758575}
+  actionExecutor: {fileID: 2067788223}
   formSelector: {fileID: 2105180496}
   actionBrain: {fileID: 1610703199}
-  actionExecutor: {fileID: 2067788223}
   forms:
   - {fileID: 1291841773}
   - {fileID: 1850744836}
@@ -32369,6 +32458,23 @@ MonoBehaviour:
   swapCooldown: 10
   botCinemachineCam: {fileID: 1578822807}
   decisionInterval: 0.5
+--- !u!114 &921872858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921872855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c30b0733dc36b741b7745b2ae838070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 921872857}
+  fuzzyFormSelector: {fileID: 2105180496}
+  fuzzyActionBrain: {fileID: 1610703199}
+  ruleFormSelector: {fileID: 761288666}
+  ruleActionBrain: {fileID: 438477833}
 --- !u!1 &923201863
 GameObject:
   m_ObjectHideFlags: 0
@@ -80401,3 +80507,5 @@ SceneRoots:
   - {fileID: 820595632}
   - {fileID: 1917426614}
   - {fileID: 557644917}
+  - {fileID: 761288667}
+  - {fileID: 438477834}
