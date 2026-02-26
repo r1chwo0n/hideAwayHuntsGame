@@ -18,7 +18,10 @@ public class SceneLoader : MonoBehaviour
     // เผื่ออนาคตอยากกลับหน้า Home
     public void GoToHome()
     {
-        SceneManager.LoadScene("HomePage");
+        if (GameManager.Instance != null)
+            GameManager.Instance.QuitGame();
+        else
+            SceneManager.LoadScene("HomePage");
     }
 
     // ออกจากเกม

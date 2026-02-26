@@ -28520,7 +28520,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 820595627}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &820595631
 Camera:
   m_ObjectHideFlags: 0
@@ -32408,7 +32408,6 @@ GameObject:
   m_Component:
   - component: {fileID: 921872856}
   - component: {fileID: 921872857}
-  - component: {fileID: 921872858}
   m_Layer: 0
   m_Name: BotManager
   m_TagString: Untagged
@@ -32443,10 +32442,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9d9ea4f20426644862cf6dc991bb02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fuzzyFormSelector: {fileID: 2105180496}
+  ruleFormSelector: {fileID: 761288666}
+  fuzzyActionBrain: {fileID: 1610703199}
+  ruleActionBrain: {fileID: 438477833}
   worldPerception: {fileID: 1904758575}
   actionExecutor: {fileID: 2067788223}
-  formSelector: {fileID: 2105180496}
-  actionBrain: {fileID: 1610703199}
+  formSelector: {fileID: 0}
+  actionBrain: {fileID: 0}
   forms:
   - {fileID: 1291841773}
   - {fileID: 1850744836}
@@ -32458,23 +32461,6 @@ MonoBehaviour:
   swapCooldown: 10
   botCinemachineCam: {fileID: 1578822807}
   decisionInterval: 0.5
---- !u!114 &921872858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 921872855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c30b0733dc36b741b7745b2ae838070, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  brain: {fileID: 921872857}
-  fuzzyFormSelector: {fileID: 2105180496}
-  fuzzyActionBrain: {fileID: 1610703199}
-  ruleFormSelector: {fileID: 761288666}
-  ruleActionBrain: {fileID: 438477833}
 --- !u!1 &923201863
 GameObject:
   m_ObjectHideFlags: 0

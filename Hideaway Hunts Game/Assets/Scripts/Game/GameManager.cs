@@ -181,6 +181,8 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Time.timeScale = 1f;
+        Destroy(gameObject);
         SceneManager.LoadScene("HomePage");
     }
+
 }

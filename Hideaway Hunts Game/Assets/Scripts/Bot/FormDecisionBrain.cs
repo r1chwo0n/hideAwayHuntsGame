@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class FormDecisionBrain : MonoBehaviour
 {
+
+    [Header("Brain Sets")]
+    public MonoBehaviour fuzzyFormSelector;
+    public MonoBehaviour ruleFormSelector;
+
+    public MonoBehaviour fuzzyActionBrain;
+    public MonoBehaviour ruleActionBrain;
+
     [Header("References")]
     public WorldPerception worldPerception;
     //public ActiveFormSelector formSelector;
@@ -40,7 +48,7 @@ public class FormDecisionBrain : MonoBehaviour
 
     void Awake()
     {
-        RefreshBrains();
+        InstallBrainByMode();
     }
 
     public void RefreshBrains()
@@ -55,6 +63,22 @@ public class FormDecisionBrain : MonoBehaviour
             Debug.LogError("ActionBrain does not implement IActionDecisionBrain!");
 
         Debug.Log($"Brain Installed: {formBrain.GetType().Name} | {actionBrainInterface.GetType().Name}");
+    }
+
+    void InstallBrainByMode()
+    {
+        if (GameManager.selectedMode == BotMode.Fuzzy)
+        {
+            formSelector = fuzzyFormSelector;
+            actionBrain = fuzzyActionBrain;
+        }
+        else
+        {
+            formSelector = ruleFormSelector;
+            actionBrain = ruleActionBrain;
+        }
+
+        RefreshBrains();
     }
 
     void Start()
