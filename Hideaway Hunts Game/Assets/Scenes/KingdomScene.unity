@@ -20888,7 +20888,7 @@ MonoBehaviour:
     m_Bits: 0
   visibleLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 65535
 --- !u!43 &601079564
 Mesh:
   m_ObjectHideFlags: 0

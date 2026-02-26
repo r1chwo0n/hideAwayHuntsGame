@@ -5,6 +5,18 @@ using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
+<<<<<<< Updated upstream
+=======
+    [Header("Swap Settings")]
+    public float swapCooldown = 10f;
+    private float swapTimer;
+    public TurnTimer turnTimer;
+
+    //[Header("Gun Settings")]
+    //public float fireCooldown = 0.5f; // ระยะห่างระหว่างนัด (วินาที)
+    //private float lastFireTime = -999f;
+
+>>>>>>> Stashed changes
     public PlayerController[] players;
     public ThirdPersonCameraWithCollision cameraController;
     public PlayerController CurrentPlayer { get; private set; }
@@ -112,6 +124,16 @@ public class PlayerManager : MonoBehaviour
 
         if (playerNumberText != null)
             playerNumberText.text = "Player " + (index + 1);
+<<<<<<< Updated upstream
+=======
+
+        // เริ่มนับ Cooldown ใหม่ทุกครั้งที่เปลี่ยนร่างสำเร็จ
+        swapTimer = swapCooldown;
+        if (turnTimer != null)
+        {
+            turnTimer.StartTimer();
+        }
+>>>>>>> Stashed changes
     }
 
 
@@ -177,7 +199,18 @@ public class PlayerManager : MonoBehaviour
             !k.isPlayer && 
             !k.isDead)
         {
+<<<<<<< Updated upstream
             count++;
+=======
+            Killable k = hit.GetComponent<Killable>();
+            if (k != null &&
+                k.transform != CurrentPlayer.transform &&
+                !k.isPlayer &&
+                !k.isDead)
+            {
+                count++;
+            }
+>>>>>>> Stashed changes
         }
     }
 
