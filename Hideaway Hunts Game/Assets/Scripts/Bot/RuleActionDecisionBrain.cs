@@ -15,7 +15,7 @@ public class RuleActionDecisionBrain : MonoBehaviour, IActionDecisionBrain
         // =====================
 
         // กระสุนต่ำ
-        if (world.ammoRatio < 0.15f)
+        if (world.ammoRatio < 0.3f)
             return ActionType.Retreat;
 
         // โดนหลายตัวเล็ง
@@ -32,11 +32,11 @@ public class RuleActionDecisionBrain : MonoBehaviour, IActionDecisionBrain
         // =====================
 
         // ศัตรูใกล้ → ยิง
-        if (world.nearestEnemyDistance < 7f)
+        if (world.nearestEnemyDistance < 5f)
             return ActionType.Attack;
 
         // ระยะกลาง → คุมตำแหน่ง
-        if (world.nearestEnemyDistance < 15f)
+        if (world.nearestEnemyDistance < 18f)
             return ActionType.Defend;
 
         // ไกล → เดินหา
