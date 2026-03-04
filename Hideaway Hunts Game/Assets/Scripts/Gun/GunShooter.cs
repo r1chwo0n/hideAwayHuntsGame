@@ -10,8 +10,8 @@ public class GunShooter : MonoBehaviour
     public AudioClip shootSound;
 
     [Header("Ammo")]
-    public int maxAmmo = 30;
-    public int currentAmmo = 30;
+    public int maxAmmo = 10;
+    public int currentAmmo = 10;
 
     [Header("Runtime")]
     public Transform target;

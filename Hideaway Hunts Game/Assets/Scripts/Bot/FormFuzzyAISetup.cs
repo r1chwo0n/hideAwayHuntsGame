@@ -30,14 +30,14 @@ public class FormFuzzyAISetup : MonoBehaviour
         enemyDist.AddSet(new FuzzySet("Near", // ใกล้
             d => Triangle(d, 0f, 5f, 12f))); 
         enemyDist.AddSet(new FuzzySet("Medium", // กลาง
-            d => Triangle(d, 8f, 18f, 28f)));
+            d => Triangle(d, 8f, 20f, 28f)));
         enemyDist.AddSet(new FuzzySet("Far", // ไกล
             d => Triangle(d, 24f, 32f, 36f)));
         engine.AddInput(enemyDist);
 
         // การกระจายของสนาม
         var avgDist = new FuzzyVariable("AverageEnemyDistance");
-        avgDist.AddSet(new FuzzySet("Close", 
+        avgDist.AddSet(new FuzzySet("Close",
             c => Triangle(c, 0f, 0f, 0.4f)));
         avgDist.AddSet(new FuzzySet("Balance", // กลาง ๆ 
             c => Triangle(c, 0.25f, 0.5f, 0.75f)));
@@ -75,14 +75,14 @@ public class FormFuzzyAISetup : MonoBehaviour
             x => Triangle(x, 1f, 3f, 3f)));
         engine.AddInput(threat);
 
-        // การเคลื่อนไหวของศัตรู (movement intensity)
+        //การเคลื่อนไหวของศัตรู(movement intensity)
         //var enemyMove = new FuzzyVariable("EnemyMovementIntensity");
         //enemyMove.AddSet(new FuzzySet("Still",
-        //    x => Triangle(x, 0f, 0f, 0.25f)));
+        //    x => Triangle(x, 0f, 0f, 0.2f)));
         //enemyMove.AddSet(new FuzzySet("Moving",
-        //    x => Triangle(x, 0.15f, 0.45f, 0.75f)));
+        //    x => Triangle(x, 0.3f, 0.5f, 0.6f)));
         //enemyMove.AddSet(new FuzzySet("Fast",
-        //    x => Triangle(x, 0.6f, 1f, 1f)));
+        //    x => Triangle(x, 0.5f, 1f, 1f)));
         //engine.AddInput(enemyMove);
 
     }

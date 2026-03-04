@@ -27495,7 +27495,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f590a4cc3711246f893897ffdb2efd57, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 127.8
+      value: 75.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f590a4cc3711246f893897ffdb2efd57, type: 3}
       propertyPath: m_LocalPosition.y
@@ -27503,7 +27503,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f590a4cc3711246f893897ffdb2efd57, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 100.6
+      value: 157.51
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f590a4cc3711246f893897ffdb2efd57, type: 3}
       propertyPath: m_LocalRotation.w
@@ -41760,8 +41760,8 @@ MonoBehaviour:
   firePoint: {fileID: 1042803113}
   audioSource: {fileID: 753941444}
   shootSound: {fileID: 8300000, guid: 738cd44d293164cefa8b7e27cc28e562, type: 3}
-  maxAmmo: 30
-  currentAmmo: 30
+  maxAmmo: 10
+  currentAmmo: 10
   target: {fileID: 0}
 --- !u!195 &1147215934
 NavMeshAgent:
@@ -48191,7 +48191,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fa8822b1cb8517a4b9175793aed20ac8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 74.5
+      value: 57.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fa8822b1cb8517a4b9175793aed20ac8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -48199,7 +48199,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fa8822b1cb8517a4b9175793aed20ac8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 93.11
+      value: 151.19
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fa8822b1cb8517a4b9175793aed20ac8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -48564,8 +48564,8 @@ MonoBehaviour:
   firePoint: {fileID: 539708154}
   audioSource: {fileID: 753941444}
   shootSound: {fileID: 8300000, guid: 738cd44d293164cefa8b7e27cc28e562, type: 3}
-  maxAmmo: 30
-  currentAmmo: 30
+  maxAmmo: 10
+  currentAmmo: 10
   target: {fileID: 0}
 --- !u!114 &1291841773
 MonoBehaviour:
@@ -51717,7 +51717,7 @@ MonoBehaviour:
   shootSound: {fileID: 8300000, guid: 738cd44d293164cefa8b7e27cc28e562, type: 3}
   shootMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 6144
   avatarSprite: {fileID: 0}
   minimapIcon: {fileID: 1605101491}
 --- !u!95 &1354819359
@@ -63026,7 +63026,7 @@ MonoBehaviour:
   shootSound: {fileID: 8300000, guid: 738cd44d293164cefa8b7e27cc28e562, type: 3}
   shootMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 6144
   avatarSprite: {fileID: 0}
   minimapIcon: {fileID: 35278894}
 --- !u!1 &1653711487
@@ -65469,7 +65469,7 @@ MonoBehaviour:
   shootSound: {fileID: 8300000, guid: 738cd44d293164cefa8b7e27cc28e562, type: 3}
   shootMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 6144
   avatarSprite: {fileID: 0}
   minimapIcon: {fileID: 767136498}
 --- !u!95 &1736181472
@@ -69578,8 +69578,8 @@ MonoBehaviour:
   firePoint: {fileID: 1745155787}
   audioSource: {fileID: 753941444}
   shootSound: {fileID: 8300000, guid: 738cd44d293164cefa8b7e27cc28e562, type: 3}
-  maxAmmo: 30
-  currentAmmo: 30
+  maxAmmo: 10
+  currentAmmo: 10
   target: {fileID: 0}
 --- !u!195 &1850744839
 NavMeshAgent:

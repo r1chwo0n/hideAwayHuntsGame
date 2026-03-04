@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     //private bool isSitting = false;
 
     [Header("Stats")]
-    public float speed = 5f;
+    public float speed = 10f;
     public float jumpForce = 5f;
     public int health = 100;
 
@@ -53,8 +53,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Start");
-        Debug.Log($"{name} started at {transform.position}");
+        //Debug.Log("Start");
+        //Debug.Log($"{name} started at {transform.position}");
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         animator.applyRootMotion = false;
@@ -83,9 +83,9 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (manager.CurrentPlayer != this) return;
-        Debug.Log($"{name} is the active player.");
+        //Debug.Log($"{name} is the active player.");
         if (isDead) return;
-        Debug.Log($"{name} is alive and can move.");
+        //Debug.Log($"{name} is alive and can move.");
 
         Move();
         HandleInput();
@@ -95,14 +95,14 @@ public class PlayerController : MonoBehaviour
 
     void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            Jump();
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //    Jump();
 
         if (Input.GetMouseButtonDown(0))
             Shoot();
 
-        if (Input.GetKeyDown(KeyCode.X))
-            Die();
+        //if (Input.GetKeyDown(KeyCode.X))
+        //    Die();
 
 
     }

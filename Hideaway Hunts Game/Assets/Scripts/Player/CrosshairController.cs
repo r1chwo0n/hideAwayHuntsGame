@@ -13,7 +13,7 @@ public class CrosshairController : MonoBehaviour
     public Color hitFlashColor = Color.red;
 
     [Header("Raycast")]
-    public float detectionDistance = 30f;
+    public float detectionDistance = 20f;
     public LayerMask BotLayer;
 
     private Camera cam;

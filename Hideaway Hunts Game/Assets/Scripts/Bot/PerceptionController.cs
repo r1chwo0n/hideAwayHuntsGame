@@ -51,7 +51,23 @@ public class PerceptionController : MonoBehaviour
         // --- Angle ---
         p.relativeAngle = GetRelativeAngle(enemy);
 
+        p.movementIntensity = GetMovementIntensity(enemy);
+
         return p;
+    }
+
+    float GetMovementIntensity(Transform enemy)
+    {
+        Rigidbody rb = enemy.GetComponent<Rigidbody>();
+        if (rb == null)
+            return 0f;
+
+        float speed = rb.linearVelocity.magnitude;
+
+        // คุณควรกำหนด maxSpeed ให้เหมาะกับเกมคุณ
+        float maxSpeed = 10f; // เช่น วิ่งเต็มสปีด = 6 m/s
+
+        return Mathf.Clamp01(speed / maxSpeed);
     }
 
     public bool HasLineOfSight(Transform enemy)

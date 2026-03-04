@@ -43,7 +43,7 @@ public class ActiveFormSelector : MonoBehaviour, IFormSelector
             { "EnemiesSeeingUs", s.enemiesSeeingUs },
             { "EnemyDensity", s.enemyCountInRange },
             { "AverageEnemyDistance", s.avgEnemyDistance },
-            //{ "EnemyMovementIntensity", s.maxEnemyMovementIntensity}
+            { "EnemyMovementIntensity", s.nearestEnemyDistance}
         };
 
         return fuzzySetup.engine.Evaluate(inputs)["FormSuitability"];
