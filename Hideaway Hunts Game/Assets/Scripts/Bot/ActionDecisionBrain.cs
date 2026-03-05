@@ -61,19 +61,43 @@ public class ActionDecisionBrain : MonoBehaviour, IActionDecisionBrain
     //    return ActionType.Retreat;
     //}
 
+    //private ActionType DecodeAction(float v)
+    //{
+    //    if (v < 0.10f) return ActionType.Idle;
+    //    if (v < 0.30f) return ActionType.Patrol;
+    //    if (v < 0.58f) return ActionType.Defend;
+    //    if (v < 0.88f) return ActionType.Attack;
+    //    return ActionType.Retreat;
+    //}
+
     private ActionType DecodeAction(float v)
     {
-        if (v < 0.10f) return ActionType.Idle;
-        if (v < 0.30f) return ActionType.Patrol;
+        float minDist = Mathf.Abs(v - 0.0f);
+        ActionType best = ActionType.Idle;
 
-        // ถ้าคะแนนเกิน 0.55 ให้ถือว่าเริ่มอยาก Attack แล้ว 
-        // เพราะค่าเฉลี่ยจากการโดนดึงระหว่าง Defend(0.5) กับ Attack(0.75) จะอยู่แถวๆ 0.6
-        if (v < 0.58f) return ActionType.Defend;
+        if (Mathf.Abs(v - 0.25f) < minDist)
+        {
+            minDist = Mathf.Abs(v - 0.25f);
+            best = ActionType.Patrol;
+        }
 
-        if (v < 0.88f) return ActionType.Attack;
+        if (Mathf.Abs(v - 0.5f) < minDist)
+        {
+            minDist = Mathf.Abs(v - 0.5f);
+            best = ActionType.Defend;
+        }
 
-        return ActionType.Retreat;
+        if (Mathf.Abs(v - 0.75f) < minDist)
+        {
+            minDist = Mathf.Abs(v - 0.75f);
+            best = ActionType.Attack;
+        }
+
+        if (Mathf.Abs(v - 1.0f) < minDist)
+        {
+            best = ActionType.Retreat;
+        }
+
+        return best;
     }
-
-
 }

@@ -214,6 +214,8 @@ public class FormFuzzyAISetup : MonoBehaviour
 
         engine.AddRule(new FuzzyRule()
             .AddCondition("AverageEnemyDistance", "Close")
+            .AddCondition("EnemyDensity", "Many")
+            .AddCondition("EnemiesSeeingUs", "Alert")
             .AddConclusion("FormSuitability", "Bad"));
 
         engine.AddRule(new FuzzyRule()
