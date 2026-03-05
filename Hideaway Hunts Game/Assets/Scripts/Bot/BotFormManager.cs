@@ -11,10 +11,16 @@ public class BotFormManager : MonoBehaviour
 
     void Awake()
     {
-        // register ร่างที่มีตั้งแต่เริ่ม
-        foreach (var f in forms.ToArray())
+        foreach (var form in forms)
         {
-            RegisterForm(f);
+            if (!form) continue;
+
+            var killable = form.GetComponent<Killable>();
+
+            if (killable != null)
+                killable.OnKilled += OnFormKilled;
+            else
+                Debug.LogWarning(form.name + " has no Killable component");
         }
     }
 

@@ -167,7 +167,8 @@ public class FormDecisionBrain : MonoBehaviour
                 $"Avg={world.avgEnemyDistance:F2}, " +
                 $"UsSee={world.usSeeingEnemies}, " +
                 $"TheySee={world.enemiesSeeingUs}, " +
-                $"Density={world.enemyCountInRange}"
+                $"Density={world.enemyCountInRange}, " +
+                $"Intensity={world.nearestEnemyMovementIntensity:F2}" 
             );
 
             situations.Add(new FormSituation

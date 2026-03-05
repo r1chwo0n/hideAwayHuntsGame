@@ -242,11 +242,11 @@ public class FormFuzzyAISetup : MonoBehaviour
             .AddConclusion("FormSuitability", "Bad"));
 
         engine.AddRule(new FuzzyRule()
-            .AddCondition("NearestEnemyDistance", "Medium")
-            .AddCondition("AverageEnemyDistance", "Balance")
+            //.AddCondition("NearestEnemyDistance", "Medium")
+            //.AddCondition("AverageEnemyDistance", "Balance")
             .AddCondition("UsSeeingEnemies", "Partial")
             .AddCondition("EnemyMovementIntensity", "Moving")
-            .AddConclusion("FormSuitability", "OK"));
+            .AddConclusion("FormSuitability", "Good"));
 
         engine.AddRule(new FuzzyRule()
             .AddCondition("EnemyDensity", "Few")
@@ -267,7 +267,7 @@ public class FormFuzzyAISetup : MonoBehaviour
         engine.AddRule(new FuzzyRule()
             .AddCondition("UsSeeingEnemies", "Partial")
             .AddCondition("EnemyMovementIntensity", "Fast")
-            .AddConclusion("FormSuitability", "OK"));
+            .AddConclusion("FormSuitability", "Good"));
     }
 
 }
