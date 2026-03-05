@@ -7,7 +7,7 @@ public enum ActionType
     Patrol,
     Attack,
     Retreat,
-    Flank,
+    //Flank,
     Defend // ยึดตำแหน่งและคุมมุม
 }
 
@@ -73,7 +73,14 @@ public class ActionExecutor : MonoBehaviour
 
         agent = actor.GetComponent<NavMeshAgent>();
         animator = actor.GetComponentInChildren<Animator>();
+
         gun = actor.GetComponentInChildren<GunShooter>();
+        if (gun)
+        {
+            gun.ammoPool = FindFirstObjectByType<AmmoPool>();
+            Debug.Log("Gun found on " + actor.name + ", ammo pool assigned: " + (gun.ammoPool != null));
+        }
+
         perception = actor.GetComponent<PerceptionController>();
     }
 

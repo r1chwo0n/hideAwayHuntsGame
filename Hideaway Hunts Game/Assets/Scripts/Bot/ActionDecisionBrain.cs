@@ -65,11 +65,7 @@ public class ActionDecisionBrain : MonoBehaviour, IActionDecisionBrain
     {
         if (v < 0.10f) return ActionType.Idle;
         if (v < 0.30f) return ActionType.Patrol;
-
-        // ถ้าคะแนนเกิน 0.55 ให้ถือว่าเริ่มอยาก Attack แล้ว 
-        // เพราะค่าเฉลี่ยจากการโดนดึงระหว่าง Defend(0.5) กับ Attack(0.75) จะอยู่แถวๆ 0.6
         if (v < 0.58f) return ActionType.Defend;
-
         if (v < 0.88f) return ActionType.Attack;
 
         return ActionType.Retreat;
