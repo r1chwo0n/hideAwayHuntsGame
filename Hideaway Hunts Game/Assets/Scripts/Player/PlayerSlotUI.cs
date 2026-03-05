@@ -23,7 +23,8 @@ public class PlayerSlotUI : MonoBehaviour
         if (killable == null) return;
 
         if (killable.isDead)
-            SetAlpha(0.3f);   // จางลงตอนตาย
+            SetAlpha(0.3f);  
+            if (outline != null) outline.enabled = false;
         else
             SetAlpha(1f);
     }
