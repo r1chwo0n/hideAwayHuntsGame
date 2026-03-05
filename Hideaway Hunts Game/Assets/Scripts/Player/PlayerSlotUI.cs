@@ -23,10 +23,15 @@ public class PlayerSlotUI : MonoBehaviour
         if (killable == null) return;
 
         if (killable.isDead)
-            SetAlpha(0.3f);  
-            if (outline != null) outline.enabled = false;
+        {
+            SetAlpha(0.3f);
+            if (outline != null)
+                outline.enabled = false;
+        }
         else
+        {
             SetAlpha(1f);
+        }
     }
 
     public void Setup(PlayerController p)
@@ -42,7 +47,11 @@ public class PlayerSlotUI : MonoBehaviour
 
     public void SetActive(bool active)
     {
-        if (outline != null && !killable.isDead)
+        if (outline == null) return;
+
+        if (killable != null && killable.isDead)
+            outline.enabled = false;
+        else
             outline.enabled = active;
     }
 
