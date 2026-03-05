@@ -19,10 +19,8 @@ public class MinimapUI : MonoBehaviour
 
     foreach (var player in playerManager.players)
     {
-        bool isCurrent = player == playerManager.CurrentPlayer;
-        bool hasBot = isCurrent && count > 0;
 
-        player.UpdateDetectCircle(hasBot);
+        player.UpdateDetectCircle(count > 0);
     }
 }
 }

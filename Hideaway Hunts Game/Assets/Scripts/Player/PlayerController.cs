@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     // =========================
 
     public SpriteRenderer minimapIcon;
-    private GameObject detectCircle;
+    public GameObject detectCircle;
 
     void Start()
     {
@@ -148,19 +148,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Jump()
-    {
-        if (!isGrounded) return;
-
-        rb.linearVelocity = new Vector3(
-            rb.linearVelocity.x,
-            0f,
-            rb.linearVelocity.z
-        );
-
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        animator.SetTrigger("Jump");
-    }
+    
 
 
     void Shoot()
@@ -227,9 +215,6 @@ public class PlayerController : MonoBehaviour
     {
         if (detectCircle == null) return;
 
-        // แสดงเฉพาะ player ที่ active และมี bot ใกล้
-        bool shouldShow = isActivePlayer && hasNearbyBot;
-
-        detectCircle.gameObject.SetActive(shouldShow);
+        detectCircle.gameObject.SetActive(hasNearbyBot);
     }
 }

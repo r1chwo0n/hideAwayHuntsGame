@@ -9,7 +9,7 @@ public struct SituationSummary
     public int enemiesSeeingUs;
     public float avgEnemyDistance; //ระยะเฉลี่ยของศัตรูทั้งหมดที่อยู่ในระยะตรวจจับ
     public float nearestEnemyDistance;
-    public float maxEnemyMovementIntensity; // มีใครกำลังทำตัวน่าสงสัยมั้ย 
+    //public float maxEnemyMovementIntensity; // มีใครกำลังทำตัวนน่าสงสัยมั้ย 
     //public float nearestEnemyVerticalDiff;
     public float nearestEnemyMovementIntensity;
 

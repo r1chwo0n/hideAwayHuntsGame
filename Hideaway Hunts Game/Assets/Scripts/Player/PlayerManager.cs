@@ -11,10 +11,6 @@ public class PlayerManager : MonoBehaviour
 
     public TurnTimer turnTimer;
 
-    //[Header("Gun Settings")]
-    //public float fireCooldown = 0.5f; // ระยะห่างระหว่างนัด (วินาที)
-    //private float lastFireTime = -999f;
-
     public PlayerController[] players;
     public ThirdPersonCameraWithCollision cameraController;
     public PlayerController CurrentPlayer { get; private set; }
@@ -40,8 +36,8 @@ public class PlayerManager : MonoBehaviour
             players[i].manager = this;
 
             Vector3 randomSpawn = GetRandomNavMeshPosition(
-                transform.position,  // ใช้ตำแหน่ง PlayerManager เป็น center
-                50f                   // รัศมีสุ่ม
+               transform.position,  // ใช้ตำแหน่ง PlayerManager เป็น center
+               50f                   // รัศมีสุ่ม
             );
 
             players[i].transform.position = randomSpawn;
@@ -133,7 +129,7 @@ public class PlayerManager : MonoBehaviour
             CurrentPlayer = players[index];
             cameraController.SetTarget(CurrentPlayer.transform);
 
-            // 🔥 อัปเดตสี minimap ทุกตัว
+            // อัปเดตสี minimap ทุกตัว
             for (int i = 0; i < players.Length; i++)
             {
                 bool isActive = (players[i] == CurrentPlayer);
@@ -143,8 +139,8 @@ public class PlayerManager : MonoBehaviour
             if (playerNumberText != null)
                 playerNumberText.text = "Player " + (index + 1);
 
-            detectCircle.SetParent(CurrentPlayer.transform);
-            detectCircle.localPosition = new Vector3(0, 0.1f, 0);
+            //detectCircle.SetParent(CurrentPlayer.transform);
+            //detectCircle.localPosition = new Vector3(0, 0.1f, 0);
 
             swapTimer = swapCooldown;
             if (turnTimer != null)
@@ -242,17 +238,36 @@ public class PlayerManager : MonoBehaviour
     }
 
     void UpdateDetectCircle()
+{
+    float radius = 30f;
+
+    foreach (var player in players)
     {
-        if (CurrentPlayer == null)
+        if (player == null || player.IsDead())
+            continue;
+
+        Collider[] hits = Physics.OverlapSphere(
+            player.transform.position,
+            radius
+        );
+
+        bool hasBotNearby = false;
+
+        foreach (var hit in hits)
         {
-            detectCircle.gameObject.SetActive(false);
-            return;
+            Killable k = hit.GetComponent<Killable>();
+
+            if (k != null &&
+                !k.isPlayer &&
+                !k.isDead &&
+                k.transform != player.transform)
+            {
+                hasBotNearby = true;
+                break;
+            }
         }
 
-        int botCount = CountNearbyBots(30f);
-
-        // แสดงเฉพาะตอนมี bot ใกล้
-        detectCircle.gameObject.SetActive(botCount > 0);
+        player.UpdateDetectCircle(hasBotNearby);
     }
-
+}
 }

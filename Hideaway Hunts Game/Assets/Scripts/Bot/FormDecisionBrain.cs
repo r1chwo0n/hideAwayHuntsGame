@@ -192,7 +192,7 @@ public class FormDecisionBrain : MonoBehaviour
         }
     }
 
-    void OnActiveFormChanged(Transform newForm) 
+    void OnActiveFormChanged(Transform newForm)
     {
         Debug.Log($"Active form changed to: {newForm.name}");
 
@@ -265,10 +265,10 @@ public class FormDecisionBrain : MonoBehaviour
                 $"Nearest={world.nearestEnemyDistance:F1}, " +
                 $"UsSee={world.usSeeingEnemies}, " +
                 $"TheySee={world.enemiesSeeingUs}, " +
-                $"Density={world.enemyCountInRange}, " + 
+                $"Density={world.enemyCountInRange}, " +
                 $"Form={world.formsRemaining}, " +
                 $"Enemy={world.enemyFormsRemaining}, " +
-                $"Ammo={world.ammoRatio:F2}" 
+                $"Ammo={world.ammoRatio:F2}"
             );
 
         // ถ้าเห็นศัตรูอย่างน้อย 1 ตัว
