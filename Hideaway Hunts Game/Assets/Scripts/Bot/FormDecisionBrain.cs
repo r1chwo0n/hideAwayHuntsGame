@@ -14,8 +14,6 @@ public class FormDecisionBrain : MonoBehaviour
 
     [Header("References")]
     public WorldPerception worldPerception;
-    //public ActiveFormSelector formSelector;
-    //public ActionDecisionBrain actionBrain;
     public ActionExecutor actionExecutor;
     public MonoBehaviour formSelector;
     public MonoBehaviour actionBrain;
@@ -43,7 +41,7 @@ public class FormDecisionBrain : MonoBehaviour
 
     public CinemachineCamera botCinemachineCam;
 
-    [SerializeField] float decisionInterval = 0.5f; // คิดทุก ๆ 0.5 วินาที 
+    [SerializeField] float decisionInterval = 1.0f; // คิดทุก ๆ ... วินาที 
     float decisionTimer; // ถึงเวลาตัดสินใจใหม่ยัง
 
     void Awake()
@@ -93,10 +91,7 @@ public class FormDecisionBrain : MonoBehaviour
             activePerception = forms[0];
             activeForm = forms[0].origin;
 
-            // เรียกใช้ Helper Function ที่คุณเขียนไว้แล้ว เพื่อกระจายค่าไปยัง Component อื่นๆ
             OnActiveFormChanged(activeForm);
-
-            // บังคับให้เริ่มนับ Cooldown ตั้งแต่เริ่มเกมเลย
             swapTimer = swapCooldown;
         }
     }
@@ -140,10 +135,10 @@ public class FormDecisionBrain : MonoBehaviour
 
         decisionTimer = decisionInterval;
 
-        // ตัดสินใจ Action ของ Form ปัจจุบันก่อนเสมอ
+        // ตัดสินใจ Action ของ Form ปัจจุบัน
         DecideAction();
 
-        // ถ้ามีหลายร่าง และ Cooldown หมดแล้ว ถึงจะอนุญาตให้เปลี่ยนร่าง
+        // ถ้ามีหลายร่าง และ Cooldown หมดแล้ว ค่อยเปลี่ยนร่าง
         if (forms.Count > 1 && swapTimer <= 0)
         {
             DecideBestForm();
@@ -197,7 +192,7 @@ public class FormDecisionBrain : MonoBehaviour
         }
     }
 
-    void OnActiveFormChanged(Transform newForm) 
+    void OnActiveFormChanged(Transform newForm)
     {
         Debug.Log($"Active form changed to: {newForm.name}");
 
@@ -231,8 +226,6 @@ public class FormDecisionBrain : MonoBehaviour
 
     void DecideAction()
     {
-        //if (activePerception == null)
-        //    return;
 
         if (!activeForm)
         {
@@ -254,19 +247,28 @@ public class FormDecisionBrain : MonoBehaviour
 
         world.enemyFormsRemaining = worldPerception.enemies.Count;
 
-        if (actionExecutor && actionExecutor.gun)
-            world.ammoRatio = actionExecutor.gun.AmmoRatio;
+        //if (actionExecutor && actionExecutor.gun)
+        //    world.ammoRatio = actionExecutor.gun.ammoPool.AmmoRatio;
+        //else
+        //    world.ammoRatio = 0f;
+
+        if (actionExecutor && actionExecutor.gun && actionExecutor.gun.ammoPool)
+        {
+            world.ammoRatio = actionExecutor.gun.ammoPool.AmmoRatio;
+        }
         else
+        {
             world.ammoRatio = 0f;
+        }
 
         Debug.Log(
                 $"Nearest={world.nearestEnemyDistance:F1}, " +
                 $"UsSee={world.usSeeingEnemies}, " +
                 $"TheySee={world.enemiesSeeingUs}, " +
-                $"Density={world.enemyCountInRange}" + 
-                $"Form={world.formsRemaining}" +
-                $"Enemy={world.enemyFormsRemaining}" +
-                $"Ammo={world.ammoRatio}" 
+                $"Density={world.enemyCountInRange}, " +
+                $"Form={world.formsRemaining}, " +
+                $"Enemy={world.enemyFormsRemaining}, " +
+                $"Ammo={world.ammoRatio:F2}"
             );
 
         // ถ้าเห็นศัตรูอย่างน้อย 1 ตัว

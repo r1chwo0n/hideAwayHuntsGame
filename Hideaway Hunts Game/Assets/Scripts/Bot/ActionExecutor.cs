@@ -7,7 +7,7 @@ public enum ActionType
     Patrol,
     Attack,
     Retreat,
-    Flank,
+    //Flank,
     Defend // ยึดตำแหน่งและคุมมุม
 }
 
@@ -47,7 +47,7 @@ public class ActionExecutor : MonoBehaviour
     {
         if (actor != null && actor != newActor)
         {
-            
+
             if (agent != null && agent.isOnNavMesh)
             {
                 agent.isStopped = true;
@@ -73,7 +73,14 @@ public class ActionExecutor : MonoBehaviour
 
         agent = actor.GetComponent<NavMeshAgent>();
         animator = actor.GetComponentInChildren<Animator>();
+
         gun = actor.GetComponentInChildren<GunShooter>();
+        if (gun)
+        {
+            gun.ammoPool = FindFirstObjectByType<AmmoPool>();
+            Debug.Log("Gun found on " + actor.name + ", ammo pool assigned: " + (gun.ammoPool != null));
+        }
+
         perception = actor.GetComponent<PerceptionController>();
     }
 
@@ -249,7 +256,7 @@ public class ActionExecutor : MonoBehaviour
         }
         // forward คือทิศที่ตัวละครกำลังหันหน้าไป และ flatDir คือทิศทางจากตัวละครไปยังเป้าหมาย
         float angle = Vector3.Angle(actor.forward, flatDir);
-        
+
         // 2. ถ้าเกินระยะยิง → เข้าใกล้
         if (dist > gun.shootRange)
         {
@@ -263,7 +270,7 @@ public class ActionExecutor : MonoBehaviour
         agent.isStopped = true;
 
         // 4. ต้องมี LOS จริง
-        bool hasLOS = perception.HasLineOfSight(target); 
+        bool hasLOS = perception.HasLineOfSight(target);
 
         if (!hasLOS)
         {

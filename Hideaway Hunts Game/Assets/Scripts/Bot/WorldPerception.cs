@@ -9,7 +9,7 @@ public struct SituationSummary
     public int enemiesSeeingUs;
     public float avgEnemyDistance; //ระยะเฉลี่ยของศัตรูทั้งหมดที่อยู่ในระยะตรวจจับ
     public float nearestEnemyDistance;
-    public float maxEnemyMovementIntensity; // มีใครกำลังทำตัวนน่าสงสัยมั้ย 
+    //public float maxEnemyMovementIntensity; // มีใครกำลังทำตัวนน่าสงสัยมั้ย 
     //public float nearestEnemyVerticalDiff;
     public float nearestEnemyMovementIntensity;
 
@@ -83,11 +83,11 @@ public class WorldPerception : MonoBehaviour
                 continue;
 
             countInRange++;
-            totalDist += p.distance3D;
+            totalDist += p.horizontalDistance;
 
-            if (p.distance3D < nearest)
+            if (p.horizontalDistance < nearest)
             {
-                nearest = p.distance3D;
+                nearest = p.horizontalDistance;
                 nearestMovement = p.movementIntensity;
             }
 

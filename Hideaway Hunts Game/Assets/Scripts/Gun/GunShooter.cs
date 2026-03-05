@@ -10,23 +10,29 @@ public class GunShooter : MonoBehaviour
     public AudioClip shootSound;
 
     [Header("Ammo")]
-    public int maxAmmo = 10;
-    public int currentAmmo = 10;
+    public AmmoPool ammoPool;
+    //public int maxAmmo = 10;
+    //public int currentAmmo = 10;
 
     [Header("Runtime")]
     public Transform target;
 
     //float lastFireTime = -999f;
 
+    //public float AmmoRatio =>
+    //    maxAmmo > 0 ? (float)currentAmmo / maxAmmo : 0f;
     public float AmmoRatio =>
-        maxAmmo > 0 ? (float)currentAmmo / maxAmmo : 0f;
+        ammoPool ? ammoPool.AmmoRatio : 0f;
 
     void Awake()
     {
         if (!firePoint)
             firePoint = transform;
 
-        currentAmmo = maxAmmo;
+        //currentAmmo = maxAmmo;
+
+        //if (ammoPool == null)
+        //    ammoPool = GetComponentInParent<AmmoPool>();
     }
 
     public bool CanFire()
@@ -34,10 +40,14 @@ public class GunShooter : MonoBehaviour
         if (target == null)
             return false;
 
-        if (currentAmmo <= 0)
+        //if (currentAmmo <= 0)
+        //    return false;
+
+        if (ammoPool == null)
             return false;
 
-       
+        if (!ammoPool.HasAmmo())
+            return false;
 
         return true;
     }
@@ -50,8 +60,9 @@ public class GunShooter : MonoBehaviour
 
         if (shootSound != null)
             audioSource.PlayOneShot(shootSound);
-            
-        currentAmmo--;
+
+        //currentAmmo--;
+        ammoPool.ConsumeAmmo();
 
         ShootRay();
     }
