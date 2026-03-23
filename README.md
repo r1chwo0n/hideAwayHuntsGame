@@ -54,6 +54,6 @@ Assets/
 * **Logic:** C# (Custom Fuzzy Logic Engine)
 
 ---
-**Developed by:** [Your Name/Team Name]  
+**Developed by:** [Picharpa Eamkanitchart/Nawawan Thaichim]  
 **Faculty of Engineering, Chiang Mai University (Entaneer)**
 
